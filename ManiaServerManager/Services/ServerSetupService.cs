@@ -17,6 +17,7 @@ internal sealed class ServerSetupService : IServerSetupService
 {
     private readonly ServerOptions serverOptions;
     private readonly IZipExtractService zipExtractService;
+    private readonly IDedicatedCfgService dedicatedCfgService;
     private readonly IFileSystem fileSystem;
     private readonly HttpClient http;
     private readonly IWebHostEnvironment hostEnvironment;
@@ -24,6 +25,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
     public ServerSetupService(
         IZipExtractService zipExtractService,
+        IDedicatedCfgService dedicatedCfgService,
         IConfiguration config,
         IFileSystem fileSystem,
         HttpClient http,
@@ -31,6 +33,7 @@ internal sealed class ServerSetupService : IServerSetupService
         ILogger<ServerSetupService> logger)
     {
         this.zipExtractService = zipExtractService;
+        this.dedicatedCfgService = dedicatedCfgService;
         this.fileSystem = fileSystem;
         this.http = http;
         this.hostEnvironment = hostEnvironment;
@@ -76,13 +79,13 @@ internal sealed class ServerSetupService : IServerSetupService
 
         await using var serverArchiveResult = await DownloadArchiveAsync(uri, cancellationToken);
 
-        var identifier = GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType);
+        var identifier = GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType, isLatest);
 
         if (serverArchiveResult.NewlyDownloaded || serverOptions.Reinstall)
         {
             logger.LogInformation("Extracting archive...");
 
-            await zipExtractService.ExtractAsync(serverArchiveResult.Stream, Path.Combine(Constants.ServerVersionsPath, identifier), cancellationToken);
+            await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, Path.Combine(Constants.ServerVersionsPath, identifier), cancellationToken);
         }
 
         if (serverType is ServerType.ManiaPlanet)
@@ -90,14 +93,27 @@ internal sealed class ServerSetupService : IServerSetupService
             await LoadTitleAsync(identifier, cancellationToken);
         }
 
+        
         // setup dedicated_cfg.txt
+        switch (serverType)
+        {
+            case ServerType.ManiaPlanet:
+                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                break;
+            case ServerType.TMF:
+                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
+                break;
+            case ServerType.TM:
+                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier), cancellationToken);
+                break;
+        }
 
         logger.LogInformation("Server setup complete!");
 
         return new ServerSetupResult(serverType, serverVersion, null);
     }
 
-    public static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType)
+    private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType, bool isLatest)
     {
         using var archive = new ZipArchive(serverZipStream, ZipArchiveMode.Read, leaveOpen: true);
 
@@ -110,6 +126,11 @@ internal sealed class ServerSetupService : IServerSetupService
         };
 
         var executableEntry = archive.GetEntry(executableName) ?? throw new Exception("Executable not found");
+
+        if (isLatest)
+        {
+            return $"{serverType}_{Constants.LatestUpper}";
+        }
 
         return $"{serverType}_{executableEntry.LastWriteTime:yyyy-MM-dd}";
     }
@@ -139,7 +160,8 @@ internal sealed class ServerSetupService : IServerSetupService
             return;
         }
 
-        await using var titleStream = fileSystem.FileStream.NewWriteAsync(Path.Combine(Constants.ServerVersionsPath, identifier, "Packs", titleFileName));
+        var copiedTitlePath = Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "Packs", titleFileName);
+        await using var titleStream = fileSystem.FileStream.NewWriteAsync(copiedTitlePath);
         await titleArchiveResult.Stream.CopyToAsync(titleStream, cancellationToken);
     }
 

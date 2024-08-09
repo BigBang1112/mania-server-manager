@@ -1,4 +1,5 @@
-﻿using ManiaServerManager.Setup;
+﻿using ManiaServerManager.Server;
+using ManiaServerManager.Setup;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.IO.Compression;
@@ -7,7 +8,7 @@ namespace ManiaServerManager.Services;
 
 internal interface IZipExtractService
 {
-    Task ExtractAsync(Stream stream, string outputDirectory, CancellationToken cancellationToken = default);
+    Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default);
 }
 
 internal sealed class ZipExtractService : IZipExtractService
@@ -20,7 +21,11 @@ internal sealed class ZipExtractService : IZipExtractService
     private readonly IWebHostEnvironment hostEnvironment;
     private readonly ILogger<ZipExtractService> logger;
 
-    public ZipExtractService(IConfiguration config, IFileSystem fileSystem, IWebHostEnvironment hostEnvironment, ILogger<ZipExtractService> logger)
+    public ZipExtractService(
+        IConfiguration config,
+        IFileSystem fileSystem,
+        IWebHostEnvironment hostEnvironment,
+        ILogger<ZipExtractService> logger)
     {
         unusedContentOptions = new UnusedContentOptions();
         config.GetSection("UnusedContent").Bind(unusedContentOptions);
@@ -30,7 +35,7 @@ internal sealed class ZipExtractService : IZipExtractService
         this.logger = logger;
     }
 
-    public async Task ExtractAsync(Stream stream, string outputDirectory, CancellationToken cancellationToken = default)
+    public async Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default)
     {
         using var archive = new ZipArchive(stream);
 
@@ -92,20 +97,6 @@ internal sealed class ZipExtractService : IZipExtractService
                 if (fileSystem.File.Exists(entryPath))
                 {
                     continue;
-                }
-            }
-
-            // Spawns dedicated_cfg.txt from dedicated_cfg.default.txt if it's not already there
-            // dedicated_cfg.default.txt will overwrite, dedicated_cfg.txt wont
-            if (entry.Name == "dedicated_cfg.default.txt")
-            {
-                var copyToFileName = Path.Combine(hostEnvironment.ContentRootPath, outputDirectory, Path.GetDirectoryName(entry.FullName)!, "dedicated_cfg.txt");
-
-                if (!fileSystem.File.Exists(copyToFileName))
-                {
-                    using var entryStreamInside = entry.Open();
-                    await using var fileStreamDefault = fileSystem.FileStream.New(copyToFileName, fileStreamOptions);
-                    await entryStreamInside.CopyToAsync(fileStreamDefault, cancellationToken);
                 }
             }
 
