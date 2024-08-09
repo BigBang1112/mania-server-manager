@@ -92,11 +92,13 @@ internal sealed class ServerSetupService : IServerSetupService
         {
             await LoadTitleAsync(identifier, cancellationToken);
         }
-
         
         // setup dedicated_cfg.txt
         switch (serverType)
         {
+            case ServerType.TM2020:
+                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                break;
             case ServerType.ManiaPlanet:
                 await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
                 break;
