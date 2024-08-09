@@ -1,7 +1,8 @@
 ﻿namespace ManiaServerManager.Server;
 
-public enum ServerType
+internal enum ServerType
 {
+    None,
     TM,
     TMF,
     ManiaPlanet,

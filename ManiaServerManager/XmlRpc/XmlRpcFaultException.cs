@@ -1,7 +1,7 @@
 ﻿namespace ManiaServerManager.XmlRpc;
 
 [Serializable]
-public class XmlRpcFaultException : Exception
+internal class XmlRpcFaultException : Exception
 {
     public XmlRpcFaultException() { }
     public XmlRpcFaultException(string? message) : base(message) { }

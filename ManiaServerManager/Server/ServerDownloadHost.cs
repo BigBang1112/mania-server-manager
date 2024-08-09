@@ -1,6 +1,6 @@
 ﻿namespace ManiaServerManager.Server;
 
-public sealed class ServerDownloadHost
+internal sealed class ServerDownloadHost
 {
     public string All { get; init; } = "";
     public string TM { get; init; } = "http://slig.free.fr/TM/dedicated";

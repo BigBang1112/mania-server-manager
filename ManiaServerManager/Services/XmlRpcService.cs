@@ -23,7 +23,7 @@ internal interface IXmlRpcService : IDisposable
     Task ProcessCallbacksAsync(CancellationToken cancellationToken);
 }
 
-public sealed class XmlRpcService
+internal sealed class XmlRpcService
 {
     private const string Handshake = "GBXRemote 2";
 

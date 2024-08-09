@@ -1,3 +1,3 @@
 ﻿namespace ManiaServerManager.XmlRpc;
 
-public delegate void RemoteCallback(string methodName, object?[] methodParams);
+internal delegate void RemoteCallback(string methodName, object?[] methodParams);
