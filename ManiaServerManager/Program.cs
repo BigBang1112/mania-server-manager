@@ -9,11 +9,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
-builder.Services.Configure<HostOptions>(options =>
-{
-    options.ServicesStartConcurrently = true;
-});
-
 builder.Services.AddHttpClient();
 builder.Services.AddTransient<IServerSetupService, ServerSetupService>();
 builder.Services.AddTransient<IZipExtractService, ZipExtractService>();
