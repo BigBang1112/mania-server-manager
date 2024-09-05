@@ -51,6 +51,7 @@ internal sealed class ServerStartService : IServerStartService
             {
                 case StartedCommandEvent started:
                     logger.LogInformation("Server is about to start! (PID: {ProcessId})", started.ProcessId);
+                    await HookServerOutputAsync(started.ProcessId, cancellationToken);
                     break;
                 case StandardErrorCommandEvent errE:
                     logger.LogError("{Error}", errE.Text);
@@ -60,6 +61,38 @@ internal sealed class ServerStartService : IServerStartService
                     break;
                 case StandardOutputCommandEvent outE:
                     logger.LogInformation("{Output}", outE.Text);
+                    break;
+            }
+        }
+    }
+
+    private async Task HookServerOutputAsync(int processId, CancellationToken cancellationToken)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            logger.LogInformation("Cannot hook output on Windows at the moment.");
+            return;
+        }
+
+        while (!File.Exists($"/proc/{processId}/fd/3"))
+        {
+            await Task.Delay(10, cancellationToken);
+        }
+
+        var events = cliService.ListenAsync("tail", ["-f", $"/proc/{processId}/fd/3"], workingDir: null, cancellationToken);
+
+        await foreach (var cmd in events)
+        {
+            switch (cmd)
+            {
+                case StandardOutputCommandEvent outE:
+                    logger.LogInformation("{Output}", outE.Text);
+                    break;
+                case StandardErrorCommandEvent errE:
+                    logger.LogError("{Error}", errE.Text);
+                    break;
+                case ExitedCommandEvent exited:
+                    logger.LogInformation("Tail exited: {ExitCode}", exited.ExitCode);
                     break;
             }
         }

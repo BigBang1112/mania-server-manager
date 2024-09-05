@@ -1,8 +1,9 @@
 ﻿using ManiaServerManager.Services;
+using System.Threading;
 
 namespace ManiaServerManager;
 
-internal sealed class Startup : IHostedService
+internal sealed class Startup : BackgroundService
 {
     private readonly IServerSetupService serverSetupService;
     private readonly IServerStartService serverStartService;
@@ -15,15 +16,10 @@ internal sealed class Startup : IHostedService
         this.logger = logger;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var setupResult = await serverSetupService.SetupAsync(cancellationToken);
+        var setupResult = await serverSetupService.SetupAsync(stoppingToken);
 
-        await serverStartService.RunServerAsync(setupResult, cancellationToken);
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
+        await serverStartService.RunServerAsync(setupResult, stoppingToken);
     }
 }
