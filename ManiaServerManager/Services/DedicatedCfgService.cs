@@ -130,7 +130,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 </dedicated>
 """;
 
-        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg + ".txt"), config, cancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg), config, cancellationToken);
     }
 
     public async Task CreateManiaPlanetConfigAsync(string configDirectory, CancellationToken cancellationToken)
@@ -241,7 +241,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 </dedicated>
 """;
 
-        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg + ".txt"), config, cancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg), config, cancellationToken);
     }
 
     public async Task CreateTMFConfigAsync(string configDirectory, CancellationToken cancellationToken)
@@ -341,7 +341,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 </dedicated>
 """;
 
-        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg + ".txt"), config, cancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(configDirectory, serverOptions.DedicatedCfg), config, cancellationToken);
     }
 
     public async Task CreateTMConfigAsync(string configDirectory, CancellationToken cancellationToken)
