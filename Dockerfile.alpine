@@ -24,6 +24,9 @@ EXPOSE 8080
 
 WORKDIR /app
 COPY --from=build /app .
-# Uncomment to enable non-root user
-# USER $APP_UID
+
+# should be moved to different directory
+RUN chown -R $APP_UID /app
+
+USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
