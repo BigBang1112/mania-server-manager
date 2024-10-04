@@ -4,9 +4,21 @@ using ManiaServerManager.Services;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
 using System.IO.Abstractions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.OpenTelemetry(options =>
+    {
+        // TODO
+    })
+    .CreateLogger();
+
+builder.Services.AddSerilog();
 
 builder.Services.AddOpenApi();
 
@@ -23,13 +35,6 @@ builder.Services.AddTransient<IServerStartService, ServerStartService>();
 builder.Services.AddTransient<ICliService, CliService>();
 builder.Services.AddTransient<IDedicatedCfgService, DedicatedCfgService>();
 builder.Services.AddHostedService<Startup>();
-
-builder.Logging.AddOpenTelemetry(options =>
-{
-    options.IncludeScopes = true;
-    options.IncludeFormattedMessage = true;
-    options.AddOtlpExporter();
-});
 
 builder.Services.AddOpenTelemetry()
     .WithMetrics(x =>
