@@ -1,4 +1,5 @@
 using ManiaServerManager;
+using ManiaServerManager.Extensions;
 using ManiaServerManager.Services;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -6,6 +7,8 @@ using OpenTelemetry.Trace;
 using System.IO.Abstractions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.AddOpenApi();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -55,5 +58,9 @@ builder.Services.AddOpenTelemetry()
     });
 
 var app = builder.Build();
+
+app.MapOpenApi();
+
+app.MapScalarUi();
 
 app.Run();
