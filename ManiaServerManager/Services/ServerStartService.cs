@@ -12,18 +12,22 @@ internal interface IServerStartService
 internal sealed class ServerStartService : IServerStartService
 {
     private readonly ICliService cliService;
-    private readonly IWebHostEnvironment hostEnvironment;
     private readonly ILogger<ServerStartService> logger;
     private readonly ServerOptions serverOptions;
+
+    private readonly string baseWorkingPath;
 
     public ServerStartService(ICliService cliService, IConfiguration config, IWebHostEnvironment hostEnvironment, ILogger<ServerStartService> logger)
     {
         this.cliService = cliService;
-        this.hostEnvironment = hostEnvironment;
         this.logger = logger;
 
         serverOptions = new ServerOptions();
         config.GetSection("Server").Bind(serverOptions);
+
+        baseWorkingPath = hostEnvironment.IsDevelopment()
+            ? hostEnvironment.ContentRootPath
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "MSM");
     }
 
     public async Task RunServerAsync(ServerSetupResult setupResult, CancellationToken cancellationToken)
@@ -38,12 +42,17 @@ internal sealed class ServerStartService : IServerStartService
             _ => throw new Exception("Unknown server type")
         };
 
-        var workingDirectory = Path.Combine(hostEnvironment.ContentRootPath, "versions", identifier);
+
+        var workingDirectory = Path.Combine(baseWorkingPath, "versions", identifier);
         var targetFilePath = Path.Combine(workingDirectory, OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
         var arguments = GetArguments(setupResult);
 
         logger.LogInformation("Starting the server...");
+        using var ctsHook = new CancellationTokenSource();
+
         var events = cliService.ListenAsync(targetFilePath, arguments, workingDirectory, cancellationToken);
+
+        var hookTask = default(Task);
 
         await foreach (var cmd in events)
         {
@@ -51,26 +60,63 @@ internal sealed class ServerStartService : IServerStartService
             {
                 case StartedCommandEvent started:
                     logger.LogInformation("Server is about to start! (PID: {ProcessId})", started.ProcessId);
-                    await HookServerOutputAsync(started.ProcessId, cancellationToken);
+                    hookTask = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await HookServerOutputAsync(started.ProcessId, workingDirectory, ctsHook.Token);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            logger.LogInformation("Server output hook cancelled.");
+                        }
+                    }, cancellationToken);
                     break;
                 case StandardErrorCommandEvent errE:
                     logger.LogError("{Error}", errE.Text);
                     break;
                 case ExitedCommandEvent exited:
                     logger.LogInformation("Server exited: {ExitCode}", exited.ExitCode);
+                    ctsHook.Cancel();
                     break;
                 case StandardOutputCommandEvent outE:
                     logger.LogInformation("{Output}", outE.Text);
                     break;
             }
         }
+
+        if (hookTask is not null)
+        {
+            await hookTask;
+        }
     }
 
-    private async Task HookServerOutputAsync(int processId, CancellationToken cancellationToken)
+    private async Task HookServerOutputAsync(int processId, string workingDirectory, CancellationToken cancellationToken)
     {
         if (OperatingSystem.IsWindows())
         {
-            logger.LogInformation("Cannot hook output on Windows at the moment.");
+            var logFilePath = Path.Combine(workingDirectory, "Logs", $"ConsoleLog.{processId}.txt");
+
+            while (!File.Exists(logFilePath))
+            {
+                await Task.Delay(10, cancellationToken);
+            }
+
+            using var reader = new StreamReader(new FileStream(logFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                var line = await reader.ReadLineAsync(cancellationToken);
+
+                if (line is null)
+                {
+                    await Task.Delay(100, cancellationToken);
+                    continue;
+                }
+
+                logger.LogInformation("{Output}", line);
+            }
+
             return;
         }
 

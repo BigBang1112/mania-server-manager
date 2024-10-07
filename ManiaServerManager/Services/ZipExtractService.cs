@@ -18,8 +18,9 @@ internal sealed class ZipExtractService : IZipExtractService
 
     private readonly UnusedContentOptions unusedContentOptions;
     private readonly IFileSystem fileSystem;
-    private readonly IWebHostEnvironment hostEnvironment;
     private readonly ILogger<ZipExtractService> logger;
+
+    private readonly string baseWorkingPath;
 
     public ZipExtractService(
         IConfiguration config,
@@ -31,8 +32,11 @@ internal sealed class ZipExtractService : IZipExtractService
         config.GetSection("UnusedContent").Bind(unusedContentOptions);
 
         this.fileSystem = fileSystem;
-        this.hostEnvironment = hostEnvironment;
         this.logger = logger;
+
+        baseWorkingPath = hostEnvironment.IsDevelopment()
+            ? hostEnvironment.ContentRootPath
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "MSM");
     }
 
     public async Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default)
@@ -57,8 +61,8 @@ internal sealed class ZipExtractService : IZipExtractService
             }
 
             var entryPath = entry.FullName.StartsWith(Constants.TmDedicatedServer)
-                ? Path.Combine(hostEnvironment.ContentRootPath, outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
-                : Path.Combine(hostEnvironment.ContentRootPath, outputDirectory, entry.FullName);
+                ? Path.Combine(baseWorkingPath, outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
+                : Path.Combine(baseWorkingPath, outputDirectory, entry.FullName);
 
             var directoryPath = fileSystem.Path.GetDirectoryName(entryPath)!;
             fileSystem.Directory.CreateDirectory(directoryPath);
@@ -90,7 +94,7 @@ internal sealed class ZipExtractService : IZipExtractService
             if (TryRenameEntry(entry.FullName, out string? newFullName))
             {
                 using var entryStreamInside = entry.Open();
-                await using var fileStreamDefault = fileSystem.FileStream.New(Path.Combine(hostEnvironment.ContentRootPath, outputDirectory, newFullName), fileStreamOptions);
+                await using var fileStreamDefault = fileSystem.FileStream.New(Path.Combine(baseWorkingPath, outputDirectory, newFullName), fileStreamOptions);
                 await entryStreamInside.CopyToAsync(fileStreamDefault, cancellationToken);
 
                 // Skips the code that would overwrite the file

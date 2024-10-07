@@ -20,8 +20,9 @@ internal sealed class ServerSetupService : IServerSetupService
     private readonly IDedicatedCfgService dedicatedCfgService;
     private readonly IFileSystem fileSystem;
     private readonly HttpClient http;
-    private readonly IWebHostEnvironment hostEnvironment;
     private readonly ILogger<ServerSetupService> logger;
+
+    private readonly string baseWorkingPath;
 
     public ServerSetupService(
         IZipExtractService zipExtractService,
@@ -36,11 +37,14 @@ internal sealed class ServerSetupService : IServerSetupService
         this.dedicatedCfgService = dedicatedCfgService;
         this.fileSystem = fileSystem;
         this.http = http;
-        this.hostEnvironment = hostEnvironment;
         this.logger = logger;
 
         serverOptions = new ServerOptions();
         config.GetSection("Server").Bind(serverOptions);
+
+        baseWorkingPath = hostEnvironment.IsDevelopment()
+            ? hostEnvironment.ContentRootPath
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "MSM");
     }
 
     public async Task<ServerSetupResult> SetupAsync(CancellationToken cancellationToken)
@@ -97,16 +101,16 @@ internal sealed class ServerSetupService : IServerSetupService
         switch (serverType)
         {
             case ServerType.TM2020:
-                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
                 break;
             case ServerType.ManiaPlanet:
-                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
                 break;
             case ServerType.TMF:
-                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
                 break;
             case ServerType.TM:
-                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier), cancellationToken);
+                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier), cancellationToken);
                 break;
         }
 
@@ -162,14 +166,14 @@ internal sealed class ServerSetupService : IServerSetupService
             return;
         }
 
-        var copiedTitlePath = Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerVersionsPath, identifier, "Packs", titleFileName);
+        var copiedTitlePath = Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "Packs", titleFileName);
         await using var titleStream = fileSystem.FileStream.NewWriteAsync(copiedTitlePath);
         await titleArchiveResult.Stream.CopyToAsync(titleStream, cancellationToken);
     }
 
     private async Task<DownloadResult> DownloadArchiveAsync(Uri uri, CancellationToken cancellationToken)
     {
-        var serverArchivesPath = Path.Combine(hostEnvironment.ContentRootPath, Constants.ServerArchivesPath);
+        var serverArchivesPath = Path.Combine(baseWorkingPath, Constants.ServerArchivesPath);
 
         fileSystem.Directory.CreateDirectory(serverArchivesPath);
 
