@@ -30,7 +30,7 @@ internal sealed class XmlRpcService
     private TcpClient? tcp;
 
     private uint handle = 0x80000000;
-    private readonly object handleLock = new();
+    private readonly Lock handleLock = new();
     private readonly ConcurrentDictionary<uint, string?> pendingRequests = new();
     private readonly ConcurrentQueue<string> callbacks = new();
 

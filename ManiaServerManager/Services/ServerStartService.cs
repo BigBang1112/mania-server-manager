@@ -104,7 +104,7 @@ internal sealed class ServerStartService : IServerStartService
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                var line = await reader.ReadLineAsync(cancellationToken);
+                var line = await reader.ReadLineAsync(CancellationToken.None);
 
                 if (line is null)
                 {
