@@ -34,9 +34,7 @@ internal sealed class ZipExtractService : IZipExtractService
         this.fileSystem = fileSystem;
         this.logger = logger;
 
-        baseWorkingPath = hostEnvironment.IsDevelopment()
-            ? hostEnvironment.ContentRootPath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "MSM");
+        baseWorkingPath = hostEnvironment.ContentRootPath;
     }
 
     public async Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default)

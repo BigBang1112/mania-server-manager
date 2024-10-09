@@ -42,9 +42,7 @@ internal sealed class ServerSetupService : IServerSetupService
         serverOptions = new ServerOptions();
         config.GetSection("Server").Bind(serverOptions);
 
-        baseWorkingPath = hostEnvironment.IsDevelopment()
-            ? hostEnvironment.ContentRootPath
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "MSM");
+        baseWorkingPath = hostEnvironment.ContentRootPath;
     }
 
     public async Task<ServerSetupResult> SetupAsync(CancellationToken cancellationToken)
