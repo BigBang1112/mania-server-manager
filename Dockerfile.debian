@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0.100-preview.7-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0.100-rc.2-bookworm-slim AS build
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -11,13 +11,19 @@ RUN dotnet restore -a $TARGETARCH
 COPY ManiaServerManager/. .
 RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app -p:PublishAot=false
 
-FROM mcr.microsoft.com/dotnet/nightly/aspnet:9.0.0-preview.7-bookworm-slim
 
-RUN apt update
-RUN apt-get install qemu-user-static binfmt-support -y
-RUN dpkg --add-architecture amd64
-RUN apt update
-RUN apt-get install libc6:amd64 -y
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.0-rc.2-bookworm-slim
+
+RUN dpkg --add-architecture amd64 \
+    && dpkg --add-architecture i386 \
+    && dpkg --add-architecture armhf \
+    && apt update && apt install wget gnupg libc6:amd64 libc6:i386 libc6:armhf -y
+
+RUN wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
+    && wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
+    && wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
+	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
+	&& apt update && apt install box86-rpi4arm64:armhf -y
 
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
@@ -28,8 +34,11 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=build /app .
 
-# should be moved to different directory
-RUN chown -R $APP_UID /app
+RUN mkdir -p /app/versions /app/archives
+RUN chown -R $APP_UID /app/versions /app/archives
+RUN chmod -R 777 /app/versions
+
+VOLUME /app/versions /app/archives
 
 USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
