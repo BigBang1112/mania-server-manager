@@ -42,7 +42,7 @@ internal sealed class ServerStartService : IServerStartService
 
 
         var workingDirectory = Path.Combine(baseWorkingPath, "versions", identifier);
-        var targetFilePath = Path.Combine(OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
+        var targetFilePath = Path.Combine("./" + (OperatingSystem.IsWindows() ? executableName + ".exe" : executableName));
         var arguments = GetArguments(setupResult);
 
         logger.LogInformation("Starting the server...");
