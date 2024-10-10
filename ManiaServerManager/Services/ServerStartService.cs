@@ -42,13 +42,13 @@ internal sealed class ServerStartService : IServerStartService
 
 
         var workingDirectory = Path.Combine(baseWorkingPath, "versions", identifier);
-        var targetFilePath = Path.Combine("./" + (OperatingSystem.IsWindows() ? executableName + ".exe" : executableName));
+        var targetFilePath = Path.Combine(workingDirectory, OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
         var arguments = GetArguments(setupResult);
 
         logger.LogInformation("Starting the server...");
         using var ctsHook = new CancellationTokenSource();
 
-        var events = cliService.ListenAsync(targetFilePath, arguments, workingDirectory, cancellationToken);
+        var events = cliService.ListenAsync(targetFilePath, arguments, null, cancellationToken);
 
         var hookTask = default(Task);
 
