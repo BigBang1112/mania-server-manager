@@ -42,7 +42,7 @@ internal sealed class ServerStartService : IServerStartService
 
 
         var workingDirectory = Path.Combine(baseWorkingPath, "versions", identifier);
-        var targetFilePath = Path.Combine(workingDirectory, OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
+        var targetFilePath = Path.Combine(OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
         var arguments = GetArguments(setupResult);
 
         logger.LogInformation("Starting the server...");
@@ -102,7 +102,7 @@ internal sealed class ServerStartService : IServerStartService
 
             using var reader = new StreamReader(new FileStream(logFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 
-            while (!cancellationToken.IsCancellationRequested)
+            do
             {
                 var line = await reader.ReadLineAsync(CancellationToken.None);
 
@@ -114,6 +114,7 @@ internal sealed class ServerStartService : IServerStartService
 
                 logger.LogInformation("{Output}", line);
             }
+            while (!cancellationToken.IsCancellationRequested);
 
             return;
         }
