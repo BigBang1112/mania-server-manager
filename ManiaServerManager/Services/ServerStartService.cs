@@ -48,7 +48,7 @@ internal sealed class ServerStartService : IServerStartService
         logger.LogInformation("Starting the server...");
         using var ctsHook = new CancellationTokenSource();
 
-        var events = cliService.ListenAsync(targetFilePath, arguments, null, cancellationToken);
+        var events = cliService.ListenAsync(targetFilePath, arguments, workingDirectory, cancellationToken);
 
         var hookTask = default(Task);
 
