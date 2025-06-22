@@ -40,7 +40,6 @@ internal sealed class ServerStartService : IServerStartService
             _ => throw new Exception("Unknown server type")
         };
 
-
         var workingDirectory = Path.Combine(baseWorkingPath, "versions", identifier);
         var targetFilePath = Path.Combine(workingDirectory, OperatingSystem.IsWindows() ? executableName + ".exe" : executableName);
         var arguments = GetArguments(setupResult);

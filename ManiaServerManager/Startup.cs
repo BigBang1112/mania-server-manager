@@ -8,7 +8,10 @@ internal sealed class Startup : BackgroundService
     private readonly IServerStartService serverStartService;
     private readonly ILogger<Startup> logger;
 
-    public Startup(IServerSetupService serverSetupService, IServerStartService serverStartService, ILogger<Startup> logger)
+    public Startup(
+        IServerSetupService serverSetupService,
+        IServerStartService serverStartService,
+        ILogger<Startup> logger)
     {
         this.serverSetupService = serverSetupService;
         this.serverStartService = serverStartService;

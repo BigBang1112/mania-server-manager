@@ -3,7 +3,6 @@ using ManiaServerManager.Setup;
 using System.IO.Abstractions;
 using System.IO.Compression;
 using System.Net;
-using System.Net.WebSockets;
 using System.Text.Json;
 
 namespace ManiaServerManager.Services;
