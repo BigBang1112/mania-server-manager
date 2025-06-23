@@ -1,4 +1,6 @@
 ﻿using ManiaServerManager.Services;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace ManiaServerManager;
 

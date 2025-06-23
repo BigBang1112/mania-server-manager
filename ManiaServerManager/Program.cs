@@ -1,19 +1,14 @@
 using ManiaServerManager;
 using ManiaServerManager.Configuration;
 using ManiaServerManager.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.IO.Abstractions;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSerilog();
-
-builder.Services.AddOpenApi();
-
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
 
 builder.Services.AddHttpClient<IServerSetupService, ServerSetupService>().AddStandardResilienceHandler();
 builder.Services.AddTransient<IZipExtractService, ZipExtractService>();

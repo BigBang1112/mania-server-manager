@@ -1,6 +1,9 @@
 ﻿using CliWrap.EventStream;
 using ManiaServerManager.Server;
 using ManiaServerManager.Setup;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace ManiaServerManager.Services;
 
@@ -17,7 +20,7 @@ internal sealed class ServerStartService : IServerStartService
 
     private readonly string baseWorkingPath;
 
-    public ServerStartService(ICliService cliService, IConfiguration config, IWebHostEnvironment hostEnvironment, ILogger<ServerStartService> logger)
+    public ServerStartService(ICliService cliService, IConfiguration config, IHostEnvironment hostEnvironment, ILogger<ServerStartService> logger)
     {
         this.cliService = cliService;
         this.logger = logger;

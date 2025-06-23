@@ -1,5 +1,8 @@
 ﻿using ManiaServerManager.Server;
 using ManiaServerManager.Setup;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.IO.Compression;
@@ -25,7 +28,7 @@ internal sealed class ZipExtractService : IZipExtractService
     public ZipExtractService(
         IConfiguration config,
         IFileSystem fileSystem,
-        IWebHostEnvironment hostEnvironment,
+        IHostEnvironment hostEnvironment,
         ILogger<ZipExtractService> logger)
     {
         unusedContentOptions = new UnusedContentOptions();

@@ -2,6 +2,9 @@
 using OpenTelemetry.Trace;
 using Serilog.Sinks.SystemConsole.Themes;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace ManiaServerManager.Configuration;
 
@@ -35,7 +38,6 @@ public static class TelemetryConfiguration
             .WithMetrics(options =>
             {
                 options
-                    .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddProcessInstrumentation()
@@ -51,7 +53,6 @@ public static class TelemetryConfiguration
                 }
 
                 options
-                    .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddOtlpExporter();
             });

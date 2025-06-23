@@ -1,5 +1,6 @@
 ﻿using CliWrap.EventStream;
 using CliWrap;
+using Microsoft.Extensions.Logging;
 
 namespace ManiaServerManager.Services;
 

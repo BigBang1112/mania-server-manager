@@ -5,7 +5,7 @@
       "launchBrowser": true,
       "launchUrl": "scalar/v1",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5138"
@@ -15,7 +15,6 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/scalar/v1",
       "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "8080"
       },
       "publishAllPorts": true
     }

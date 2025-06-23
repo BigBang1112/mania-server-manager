@@ -1,4 +1,5 @@
 ﻿using ManiaServerManager.Server;
+using Microsoft.Extensions.Configuration;
 
 namespace ManiaServerManager.Services;
 
@@ -206,7 +207,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 
         <p2p_cache_size>600</p2p_cache_size>
 
-        <force_ip_address></force_ip_address>
+        <force_ip_address>{{serverOptions.ForceIp}}</force_ip_address>
         <server_port>{{serverOptions.ServerPort}}</server_port>
         <server_p2p_port>{{serverOptions.ServerP2pPort}}</server_p2p_port>
         <client_port>0</client_port>

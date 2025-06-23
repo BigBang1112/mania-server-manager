@@ -1,5 +1,8 @@
 ﻿using ManiaServerManager.Server;
 using ManiaServerManager.Setup;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.IO.Compression;
 using System.Net;
@@ -29,7 +32,7 @@ internal sealed class ServerSetupService : IServerSetupService
         IConfiguration config,
         IFileSystem fileSystem,
         HttpClient http,
-        IWebHostEnvironment hostEnvironment,
+        IHostEnvironment hostEnvironment,
         ILogger<ServerSetupService> logger)
     {
         this.zipExtractService = zipExtractService;
@@ -93,6 +96,8 @@ internal sealed class ServerSetupService : IServerSetupService
         {
             await LoadTitleAsync(identifier, cancellationToken);
         }
+
+        var titleId = default(string);
         
         // setup dedicated_cfg.txt
         switch (serverType)
@@ -102,6 +107,7 @@ internal sealed class ServerSetupService : IServerSetupService
                 break;
             case ServerType.ManiaPlanet:
                 await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                titleId = serverOptions.Title;
                 break;
             case ServerType.TMF:
                 await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
@@ -113,7 +119,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         logger.LogInformation("Server setup complete!");
 
-        return new ServerSetupResult(serverType, serverVersion, null);
+        return new ServerSetupResult(serverType, serverVersion, titleId);
     }
 
     private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType, bool isLatest)
