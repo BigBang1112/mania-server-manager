@@ -14,7 +14,7 @@ RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app
 # Remove dbg files
 RUN find /app -name '*.dbg' -delete
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine
+FROM mcr.microsoft.com/dotnet/runtime:9.0-alpine
 
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
