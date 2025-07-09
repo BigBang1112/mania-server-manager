@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0.100-rc.2-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -12,7 +12,7 @@ COPY ManiaServerManager/. .
 RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app -p:PublishAot=false
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.0-rc.2-bookworm-slim
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-bookworm-slim
 
 RUN dpkg --add-architecture amd64 \
     && dpkg --add-architecture i386 \
