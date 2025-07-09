@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-alpine3.20-aot AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -14,7 +14,7 @@ RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app
 # Remove dbg files
 RUN find /app -name '*.dbg' -delete
 
-FROM mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0-alpine3.20-aot
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine
 
 EXPOSE 2350/tcp
 EXPOSE 2350/udp

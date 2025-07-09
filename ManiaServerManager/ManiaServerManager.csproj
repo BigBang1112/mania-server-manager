@@ -7,7 +7,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <PublishAot>true</PublishAot>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>abe0c420-4396-4505-8b8f-1066061e779d</UserSecretsId>
         <DockerfileContext>../</DockerfileContext>
