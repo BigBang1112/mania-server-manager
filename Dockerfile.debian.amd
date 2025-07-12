@@ -14,17 +14,6 @@ RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app -
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-bookworm-slim
 
-RUN dpkg --add-architecture amd64 \
-    && dpkg --add-architecture i386 \
-    && dpkg --add-architecture armhf \
-    && apt update && apt install wget gnupg libc6:amd64 libc6:i386 libc6:armhf -y
-
-RUN wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
-    && wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
-    && wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
-	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
-	&& apt update && apt install box86-rpi4arm64:armhf -y
-
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
 EXPOSE 3450/tcp
