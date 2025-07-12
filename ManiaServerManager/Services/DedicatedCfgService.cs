@@ -182,6 +182,9 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
         <callvote_ratios>
             <voteratio command="Ban" ratio="-1"/>
+            <voteratio command="RestartMap" ratio="-1"/>
+            <voteratio command="NextMap" ratio="-1"/>
+            <voteratio command="SetModeScriptSettingsAndCommands" ratio="-1"/>
             <!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
         </callvote_ratios>
 
