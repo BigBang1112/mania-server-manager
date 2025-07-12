@@ -24,8 +24,9 @@ EXPOSE 3450/udp
 WORKDIR /app
 COPY --from=build /app .
 
-# should be moved to different directory
-#RUN chown -R $APP_UID /app
+RUN mkdir -p /app/versions /app/archives
+RUN chown -R $APP_UID /app/versions /app/archives
+RUN chmod -R 777 /app/versions
 
-#USER $APP_UID
+USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
