@@ -164,7 +164,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         await using var titleArchiveResult = await DownloadArchiveAsync(titleDownloadUri, cancellationToken);
 
-        if (!titleArchiveResult.NewlyDownloaded)
+        if (!titleArchiveResult.NewlyDownloaded && !serverOptions.Reinstall)
         {
             return;
         }
