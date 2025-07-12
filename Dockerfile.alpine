@@ -25,7 +25,7 @@ WORKDIR /app
 COPY --from=build /app .
 
 # should be moved to different directory
-#RUN chown -R $APP_UID /app
+RUN chown -R $APP_UID /app
 
 #USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
