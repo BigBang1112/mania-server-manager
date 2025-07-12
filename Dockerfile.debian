@@ -40,5 +40,5 @@ RUN chmod -R 777 /app/versions
 
 VOLUME /app/versions /app/archives
 
-USER $APP_UID
+#USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
