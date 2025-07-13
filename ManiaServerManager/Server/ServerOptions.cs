@@ -41,4 +41,10 @@ internal sealed class ServerOptions
     public int ServerPort { get; set; } = 2350;
     public int ServerP2pPort { get; set; } = 3450;
     public int XmlRpcPort { get; set; } = 5000;
+    public VoteRatio[] CallVoteRatios { get; set; } = [];
+    public bool AllowMapDownload { get; set; } = true;
+    public bool AutosaveReplays { get; set; }
+    public bool AutosaveValidationReplays { get; set; }
+    public bool DisableReplayRecording { get; set; }
+    public bool SaveAllIndividualRuns { get; set; }
 }

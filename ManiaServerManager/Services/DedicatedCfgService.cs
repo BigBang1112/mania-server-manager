@@ -67,13 +67,13 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 		<callvote_timeout>60000</callvote_timeout>
 		<callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
 		<callvote_ratios>
-			<voteratio command="Ban" ratio="-1"/>
+            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
 			<!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
 		</callvote_ratios>
 
-		<allow_map_download>True</allow_map_download>
-		<autosave_replays>False</autosave_replays>
-		<autosave_validation_replays>False</autosave_validation_replays>
+		<allow_map_download>{{serverOptions.AllowMapDownload}}</allow_map_download>
+		<autosave_replays>{{serverOptions.AutosaveReplays}}</autosave_replays>
+		<autosave_validation_replays>{{serverOptions.AutosaveValidationReplays}}</autosave_validation_replays>
 
 		<referee_password></referee_password>
 		<referee_validation_mode>0</referee_validation_mode>		<!-- value is 0 (only validate top3 players),  1 (validate all players) -->
@@ -122,8 +122,8 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 
 		<disable_coherence_checks>False</disable_coherence_checks>	<!-- disable internal checks to detect issues/cheats, and reject race times -->
 
-		<disable_replay_recording>False</disable_replay_recording>	<!-- disable replay recording in memory during the game to lower memory usage. -->
-		<save_all_individual_runs>False</save_all_individual_runs>	<!-- Save all the ghosts from the match replay to individual ghost.gbx files, in folder {servername}/Autosaves/Runs_{mapname}/  -->
+		<disable_replay_recording>{{serverOptions.DisableReplayRecording}}</disable_replay_recording>	<!-- disable replay recording in memory during the game to lower memory usage. -->
+		<save_all_individual_runs>{{serverOptions.SaveAllIndividualRuns}}</save_all_individual_runs>	<!-- Save all the ghosts from the match replay to individual ghost.gbx files, in folder {servername}/Autosaves/Runs_{mapname}/  -->
 
 		<use_proxy>False</use_proxy>
 		<proxy_url></proxy_url>
@@ -181,16 +181,13 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <callvote_timeout>60000</callvote_timeout>
         <callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
         <callvote_ratios>
-            <voteratio command="Ban" ratio="-1"/>
-            <voteratio command="RestartMap" ratio="-1"/>
-            <voteratio command="NextMap" ratio="-1"/>
-            <voteratio command="SetModeScriptSettingsAndCommands" ratio="-1"/>
+            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
             <!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
         </callvote_ratios>
 
-        <allow_map_download>True</allow_map_download>
-        <autosave_replays>False</autosave_replays>
-        <autosave_validation_replays>False</autosave_validation_replays>
+        <allow_map_download>{{serverOptions.AllowMapDownload}}</allow_map_download>
+        <autosave_replays>{{serverOptions.AutosaveReplays}}</autosave_replays>
+        <autosave_validation_replays>{{serverOptions.AutosaveValidationReplays}}</autosave_validation_replays>
 
         <referee_password></referee_password>
         <referee_validation_mode>0</referee_validation_mode>		<!-- value is 0 (only validate top3 players),  1 (validate all players) -->
@@ -236,8 +233,8 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 
         <disable_coherence_checks>False</disable_coherence_checks>	<!-- disable internal checks to detect issues/cheats, and reject race times -->
 
-        <disable_replay_recording>False</disable_replay_recording>	<!-- disable replay recording in memory during the game to lower memory usage. -->
-        <save_all_individual_runs>False</save_all_individual_runs>	<!-- Save all the ghosts from the match replay to individual ghost.gbx files, in folder {servername}/Autosaves/Runs_{mapname}/  -->
+        <disable_replay_recording>{{serverOptions.DisableReplayRecording}}</disable_replay_recording>	<!-- disable replay recording in memory during the game to lower memory usage. -->
+        <save_all_individual_runs>{{serverOptions.SaveAllIndividualRuns}}</save_all_individual_runs>	<!-- Save all the ghosts from the match replay to individual ghost.gbx files, in folder {servername}/Autosaves/Runs_{mapname}/  -->
 
         <use_proxy>False</use_proxy>
         <proxy_url></proxy_url>
@@ -296,13 +293,13 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 		<callvote_timeout>60000</callvote_timeout>
 		<callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
 		<callvote_ratios>
-			<voteratio command="Ban" ratio="0.65"/>
+            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
 			<!-- commands can be "Ban", "Kick", "ChallengeRestart", "NextChallenge", ... -->
 		</callvote_ratios>
 
-		<allow_challenge_download>True</allow_challenge_download>
-		<autosave_replays>False</autosave_replays>
-		<autosave_validation_replays>False</autosave_validation_replays>
+		<allow_challenge_download>{{serverOptions.AllowMapDownload}}</allow_challenge_download>
+		<autosave_replays>{{serverOptions.AutosaveReplays}}</autosave_replays>
+		<autosave_validation_replays>{{serverOptions.AutosaveValidationReplays}}</autosave_validation_replays>
 
 		<referee_password></referee_password>
 		<referee_validation_mode>0</referee_validation_mode>		<!-- value is 0 (only validate top3 players),  1 (validate all players) -->
