@@ -67,7 +67,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 		<callvote_timeout>60000</callvote_timeout>
 		<callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
 		<callvote_ratios>
-            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
+            {{string.Join("\n            ", serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
 			<!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
 		</callvote_ratios>
 
@@ -181,7 +181,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <callvote_timeout>60000</callvote_timeout>
         <callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
         <callvote_ratios>
-            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
+            {{string.Join("\n            ", serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
             <!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
         </callvote_ratios>
 
@@ -293,7 +293,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 		<callvote_timeout>60000</callvote_timeout>
 		<callvote_ratio>0.5</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
 		<callvote_ratios>
-            {{string.Join('\n', serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
+            {{string.Join("\n            ", serverOptions.CallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
 			<!-- commands can be "Ban", "Kick", "ChallengeRestart", "NextChallenge", ... -->
 		</callvote_ratios>
 
@@ -384,7 +384,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <enable_p2p_download>True</enable_p2p_download>
         <callvote_timeout>60000</callvote_timeout>
         <callvote_ratio>0.5</callvote_ratio>
-        <allow_challenge_download>True</allow_challenge_download>
+        <allow_challenge_download>{{serverOptions.AllowMapDownload}}</allow_challenge_download>
     </server_options>
 
     <system_config>
