@@ -7,6 +7,9 @@ using System.IO.Abstractions;
 using var provider = new ServiceProvider();
 
 var config = provider.GetService<IConfiguration>();
+var setup = provider.GetService<IServerSetupService>();
+
+await setup.SetupAsync(CancellationToken.None);
 
 [ServiceProvider]
 [Singleton<IConfiguration, Configuration>]

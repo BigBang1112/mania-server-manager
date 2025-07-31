@@ -11,11 +11,23 @@ internal sealed class Logger : ILogger
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        throw new NotImplementedException();
+        return logLevel >= LogLevel.Information;
     }
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
-        throw new NotImplementedException();
+        if (!IsEnabled(logLevel))
+        {
+            return;
+        }
+
+        var message = formatter(state, exception);
+
+        Console.WriteLine($"[{logLevel}] {message}");
+
+        if (exception is not null)
+        {
+            Console.WriteLine(exception);
+        }
     }
 }

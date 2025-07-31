@@ -20,7 +20,7 @@ internal sealed class ZipExtractService : IZipExtractService
     private readonly IFileSystem fileSystem;
     private readonly ILogger logger;
 
-    private readonly string baseWorkingPath;
+    private readonly string baseWorkingPath = Constants.DataPath;
 
     public ZipExtractService(
         IConfiguration config,
@@ -30,8 +30,6 @@ internal sealed class ZipExtractService : IZipExtractService
         this.config = config;
         this.fileSystem = fileSystem;
         this.logger = logger;
-
-        baseWorkingPath = ""; throw new NotImplementedException();
     }
 
     public async Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default)

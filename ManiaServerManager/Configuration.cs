@@ -10,7 +10,7 @@ internal interface IConfiguration
     string Version { get; }
     ServerDownloadHost DownloadHost { get; }
     bool Reinstall { get; }
-    string? Title { get; }
+    string Title { get; }
     bool IgnoreTitleDownload { get; }
     string TitleDownloadHost { get; }
     UnusedContent UnusedContent { get; }
@@ -29,7 +29,7 @@ internal sealed class Configuration : IConfiguration
     public string Version { get; }
     public ServerDownloadHost DownloadHost { get; }
     public bool Reinstall { get; }
-    public string? Title { get; }
+    public string Title { get; }
     public bool IgnoreTitleDownload { get; }
     public string TitleDownloadHost { get; }
     public UnusedContent UnusedContent { get; }
@@ -46,7 +46,7 @@ internal sealed class Configuration : IConfiguration
         Type = Enum.TryParse<ServerType>(Environment.GetEnvironmentVariable("MSM_SERVER_TYPE"), ignoreCase: true, out var serverType)
             ? serverType
             : throw new InvalidOperationException("MSM_SERVER_TYPE is not set or invalid.");
-        Version = Environment.GetEnvironmentVariable("MSM_SERVER_VERSION") ?? throw new InvalidOperationException("MSM_SERVER_VERSION is not set.");
+        Version = Environment.GetEnvironmentVariable("MSM_SERVER_VERSION") ?? "Latest";
 
         DownloadHost = new();
         DownloadHost.All = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_ALL") ?? DownloadHost.All;
@@ -64,7 +64,7 @@ internal sealed class Configuration : IConfiguration
 
         AccountLogin = Environment.GetEnvironmentVariable("ACCOUNT_LOGIN") ?? throw new InvalidOperationException("ACCOUNT_LOGIN is not set.");
         AccountPassword = Environment.GetEnvironmentVariable("ACCOUNT_PASSWORD") ?? throw new InvalidOperationException("ACCOUNT_PASSWORD is not set.");
-        ServerName = Environment.GetEnvironmentVariable("SERVER_NAME") ?? throw new InvalidOperationException("SERVER_NAME is not set.");
+        ServerName = Environment.GetEnvironmentVariable("SERVER_NAME") ?? "ManiaServerManager Server";
 
         Cfg = new();
 
@@ -86,7 +86,9 @@ internal sealed class Configuration : IConfiguration
         if (int.TryParse(GetCfgEnv("SERVER_MAX_PLAYERS"), out var maxPlayers))
             Cfg.ServerMaxPlayers = maxPlayers;
 
-        Cfg.ServerMaxSpectators = GetCfgEnv("SERVER_MAX_SPECTATORS") ?? Cfg.ServerMaxSpectators;
+        if (int.TryParse(GetCfgEnv("SERVER_MAX_SPECTATORS"), out var maxSpectators))
+            Cfg.ServerMaxSpectators = maxSpectators;
+
         Cfg.ServerPasswordSpectator = GetCfgEnv("SERVER_PASSWORD_SPECTATOR") ?? Cfg.ServerPasswordSpectator;
 
         if (bool.TryParse(GetCfgEnv("SERVER_KEEP_PLAYER_SLOTS"), out var keepPlayerSlots))

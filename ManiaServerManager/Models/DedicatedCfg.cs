@@ -6,18 +6,18 @@ namespace ManiaServerManager.Models;
 internal sealed class DedicatedCfg
 {
     public string AuthorizationSuperAdminName { get; set; } = "SuperAdmin";
-    public string AuthorizationSuperAdminPassword { get; set; } = string.Empty;
+    public string AuthorizationSuperAdminPassword { get; set; } = "SuperAdmin";
     public string AuthorizationAdminName { get; set; } = "Admin";
-    public string AuthorizationAdminPassword { get; set; } = string.Empty;
+    public string AuthorizationAdminPassword { get; set; } = "Admin";
     public string AuthorizationUserName { get; set; } = "User";
-    public string AuthorizationUserPassword { get; set; } = string.Empty;
+    public string AuthorizationUserPassword { get; set; } = "User";
     //public string AccountLogin { get; set; } = string.Empty;
     //public string AccountPassword { get; set; } = string.Empty;
     //public string ServerName { get; set; } = string.Empty;
     public string ServerComment { get; set; } = string.Empty;
     public HideServer ServerHideServer { get; set; }
-    public int ServerMaxPlayers { get; set; } = 255;
-    public string ServerMaxSpectators { get; set; } = string.Empty;
+    public int ServerMaxPlayers { get; set; } = 32;
+    public int ServerMaxSpectators { get; set; } = 32;
     public string ServerPasswordSpectator { get; set; } = string.Empty;
     public bool ServerKeepPlayerSlots { get; set; }
     public LadderMode ServerLadderMode { get; set; }

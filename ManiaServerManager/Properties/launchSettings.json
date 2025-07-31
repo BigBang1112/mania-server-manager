@@ -1,10 +1,20 @@
 {
   "profiles": {
     "ManiaServerManager": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "MSM_SERVER_TYPE": "ManiaPlanet",
+        "ACCOUNT_LOGIN": "bigbang1112test",
+        "ACCOUNT_PASSWORD": ""
+      }
     },
     "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "environmentVariables": {
+        "MSM_SERVER_TYPE": "ManiaPlanet",
+        "ACCOUNT_LOGIN": "bigbang1112test",
+        "ACCOUNT_PASSWORD": ""
+      }
     }
   }
 }

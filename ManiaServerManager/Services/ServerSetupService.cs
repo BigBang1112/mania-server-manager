@@ -22,7 +22,7 @@ internal sealed class ServerSetupService : IServerSetupService
     private readonly HttpClient http;
     private readonly ILogger logger;
 
-    private readonly string baseWorkingPath;
+    private readonly string baseWorkingPath = Constants.DataPath;
 
     public ServerSetupService(
         IZipExtractService zipExtractService,
@@ -38,8 +38,6 @@ internal sealed class ServerSetupService : IServerSetupService
         this.fileSystem = fileSystem;
         this.http = http;
         this.logger = logger;
-
-        baseWorkingPath = ""; throw new NotImplementedException();
     }
 
     public async Task<ServerSetupResult> SetupAsync(CancellationToken cancellationToken)
