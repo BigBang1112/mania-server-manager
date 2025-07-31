@@ -1,7 +1,5 @@
-﻿using ManiaServerManager.Server;
-using ManiaServerManager.Setup;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+﻿using ManiaServerManager.Enums;
+using ManiaServerManager.Models;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.IO.Compression;
@@ -17,12 +15,12 @@ internal interface IServerSetupService
 
 internal sealed class ServerSetupService : IServerSetupService
 {
-    private readonly ServerOptions serverOptions;
     private readonly IZipExtractService zipExtractService;
     private readonly IDedicatedCfgService dedicatedCfgService;
+    private readonly IConfiguration config;
     private readonly IFileSystem fileSystem;
     private readonly HttpClient http;
-    private readonly ILogger<ServerSetupService> logger;
+    private readonly ILogger logger;
 
     private readonly string baseWorkingPath;
 
@@ -32,19 +30,16 @@ internal sealed class ServerSetupService : IServerSetupService
         IConfiguration config,
         IFileSystem fileSystem,
         HttpClient http,
-        IHostEnvironment hostEnvironment,
-        ILogger<ServerSetupService> logger)
+        ILogger logger)
     {
         this.zipExtractService = zipExtractService;
         this.dedicatedCfgService = dedicatedCfgService;
+        this.config = config;
         this.fileSystem = fileSystem;
         this.http = http;
         this.logger = logger;
 
-        serverOptions = new ServerOptions();
-        config.GetSection("Server").Bind(serverOptions);
-
-        baseWorkingPath = hostEnvironment.ContentRootPath;
+        baseWorkingPath = ""; throw new NotImplementedException();
     }
 
     public async Task<ServerSetupResult> SetupAsync(CancellationToken cancellationToken)
@@ -54,24 +49,24 @@ internal sealed class ServerSetupService : IServerSetupService
         logger.LogInformation("Mania Server Manager!");
         logger.LogInformation("Setting up server...");
 
-        // SERVER_TYPE: TMF / ManiaPlanet / TM2020
-        var serverType = serverOptions.Type;
+        // MSM_TYPE: TMF / ManiaPlanet / TM2020
+        var serverType = config.Type;
         logger.LogInformation("> Type: {Type}", serverType);
 
         // VERSION: 0000-00-00 / Latest
-        var serverVersion = serverOptions.Version;
+        var serverVersion = config.Version;
         logger.LogInformation("> Version: {Version}", serverVersion);
 
         var isLatest = serverVersion.ToLowerInvariant() is Constants.Latest;
 
-        var allServerDownloadHost = string.IsNullOrEmpty(serverOptions.DownloadHost.All) ? null : serverOptions.DownloadHost.All;
+        var allServerDownloadHost = string.IsNullOrEmpty(config.DownloadHost.All) ? null : config.DownloadHost.All;
 
-        var uri = serverOptions.Type switch
+        var uri = config.Type switch
         {
-            ServerType.TM => new Uri($"{allServerDownloadHost ?? serverOptions.DownloadHost.TM}/TmDedicatedServer_{(isLatest ? "2006-05-30" : serverVersion)}.zip"),
-            ServerType.TMF => new Uri($"{allServerDownloadHost ?? serverOptions.DownloadHost.TMF}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LastTrackmaniaForeverServerVersion : serverVersion)}.zip"),
-            ServerType.ManiaPlanet => new Uri($"{allServerDownloadHost ?? serverOptions.DownloadHost.ManiaPlanet}/ManiaplanetServer_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
-            ServerType.TM2020 => new Uri($"{allServerDownloadHost ?? serverOptions.DownloadHost.TM2020}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
+            ServerType.TM => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TM}/TmDedicatedServer_{(isLatest ? "2006-05-30" : serverVersion)}.zip"),
+            ServerType.TMF => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TMF}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LastTrackmaniaForeverServerVersion : serverVersion)}.zip"),
+            ServerType.ManiaPlanet => new Uri($"{allServerDownloadHost ?? config.DownloadHost.ManiaPlanet}/ManiaplanetServer_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
+            ServerType.TM2020 => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TM2020}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
             ServerType.None => throw new Exception("Server type not set"),
             _ => throw new Exception("Unknown server type"),
         };
@@ -85,7 +80,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         var identifier = GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType, isLatest);
 
-        if (serverArchiveResult.NewlyDownloaded || serverOptions.Reinstall)
+        if (serverArchiveResult.NewlyDownloaded || config.Reinstall)
         {
             logger.LogInformation("Extracting archive...");
 
@@ -97,8 +92,6 @@ internal sealed class ServerSetupService : IServerSetupService
             await LoadTitleAsync(identifier, cancellationToken);
         }
 
-        var titleId = default(string);
-        
         // setup dedicated_cfg.txt
         switch (serverType)
         {
@@ -107,7 +100,6 @@ internal sealed class ServerSetupService : IServerSetupService
                 break;
             case ServerType.ManiaPlanet:
                 await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
-                titleId = serverOptions.Title;
                 break;
             case ServerType.TMF:
                 await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
@@ -119,7 +111,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         logger.LogInformation("Server setup complete!");
 
-        return new ServerSetupResult(serverType, serverVersion, titleId);
+        return new ServerSetupResult(serverType, serverVersion);
     }
 
     private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType, bool isLatest)
@@ -146,13 +138,13 @@ internal sealed class ServerSetupService : IServerSetupService
 
     private async Task LoadTitleAsync(string identifier, CancellationToken cancellationToken)
     {
-        var title = serverOptions.Title;
+        var title = config.Title;
         logger.LogInformation("> Title: {Title}", title);
 
-        var ignoreTitleDownload = serverOptions.IgnoreTitleDownload;
+        var ignoreTitleDownload = config.IgnoreTitleDownload;
         logger.LogInformation("> Ignore title download: {IgnoreTitleDownload}", ignoreTitleDownload);
 
-        var titleDownloadHost = serverOptions.TitleDownloadHost;
+        var titleDownloadHost = config.TitleDownloadHost;
 
         if (ignoreTitleDownload)
         {
@@ -165,7 +157,7 @@ internal sealed class ServerSetupService : IServerSetupService
         await using var titleArchiveResult = await DownloadArchiveAsync(titleDownloadUri, cancellationToken);
 
         // maybe could always run the copy?
-        if (!titleArchiveResult.NewlyDownloaded && !serverOptions.Reinstall)
+        if (!titleArchiveResult.NewlyDownloaded && !config.Reinstall)
         {
             return;
         }
@@ -181,18 +173,24 @@ internal sealed class ServerSetupService : IServerSetupService
 
         fileSystem.Directory.CreateDirectory(serverArchivesPath);
 
-        var etagsFilePath = Path.Combine(serverArchivesPath, "etags.json");
+        var etagsFilePath = Path.Combine(serverArchivesPath, "etags.txt");
 
-        Dictionary<string, string> etags;
+        var etags = new Dictionary<string, string>();
 
         if (fileSystem.File.Exists(etagsFilePath))
         {
             await using var etagsStream = fileSystem.FileStream.NewReadAsync(etagsFilePath);
-            etags = await JsonSerializer.DeserializeAsync(etagsStream, AppJsonSerializerContext.Default.DictionaryStringString, cancellationToken) ?? [];
-        }
-        else
-        {
-            etags = [];
+            using var etagsReader = new StreamReader(etagsStream);
+
+            string? line;
+            while ((line = await etagsReader.ReadLineAsync(cancellationToken)) is not null)
+            {
+                var parts = line.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 2)
+                {
+                    etags[parts[0]] = parts[1];
+                }
+            }
         }
 
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -242,8 +240,12 @@ internal sealed class ServerSetupService : IServerSetupService
         }
 
         await using (var etagsStream = fileSystem.FileStream.NewWriteAsync(etagsFilePath))
+        using (var etagsWriter = new StreamWriter(etagsStream))
         {
-            await JsonSerializer.SerializeAsync(etagsStream, etags, AppJsonSerializerContext.Default.DictionaryStringString, cancellationToken);
+            foreach (var kvp in etags)
+            {
+                await etagsWriter.WriteLineAsync($"{kvp.Key} {kvp.Value}");
+            }
         }
 
         return new DownloadResult(fileSystem.FileStream.NewReadAsync(archiveFilePath), NewlyDownloaded: true, etag);

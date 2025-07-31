@@ -1,7 +1,4 @@
-﻿using ManiaServerManager.Server;
-using ManiaServerManager.Setup;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+﻿using ManiaServerManager.Enums;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
@@ -19,25 +16,22 @@ internal sealed class ZipExtractService : IZipExtractService
     private const string DedicatedCfgFileTM = "dedicated.cfg";
     private const string DedicatedCfgFileTMF = "GameData/Config/dedicated_cfg.txt";
 
-    private readonly UnusedContentOptions unusedContentOptions;
+    private readonly IConfiguration config;
     private readonly IFileSystem fileSystem;
-    private readonly ILogger<ZipExtractService> logger;
+    private readonly ILogger logger;
 
     private readonly string baseWorkingPath;
 
     public ZipExtractService(
         IConfiguration config,
         IFileSystem fileSystem,
-        IHostEnvironment hostEnvironment,
-        ILogger<ZipExtractService> logger)
+        ILogger logger)
     {
-        unusedContentOptions = new UnusedContentOptions();
-        config.GetSection("UnusedContent").Bind(unusedContentOptions);
-
+        this.config = config;
         this.fileSystem = fileSystem;
         this.logger = logger;
 
-        baseWorkingPath = hostEnvironment.ContentRootPath;
+        baseWorkingPath = ""; throw new NotImplementedException();
     }
 
     public async Task ExtractServerAsync(ServerType type, Stream stream, string outputDirectory, CancellationToken cancellationToken = default)
@@ -51,12 +45,12 @@ internal sealed class ZipExtractService : IZipExtractService
                 continue;
             }
 
-            if (unusedContentOptions.Files.Contains(entry.Name))
+            if (config.UnusedContent.Files.Contains(entry.Name))
             {
                 continue;
             }
 
-            if (unusedContentOptions.Folders.Any(entry.FullName.StartsWith)) // be careful adding more folders
+            if (config.UnusedContent.Folders.Any(entry.FullName.StartsWith)) // be careful adding more folders
             {
                 continue;
             }
@@ -91,7 +85,7 @@ internal sealed class ZipExtractService : IZipExtractService
 
             logger.LogInformation("Extracting {FileName} ({FileSize})...", entry.FullName, Bytes.Format(entry.Length));
 
-            // Avoid overwriting files that users usually edit (usually dedicated_cfg.txt)
+            // Avoid overwriting files that users usually edit (often dedicated_cfg.txt)
             if (TryRenameEntry(entry.FullName, out string? newFullName))
             {
                 using var entryStreamInside = entry.Open();

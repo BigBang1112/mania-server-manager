@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 
-namespace ManiaServerManager.Setup;
+namespace ManiaServerManager.Models;
 
 internal sealed record DownloadResult(FileSystemStream Stream, bool NewlyDownloaded, string? ETag)
     : IDisposable, IAsyncDisposable

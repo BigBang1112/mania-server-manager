@@ -1,4 +1,4 @@
-﻿namespace ManiaServerManager.Server;
+﻿namespace ManiaServerManager.Enums;
 
 internal enum HideServer
 {

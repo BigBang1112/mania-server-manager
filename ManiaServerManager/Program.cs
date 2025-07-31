@@ -1,25 +1,19 @@
+﻿using Jab;
 using ManiaServerManager;
-using ManiaServerManager.Configuration;
 using ManiaServerManager.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
-var builder = Host.CreateApplicationBuilder(args);
+using var provider = new ServiceProvider();
 
-builder.Services.AddSerilog();
+var config = provider.GetService<IConfiguration>();
 
-builder.Services.AddHttpClient<IServerSetupService, ServerSetupService>().AddStandardResilienceHandler();
-builder.Services.AddTransient<IZipExtractService, ZipExtractService>();
-builder.Services.AddTransient<IFileSystem, FileSystem>();
-builder.Services.AddTransient<IServerStartService, ServerStartService>();
-builder.Services.AddTransient<ICliService, CliService>();
-builder.Services.AddTransient<IDedicatedCfgService, DedicatedCfgService>();
-builder.Services.AddHostedService<Startup>();
-
-builder.Services.AddTelemetryServices(builder.Configuration, builder.Environment);
-
-var app = builder.Build();
-
-app.Run();
+[ServiceProvider]
+[Singleton<IConfiguration, Configuration>]
+[Singleton<ILogger, Logger>]
+[Transient<IDedicatedCfgService, DedicatedCfgService>]
+[Transient<IZipExtractService, ZipExtractService>]
+[Singleton<HttpClient>]
+[Transient<IServerSetupService, ServerSetupService>]
+[Transient<IFileSystem, FileSystem>]
+internal partial class ServiceProvider;
