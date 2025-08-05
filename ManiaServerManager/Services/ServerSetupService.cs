@@ -107,6 +107,9 @@ internal sealed class ServerSetupService : IServerSetupService
                 break;
         }
 
+        // copy matchsettings
+        SetupExampleMatchSettings(serverType, identifier);
+
         logger.LogInformation("Server setup complete!");
 
         return new ServerSetupResult(serverType, serverVersion);
@@ -288,6 +291,41 @@ internal sealed class ServerSetupService : IServerSetupService
             }
 
             percentageBefore = percentage;
+        }
+    }
+
+    private void SetupExampleMatchSettings(ServerType serverType, string identifier)
+    {
+        logger.LogInformation("Example MatchSettings source directory: {ExampleMatchSettingsDirPath}", config.ExampleMatchSettingsDirPath);
+
+        if (!Directory.Exists(config.ExampleMatchSettingsDirPath))
+        {
+            logger.LogInformation("Example MatchSettings directory does not exist: {ExampleMatchSettingsDirPath}", config.ExampleMatchSettingsDirPath);
+            return;
+        }
+
+        logger.LogInformation("Trying to copy example match settings...");
+
+        var destinationDirPath = serverType switch
+        {
+            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Maps", "MatchSettings"),
+            ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Tracks", "MatchSettings"),
+            _ => throw new Exception("Unknown server type for match settings")
+        };
+
+        logger.LogInformation("Destination MatchSettings directory: {DestinationDirPath}", destinationDirPath);
+
+        if (!Directory.Exists(destinationDirPath))
+        {
+            fileSystem.Directory.CreateDirectory(destinationDirPath);
+        }
+
+        foreach (var filePath in Directory.GetFiles(config.ExampleMatchSettingsDirPath, "*.txt"))
+        {
+            var fileName = Path.GetFileName(filePath);
+            var destinationPath = Path.Combine(destinationDirPath, fileName);
+            logger.LogInformation("Copying MatchSettings: {FileName} to {DestinationPath}", fileName, destinationPath);
+            fileSystem.File.Copy(filePath, destinationPath, overwrite: true);
         }
     }
 }

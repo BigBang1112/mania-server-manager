@@ -3,13 +3,22 @@ using ManiaServerManager;
 using ManiaServerManager.Services;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
+using System.Runtime.InteropServices;
+
+using var cts = new CancellationTokenSource();
+
+using var registration = PosixSignalRegistration.Create(PosixSignal.SIGTERM, context =>
+{
+    cts.Cancel();
+    Console.WriteLine("Received SIGTERM, shutting down early...");
+});
 
 using var provider = new ServiceProvider();
 
 var config = provider.GetService<IConfiguration>();
 var setup = provider.GetService<IServerSetupService>();
 
-await setup.SetupAsync(CancellationToken.None);
+await setup.SetupAsync(cts.Token);
 
 [ServiceProvider]
 [Singleton<IConfiguration, Configuration>]

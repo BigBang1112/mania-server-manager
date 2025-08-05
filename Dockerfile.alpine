@@ -1,34 +1,40 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/nightly/sdk:9.0-alpine-aot AS build
 ARG TARGETARCH
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # copy csproj and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
-RUN dotnet restore -a $TARGETARCH
+RUN dotnet restore -r linux-musl-$TARGETARCH
 
 # copy and publish app and libraries
 COPY ManiaServerManager/. .
-RUN dotnet publish --no-restore -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app
+RUN dotnet publish --no-restore -o /app
+RUN rm /app/*.dbg
 
-# Remove dbg files
-RUN find /app -name '*.dbg' -delete
+# There are glibc issues since 3.18, this image solves them automatically, though it's not directly runtime-deps build
+# Some issues might arise with future .NET versions
+FROM frolvlad/alpine-glibc
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
+RUN apk add --no-cache libuuid
+
+# UID of the non-root user 'app', copied from .NET images
+ENV APP_UID=1654
+RUN addgroup --gid=$APP_UID app && adduser --uid=$APP_UID --ingroup=app --disabled-password app
+
+WORKDIR /app
+COPY --from=build /app .
+COPY --chown=$APP_UID --chmod=755 entrypoint.sh .
+
+RUN mkdir ./data
+RUN chown -R $APP_UID ./data
+RUN chmod -R 777 ./data
+
+VOLUME /app/data
 
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
 EXPOSE 3450/tcp
 EXPOSE 3450/udp
 
-WORKDIR /app
-COPY --from=build /app .
-
-RUN mkdir -p /app/versions /app/archives
-RUN chown -R $APP_UID /app/versions /app/archives
-RUN chmod -R 777 /app/versions
-
-VOLUME /app/versions /app/archives
-
 USER $APP_UID
-ENTRYPOINT ["./ManiaServerManager"]
+ENTRYPOINT ["./entrypoint.sh"]

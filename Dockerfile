@@ -1,10 +1,6 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
 ARG TARGETARCH
 WORKDIR /src
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy project file and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
@@ -17,7 +13,7 @@ RUN rm /app/*.dbg
 
 
 # Final stage/image
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
 
 EXPOSE 2350/tcp
 EXPOSE 2350/udp

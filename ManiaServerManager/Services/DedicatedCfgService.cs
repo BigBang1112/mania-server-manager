@@ -101,10 +101,10 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 
 		<p2p_cache_size>{{cfg.ConfigP2pCacheSize}}</p2p_cache_size>
 
-		<force_ip_address>{{cfg.ConfigForceIpAddress}}</force_ip_address>
+		<force_ip_address></force_ip_address>
 		<server_port>{{cfg.ConfigServerPort}}</server_port>
 		<client_port>{{cfg.ConfigClientPort}}</client_port>
-		<bind_ip_address>{{cfg.ConfigBindIpAddress}}</bind_ip_address>
+		<bind_ip_address></bind_ip_address>
 		<use_nat_upnp>{{cfg.ConfigUseNatUpnp}}</use_nat_upnp>
 
 		<gsp_name>{{cfg.ConfigGspName}}</gsp_name>						<!-- Game Server Provider name and info url -->
@@ -207,11 +207,11 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 
         <p2p_cache_size>{{cfg.ConfigP2pCacheSize}}</p2p_cache_size>
 
-        <force_ip_address>{{cfg.ConfigForceIpAddress}}</force_ip_address>
+        <force_ip_address></force_ip_address>
         <server_port>{{cfg.ConfigServerPort}}</server_port>
         <server_p2p_port>{{cfg.ConfigServerP2pPort}}</server_p2p_port>
         <client_port>{{cfg.ConfigClientPort}}</client_port>
-        <bind_ip_address>{{cfg.ConfigBindIpAddress}}</bind_ip_address>
+        <bind_ip_address></bind_ip_address>
         <use_nat_upnp>{{cfg.ConfigUseNatUpnp}}</use_nat_upnp>
 
         <gsp_name>{{cfg.ConfigGspName}}</gsp_name>						<!-- Game Server Provider name and info url -->
@@ -220,7 +220,7 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <xmlrpc_port>{{cfg.ConfigXmlRpcPort}}</xmlrpc_port>
         <xmlrpc_allowremote>{{cfg.ConfigXmlRpcAllowRemote}}</xmlrpc_allowremote>			<!-- If you specify an ip adress here, it'll be the only accepted adress. this will improve security. -->
 
-        <scriptcloud_source>{{cfg.ConfigScriptCloudSource}}</scriptcloud_source>		<!-- Specify the cloud storage mode for Titles that use it. Can be "localdebug" or "xmlrpc" or "nadeocloud" (default). "nadeocloud" will work only if the creator of the title subscribed to the cloud service. -->
+        <scriptcloud_source>{{cfg.ConfigScriptCloudSource.ToString().ToLowerInvariant()}}</scriptcloud_source>		<!-- Specify the cloud storage mode for Titles that use it. Can be "localdebug" or "xmlrpc" or "nadeocloud" (default). "nadeocloud" will work only if the creator of the title subscribed to the cloud service. -->
 
         
         <blacklist_url>{{cfg.ConfigBlacklistUrl}}</blacklist_url>
@@ -311,11 +311,11 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 		<connection_uploadrate>{{cfg.ConfigConnectionUploadRate}}</connection_uploadrate>		<!-- Kbps (kilo bits per second) -->
 		<connection_downloadrate>{{cfg.ConfigConnectionDownloadRate}}</connection_downloadrate>		<!-- Kbps -->
 
-		<force_ip_address>{{cfg.ConfigForceIpAddress}}</force_ip_address>
+		<force_ip_address></force_ip_address>
 		<server_port>{{cfg.ConfigServerPort}}</server_port>
 		<server_p2p_port>{{cfg.ConfigServerP2pPort}}</server_p2p_port>
 		<client_port>{{cfg.ConfigClientPort}}</client_port>
-		<bind_ip_address>{{cfg.ConfigBindIpAddress}}</bind_ip_address>
+		<bind_ip_address></bind_ip_address>
 		<use_nat_upnp>{{cfg.ConfigUseNatUpnp}}</use_nat_upnp>
 
 		<p2p_cache_size>{{cfg.ConfigP2pCacheSize}}</p2p_cache_size>
@@ -394,8 +394,8 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <client_port>{{cfg.ConfigClientPort}}</client_port>
         <xmlrpc_port>{{cfg.ConfigXmlRpcPort}}</xmlrpc_port>
         <xmlrpc_allowremote>{{cfg.ConfigXmlRpcAllowRemote}}</xmlrpc_allowremote>	// if you specify an ip adress here, it'll be the only accepted adress. this will improve security.
-        <bind_ip_address>{{cfg.ConfigBindIpAddress}}</bind_ip_address>
-        <force_ip_address>{{cfg.ConfigForceIpAddress}}</force_ip_address>
+        <bind_ip_address></bind_ip_address>
+        <force_ip_address></force_ip_address>
         <use_proxy>{{cfg.ConfigUseProxy}}</use_proxy>
         <proxy_login>{{cfg.ConfigProxyLogin}}</proxy_login>
         <proxy_password>{{cfg.ConfigProxyPassword}}</proxy_password>

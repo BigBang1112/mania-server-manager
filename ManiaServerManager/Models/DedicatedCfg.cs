@@ -1,5 +1,4 @@
 ﻿using ManiaServerManager.Enums;
-using System.Net;
 
 namespace ManiaServerManager.Models;
 
@@ -45,11 +44,11 @@ internal sealed class DedicatedCfg
     public int ConfigTrustClientSimuC2sSendingRate { get; set; } = 64;
     public bool ConfigAllowSpectatorRelays { get; set; }
     public int ConfigP2pCacheSize { get; set; } = 600;
-    public IPAddress? ConfigForceIpAddress { get; set; }
+    //public IPAddress? ConfigForceIpAddress { get; set; }
     public ushort ConfigServerPort { get; set; } = 2350;
     public ushort ConfigServerP2pPort { get; set; } = 3450;
     public ushort ConfigClientPort { get; set; } = 0;
-    public IPAddress? ConfigBindIpAddress { get; set; }
+    //public IPAddress? ConfigBindIpAddress { get; set; }
     public string ConfigUseNatUpnp { get; set; } = string.Empty;
     public string ConfigGspName { get; set; } = string.Empty;
     public string ConfigGspUrl { get; set; } = string.Empty;
