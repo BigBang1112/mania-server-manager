@@ -12,18 +12,47 @@ The server is not executed immeidately. Instead, a short-lived manager applicati
 
 The management application is written in C# and was built with NativeAOT and trimmed, allowing fast startup time and a very small image. It came out to be a convenient replacement for the Shell language.
 
-Alpine image uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) so that breaking changes in future Alpine versions can still handle the server executable without much hassle.
+## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
-## Advantaged over `docker-trackmania/forever` images
-
-- ManiaPlanet support
 - All Nadeo servers within a single image
-- Checks for update per restart, not per deployment - benefitial for ManiaPlanet title packs
-- Alternatively use the Windows executable with Wine
+- Checks for updates per restart, not per deployment - benefitial for ManiaPlanet title packs
+- Alternatively use the Windows executable with Wine (there's a use for it, soon^)
 - Specific versions can be picked, or the download sources can be modified
 - Many more possible options are configurable with environment variables
 - Supports niche command line arguments like `/validatepath`
 - Up-to-date base images
+
+## Image variants
+
+Various image variants are provided:
+
+- Ubuntu Noble (default)
+- Debian Bookworm (slim)
+- Alpine (recommended for image size)
+
+Multiple variants are available for `x86` (`amd64`) architectures only.
+
+### Ubuntu Noble
+
+This is the default for `latest`, for specific images it's `noble`. It is a stable image that doesn't install anything additionally to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
+
+### Debian Bookworm (slim)
+
+This is the Debian variant, tagged as `bookworm-slim`, whose image is actually 1MB bigger than Noble for some reason. Use this only if you prefer Debian image bases in your orchestration or any other layer caching reasons.
+
+### Alpine
+
+Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers as just 22MB image size.
+
+There's a chance this variant is less stable, but no issues have been found yet.
+
+It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) as a base so that breaking changes in future Alpine versions can still handle the server executable without much hassle.
+
+## Experimental ARM64 emulation support
+
+There's an ongoing experiment with ARM64 support to make it possible to run any Nadeo game server on a Raspberry PI or other low-cost devices.
+
+ARM64 is a future-proof variant of ARM, so it is supported over ARM32.
 
 ## Environment variables reference
 
@@ -47,14 +76,19 @@ Provided MatchSettings examples:
 
 - **`MSM_TITLE`** - Title pack ID (required when `MSM_SERVER_TYPE=ManiaPlanet`, example: `TMStadium@nadeo`)
 
+#### TMNESWC/TMSX-specific
+
+- `MSM_GAME` - Must be one of `nations`, `sunrise`, or `original`
+
 ### Optional variables
 
 #### Basic configuration
 
 - `MSM_SERVER_NAME` - Server name (default: `ManiaServerManager Server`)
-- `MSM_SERVER_VERSION` - Server version to download and setup (default: `Latest`)
+- `MSM_SERVER_PASSWORD` - Server password (default: none)
 - `MSM_DEDICATED_CFG` - Dedicated config filename (default: `dedicated_cfg.txt`)
 - `MSM_REINSTALL` - Special variable to trigger server and title pack overwrite on the same version that's otherwise regularly triggered on server updates per restart (default: `False`)
+- `MSM_LAN` - LAN mode (default: `False`)
 
 #### Download hosts
 
@@ -120,8 +154,8 @@ Provided MatchSettings examples:
 - `MSM_CFG_CONFIG_USE_NAT_UPNP` (default: none)
 - `MSM_CFG_CONFIG_GSP_NAME` (default: none)
 - `MSM_CFG_CONFIG_GSP_URL` (default: none)
-- `MSM_CFG_CONFIG_XMLRPC_PORT`  (default: `5000`)
-- `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE`  (default: `False`)
+- `MSM_CFG_CONFIG_XMLRPC_PORT` (default: `5000`)
+- `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE` - to enable XML-RPC communication. **Prefer specifying a concrete address** instead of just `True` (default: `False`)
 - `MSM_CFG_CONFIG_BLACKLIST_URL` (default: none)
 - `MSM_CFG_CONFIG_GUESTLIST_FILE_NAME` (default: none)
 - `MSM_CFG_CONFIG_BLACKLIST_FILE_NAME` (default: none)
@@ -141,14 +175,19 @@ Provided MatchSettings examples:
 - `MSM_CFG_CONFIG_PROXY_PASSWORD` - **only TMF/TM** (default: none)
 - `MSM_CFG_CONFIG_CONNECTION_TYPE` - **only TM** (default: `DSL_16384_4096`)
 
+Provided via command line arguments when starting the server:
+
+- `MSM_FORCE_IP` (default: none)
+- `MSM_BIND_IP` (default: none)
+
 #### Authorization settings
 
 These don't need to be changed if port 5000 is kept closed.
 
 - `MSM_CFG_AUTHORIZATION_SUPERADMIN_NAME` (default: `SuperAdmin`)
-- `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` (default: `SuperAdmin`)
+- `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` - if you use `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`, make sure to change it to something more secure! (default: `SuperAdmin`)
 - `MSM_CFG_AUTHORIZATION_ADMIN_NAME` (default: `Admin`)
-- `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD` (default: `Admin`)
+- `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD` - if you use `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`, make sure to change it to something more secure! (default: `Admin`)
 - `MSM_CFG_AUTHORIZATION_USER_NAME` (default: `User`)
 - `MSM_CFG_AUTHORIZATION_USER_PASSWORD` (default: `User`)
 
@@ -156,6 +195,11 @@ These don't need to be changed if port 5000 is kept closed.
 
 - `MSM_CFG_ACCOUNT_VALIDATION_KEY` - **only ManiaPlanet/TMF** (default: none)
 - `MSM_CFG_ACCOUNT_NATION` - **only TM** (default: none)
+
+#### Debug settings
+
+- `MSM_VERBOSE_RPC` (default: `False`)
+- `MSM_VERBOSE_RPC_FULL` (default: `False`)
 
 ## Example Docker Run
 
@@ -236,6 +280,27 @@ docker run -d \
   bigbang1112/mania-server-manager:alpine
 ```
 
+Different ports need to be also configured with variables (due to the way master server handles servers):
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=TM2020 \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_MATCH_SETTINGS=example.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -e MSM_CFG_CONFIG_SERVER_PORT=2355 \
+  -e MSM_CFG_CONFIG_SERVER_P2P_PORT=3455 \
+  -p 2355:2355/tcp \
+  -p 2355:2355/udp \
+  -p 3455:3455/tcp \
+  -p 3455:3455/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./GameData:/app/data/versions/TM2020_Latest/GameData \
+  bigbang1112/mania-server-manager:alpine
+```
+
 ## Example Docker Compose
 
 For TM2020:
@@ -260,7 +325,6 @@ services:
     volumes:
       - msm_archives:/app/data/archives
       - ./GameData:/app/data/versions/TM2020_Latest/GameData
-
 volumes:
   msm_archives:
 ```
@@ -288,7 +352,6 @@ services:
     volumes:
       - msm_archives:/app/data/archives
       - ./GameData:/app/data/versions/ManiaPlanet_Latest/GameData
-
 volumes:
   msm_archives:
 ```
@@ -315,7 +378,6 @@ services:
     volumes:
       - msm_archives:/app/data/archives
       - ./GameData:/app/data/versions/TMF_Latest/GameData
-
 volumes:
   msm_archives:
 ```
@@ -342,7 +404,42 @@ services:
     volumes:
       - msm_archives:/app/data/archives
       - ./GameData:/app/data/versions/TM_Latest/GameData
-
 volumes:
   msm_archives:
 ```
+
+Different ports need to be also configured with variables (due to the way master server handles servers):
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: TM2020
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_MATCH_SETTINGS: example.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+      MSM_CFG_CONFIG_SERVER_PORT: 2355
+      MSM_CFG_CONFIG_SERVER_P2P_PORT: 3455
+    ports:
+      - "2355:2355/tcp"
+      - "2355:2355/udp"
+      - "3455:3455/tcp"
+      - "3455:3455/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./GameData:/app/data/versions/TM2020_Latest/GameData
+volumes:
+  msm_archives:
+```
+
+## Quirks to be aware of on host network
+
+If you decide to use host for simplicity, make sure that:
+
+- You don't forget to change the XML-RPC port for each new server (if you want separate communication)
+- That your XML-RPC ports are behind a firewall if you set `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`
+- If you need to communicate XML-RPC remotely from any address (there are minimal reasons), absolutely make sure to change `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` and `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD`
