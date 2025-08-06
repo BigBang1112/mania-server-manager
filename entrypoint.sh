@@ -4,7 +4,17 @@ set -e
 # Runs the necessary setup of the server
 ./ManiaServerManager
 
-cd data/versions/ManiaPlanet_Latest
+
+if [ "$MSM_SERVER_TYPE" = "TM" ]; then
+    cd data/versions/TM_Latest
+elif [ "$MSM_SERVER_TYPE" = "TMF" ] || [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+    cd data/versions/TMF_Latest
+elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+    cd data/versions/ManiaPlanet_Latest
+else
+    echo "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
+    exit 1
+fi
 
 original_args="$@"
 
@@ -116,4 +126,13 @@ done
 # echo "> Parameters: $@"
 
 # Forward all constructed parameters to ManiaPlanetServer
-exec ./ManiaPlanetServer /nodaemon "$@"
+if [ "$MSM_SERVER_TYPE" = "TM" ]; then
+    exec ./TrackManiaServer /nodaemon "$@"
+elif [ "$MSM_SERVER_TYPE" = "TMF" ] || [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+    exec ./TrackmaniaServer /nodaemon "$@"
+elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+    exec ./ManiaPlanetServer /nodaemon "$@"
+else
+    echo "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
+    exit 1
+fi
