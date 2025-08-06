@@ -13,6 +13,19 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dockerfile: Dockerfile
+            tags: |
+              type=raw,value=latest
+              type=raw,value=noble
+          - dockerfile: Dockerfile.debian
+            tags: |
+              type=raw,value=bookworm-slim
+          - dockerfile: Dockerfile.alpine
+            tags: |
+              type=raw,value=alpine
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,11 +36,7 @@ jobs:
         with:
           images: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest
-            type=raw,value=noble
-            type=raw,value=bookworm-slim
-            type=raw,value=alpine
+          tags: ${{ matrix.tags }}
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -41,44 +50,14 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Build and push (latest)
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
+          file: ${{ matrix.dockerfile }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       
-      - name: Build and push (noble)
-        uses: docker/build-push-action@v6
-        with:
-          platforms: linux/amd64
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      
-      - name: Build and push (debian)
-        uses: docker/build-push-action@v6
-        with:
-          platforms: linux/amd64
-          file: Dockerfile.debian
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push (alpine)
-        uses: docker/build-push-action@v6
-        with:
-          platforms: linux/amd64
-          file: Dockerfile.alpine
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ steps.meta.outputs.tags }}
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
