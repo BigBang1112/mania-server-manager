@@ -37,13 +37,13 @@ else
     echo "> Password: **PROTECTED**"
     set -- "$@" "/password=${MSM_ACCOUNT_PASSWORD}"
 
-    if [ "$MSM_LAN" = "true" ] || [ "$MSM_LAN" = "1" ]; then
+    if [ "$MSM_LAN" = "True" ] || [ "$MSM_LAN" = "1" ]; then
         echo "> Lan: $MSM_LAN"
         set -- "$@" "/lan"
     fi
 
     if [ "$MSM_SERVER_TYPE" = "TM" ]; then
-        if [ "$MSM_LAN" != "true" ] && [ "$MSM_LAN" != "1" ]; then
+        if [ "$MSM_LAN" != "True" ] && [ "$MSM_LAN" != "1" ]; then
             set -- "$@" "/internet"
         fi
         echo "> Game: $MSM_GAME"
@@ -72,7 +72,7 @@ else
         set -- "$@" "/joinpassword=${MSM_JOIN_PASSWORD}"
     fi
 
-    if [ "$MSM_LOAD_CACHE" = "true" ] || [ "$MSM_LOAD_CACHE" = "1" ]; then
+    if [ "$MSM_LOAD_CACHE" = "True" ] || [ "$MSM_LOAD_CACHE" = "1" ]; then
         echo "> Load cache: $MSM_LOAD_CACHE"
         set -- "$@" "/loadcache"
     fi
@@ -87,12 +87,12 @@ else
         set -- "$@" "/bindip=${MSM_BIND_IP}"
     fi
 
-    if [ "$MSM_VERBOSE_RPC_FULL" = "true" ] || [ "$MSM_VERBOSE_RPC_FULL" = "1" ]; then
+    if [ "$MSM_VERBOSE_RPC_FULL" = "True" ] || [ "$MSM_VERBOSE_RPC_FULL" = "1" ]; then
         echo "> Verbose RPC Full: $MSM_VERBOSE_RPC_FULL"
         set -- "$@" "/verbose_rpc_full"
     fi
 
-    if [ "$MSM_VERBOSE_RPC" = "true" ] || [ "$MSM_VERBOSE_RPC" = "1" ]; then
+    if [ "$MSM_VERBOSE_RPC" = "True" ] || [ "$MSM_VERBOSE_RPC" = "1" ]; then
         echo "> Verbose RPC: $MSM_VERBOSE_RPC"
         set -- "$@" "/verbose_rpc"
     fi
