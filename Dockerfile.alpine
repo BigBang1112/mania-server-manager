@@ -30,8 +30,6 @@ RUN mkdir ./data
 RUN chown -R $APP_UID ./data
 RUN chmod -R 777 ./data
 
-VOLUME /app/data
-
 EXPOSE 2350/tcp
 EXPOSE 2350/udp
 EXPOSE 3450/tcp

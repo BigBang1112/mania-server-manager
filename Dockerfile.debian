@@ -32,7 +32,5 @@ RUN mkdir ./data
 RUN chown -R $APP_UID ./data
 #RUN chmod -R 777 ./data
 
-VOLUME /app/data
-
 USER $APP_UID
 ENTRYPOINT ["./entrypoint.sh"]

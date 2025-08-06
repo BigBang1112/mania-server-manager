@@ -37,7 +37,5 @@ RUN mkdir -p /app/versions /app/archives
 RUN chown -R $APP_UID /app/versions /app/archives
 RUN chmod -R 777 /app/versions
 
-VOLUME /app/versions /app/archives
-
 #USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
