@@ -224,7 +224,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./GameData:/app/data/versions/TM2020_Latest/GameData \
+  -v ./MyServer:/app/data/versions/TM2020_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -244,7 +244,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./GameData:/app/data/versions/ManiaPlanet_Latest/GameData \
+  -v ./MyServer:/app/data/versions/ManiaPlanet_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -263,7 +263,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./GameData:/app/data/versions/TMF_Latest/GameData \
+  -v ./MyServer:/app/data/versions/TMF_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -282,7 +282,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./GameData:/app/data/versions/TM_Latest/GameData \
+  -v ./MyServer:/app/data/versions/TM_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -303,7 +303,7 @@ docker run -d \
   -p 3455:3455/tcp \
   -p 3455:3455/udp \
   -v msm_archives:/app/data/archives \
-  -v ./GameData:/app/data/versions/TM2020_Latest/GameData \
+  -v ./MyServer:/app/data/versions/TM2020_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -330,7 +330,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./GameData:/app/data/versions/TM2020_Latest/GameData
+      - ./MyServer:/app/data/versions/TM2020_Latest
 volumes:
   msm_archives:
 ```
@@ -357,7 +357,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./GameData:/app/data/versions/ManiaPlanet_Latest/GameData
+      - ./MyServer:/app/data/versions/ManiaPlanet_Latest
 volumes:
   msm_archives:
 ```
@@ -383,7 +383,7 @@ services:
       - "3452:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./GameData:/app/data/versions/TMF_Latest/GameData
+      - ./MyServer:/app/data/versions/TMF_Latest
 volumes:
   msm_archives:
 ```
@@ -409,7 +409,7 @@ services:
       - "3453:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./GameData:/app/data/versions/TM_Latest/GameData
+      - ./MyServer:/app/data/versions/TM_Latest
 volumes:
   msm_archives:
 ```
@@ -437,7 +437,7 @@ services:
       - "3455:3455/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./GameData:/app/data/versions/TM2020_Latest/GameData
+      - ./MyServer:/app/data/versions/TM2020_Latest
 volumes:
   msm_archives:
 ```

@@ -1,0 +1,50 @@
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: ManiaPlanet
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_TITLE: TMStadium@nadeo
+      MSM_MATCH_SETTINGS: NadeoTimeAttack.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+      MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE: minicontrol
+    ports:
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
+    volumes:
+      - ./my-tm2-minicontrol-server:/app/data/versions/ManiaPlanet_Latest
+      - msm-archives:/app/data/archives
+    
+  minicontrol:
+    image: evoesports/minicontrol
+    restart: unless-stopped
+    environment:
+      XMLRPC_HOST: server
+      XMLRPC_PORT: 5000
+      XMLRPC_USER: SuperAdmin
+      XMLRPC_PASS: SuperAdmin
+      EXCLUDED_PLUGINS: "tm2020, tmnf/freezone"
+      DEDIMANIA_PASS: your_password # use same pass as MSM_ACCOUNT_PASSWORD
+      DATABASE: mysql://user:pass@host:port/db
+      ERROR_REPORTING: true
+      DEBUG: false
+      DEBUGLEVEL: 1
+      ANSILEVEL: 2
+      TALIMIT: 300
+      # initial admin access, you can add more admin ingame later with //admin add <login>
+      ADMINS: ""
+    networks:
+      - default
+      - db_mariadb
+
+networks:
+  db_mariadb:
+    external: true
+
+volumes:
+  msm-archives:
