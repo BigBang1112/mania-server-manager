@@ -117,6 +117,11 @@ internal sealed class ServerSetupService : IServerSetupService
 
     private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType, bool isLatest)
     {
+        if (isLatest)
+        {
+            return $"{serverType}_{Constants.LatestUpper}";
+        }
+
         using var archive = new ZipArchive(serverZipStream, ZipArchiveMode.Read, leaveOpen: true);
 
         var executableName = serverType switch
@@ -128,11 +133,6 @@ internal sealed class ServerSetupService : IServerSetupService
         };
 
         var executableEntry = archive.GetEntry(executableName) ?? throw new Exception("Executable not found");
-
-        if (isLatest)
-        {
-            return $"{serverType}_{Constants.LatestUpper}";
-        }
 
         return $"{serverType}_{executableEntry.LastWriteTime:yyyy-MM-dd}";
     }
