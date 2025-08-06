@@ -4,11 +4,14 @@ set -e
 # Runs the necessary setup of the server
 ./ManiaServerManager
 
+echo "> Server Type: $MSM_SERVER_TYPE"
 
 if [ "$MSM_SERVER_TYPE" = "TM" ]; then
     cd data/versions/TM_Latest
-elif [ "$MSM_SERVER_TYPE" = "TMF" ] || [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
     cd data/versions/TMF_Latest
+elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+    cd data/versions/TM2020_Latest
 elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
     cd data/versions/ManiaPlanet_Latest
 else
@@ -128,7 +131,11 @@ done
 # Forward all constructed parameters to ManiaPlanetServer
 if [ "$MSM_SERVER_TYPE" = "TM" ]; then
     exec ./TrackManiaServer /nodaemon "$@"
-elif [ "$MSM_SERVER_TYPE" = "TMF" ] || [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
+    mkdir -p ./Logs && touch ./Logs/ConsoleLog.1.txt
+    ln -sf /proc/self/fd/1 ./Logs/ConsoleLog.1.txt
+    exec ./TrackmaniaServer /nodaemon "$@"
+elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
     exec ./TrackmaniaServer /nodaemon "$@"
 elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
     exec ./ManiaPlanetServer /nodaemon "$@"
