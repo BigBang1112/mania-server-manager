@@ -1,1 +1,348 @@
 # ManiaServerManager
+
+ManiaServerManager (MSM) is NOT a server controller! It is a stock server manager for all Trackmania and Shootmania versions.
+
+You can easily open a communication between your server controller using this manager. In fact, it forces you to separate your server controller from your stock server.
+
+This tool is meant to be run with Docker, but it can be also integrated in other ways.
+
+## How it works
+
+The server is not executed immeidately. Instead, a short-lived manager application is launched which downloads all of the necessities and configures everything. The server is then launched afterwards, the shell handles command line argument propagation.
+
+The management application is written in C# and was built with NativeAOT and trimmed, allowing fast startup time and a very small image. It came out to be a convenient replacement for the Shell language.
+
+Alpine image uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) so that breaking changes in future Alpine versions can still handle the server executable without much hassle.
+
+## Advantaged over `docker-trackmania/forever` images
+
+- ManiaPlanet support
+- All Nadeo servers within a single image
+- Checks for update per restart, not per deployment - benefitial for ManiaPlanet title packs
+- Alternatively use the Windows executable with Wine
+- Specific versions can be picked, or the download sources can be modified
+- Many more possible options are configurable with environment variables
+- Supports niche command line arguments like `/validatepath`
+- Up-to-date base images
+
+## Environment variables reference
+
+### Required variables
+
+#### Server configuration
+
+- **`MSM_SERVER_TYPE`** - Server type, must be one of: `TM2020`, `ManiaPlanet`, `TMF`, or `TM` (TMNESWC/TMSX)
+- **`MSM_ACCOUNT_LOGIN`** - Server account login
+- **`MSM_ACCOUNT_PASSWORD`** - Server account password
+- **`MSM_MATCH_SETTINGS`** - MatchSettings file path relative to `UserData/Maps/MatchSettings` OR `GameData/Tracks/MatchSettings`
+  - OR `MSM_GAME_SETTINGS` - MatchSettings file path relative to `UserData/Maps` OR `GameData/Tracks`
+
+Provided MatchSettings examples:
+
+- [Official](OFFICIAL_MATCHSETTINGS.md)
+- For Trackmania 2 official title packs:
+  - `NadeoTimeAttack.txt`
+
+#### ManiaPlanet-specific
+
+- **`MSM_TITLE`** - Title pack ID (required when `MSM_SERVER_TYPE=ManiaPlanet`, example: `TMStadium@nadeo`)
+
+### Optional variables
+
+#### Basic configuration
+
+- `MSM_SERVER_NAME` - Server name (default: `ManiaServerManager Server`)
+- `MSM_SERVER_VERSION` - Server version to download and setup (default: `Latest`)
+- `MSM_DEDICATED_CFG` - Dedicated config filename (default: `dedicated_cfg.txt`)
+- `MSM_REINSTALL` - Special variable to trigger server and title pack overwrite on the same version that's otherwise regularly triggered on server updates per restart (default: `False`)
+
+#### Download hosts
+
+- `MSM_SERVER_DOWNLOAD_HOST_ALL` - Override download host for all server types, if you host all types of servers on some URL (default: none)
+- `MSM_SERVER_DOWNLOAD_HOST_TM2020` - Override download host for TM2020 servers (default: https://nadeo-download.cdn.ubi.com/trackmania)
+- `MSM_SERVER_DOWNLOAD_HOST_MANIAPLANET` - Override download host for ManiaPlanet servers (default: http://files.v04.maniaplanet.com/server)
+- `MSM_SERVER_DOWNLOAD_HOST_TMF` - Override download host for TMF servers (default: http://files2.trackmaniaforever.com)
+- `MSM_SERVER_DOWNLOAD_HOST_TM` - Override download host for TMNESWC/TMSX servers (default: http://slig.free.fr/TM/dedicated)
+
+#### Title pack configuration (ManiaPlanet)
+
+- `MSM_IGNORE_TITLE_DOWNLOAD` - Skip title pack download (default: `False`)
+- `MSM_TITLE_DOWNLOAD_HOST` - Title pack download host (default: https://maniaplanet.com/ingame/public/titles/download)
+
+#### Server settings
+
+- `MSM_CFG_SERVER_COMMENT` - Server description (default: none)
+- `MSM_CFG_SERVER_HIDE_SERVER` - How to show/hide the server from the browser, values:
+  - `AlwaysShown` (default)
+  - `AlwaysHidden`
+  - `HiddenFromNations`
+- `MSM_CFG_SERVER_MAX_PLAYERS` (default: `32`)
+- `MSM_CFG_SERVER_MAX_SPECTATORS` (default: `32`)
+- `MSM_CFG_SERVER_PASSWORD_SPECTATOR` (default: none)
+- `MSM_CFG_SERVER_KEEP_PLAYER_SLOTS` (default: `False`)
+- `MSM_CFG_SERVER_LADDER_MODE` - values:
+  - `Inactive` (default)
+  - `Forced`
+  - `Normal` (old value)
+- `MSM_CFG_SERVER_ENABLE_P2P_UPLOAD` (default: `True`)
+- `MSM_CFG_SERVER_ENABLE_P2P_DOWNLOAD` (default: `False`)
+- `MSM_CFG_SERVER_CALLVOTE_TIMEOUT` - vote timeout in milliseconds (default: `60000`)
+- `MSM_CFG_SERVER_CALLVOTE_RATIO` - vote ratio to succeed (default: `0.5`)
+- `MSM_CFG_SERVER_ALLOW_MAP_DOWNLOAD` (default: `True`)
+- `MSM_CFG_SERVER_AUTOSAVE_REPLAYS` (default: `False`)
+- `MSM_CFG_SERVER_AUTOSAVE_VALIDATION_REPLAYS` (default: `False`)
+- `MSM_CFG_SERVER_REFEREE_PASSWORD` (default: none)
+- `MSM_CFG_SERVER_REFEREE_VALIDATION_MODE` - values:
+  - `OnlyTop3` (default)
+  - `AllPlayers`   
+- `MSM_CFG_SERVER_USE_CHANGING_VALIDATION_SEED` (default: `False`)
+- `MSM_CFG_SERVER_DISABLE_HORNS` (default: `False`)
+- `MSM_CFG_SERVER_DISABLE_PROFILE_SKINS` (default: `False`)
+- `MSM_CFG_SERVER_CLIENT_INPUTS_MAX_LATENCY` (default: `False`)
+- `MSM_CFG_SERVER_LADDER_SERVER_LIMIT_MIN` - **only TMF** (default: `0`)
+- `MSM_CFG_SERVER_LADDER_SERVER_LIMIT_MAX` - **only TMF** (default: `50000`)
+
+#### Connection settings
+
+- `MSM_CFG_CONFIG_CONNECTION_UPLOAD_RATE` (default: `102400`)
+- `MSM_CFG_CONFIG_CONNECTION_DOWNLOAD_RATE` (default: `102400`)
+- `MSM_CFG_CONFIG_WORKER_THREAD_COUNT` - **only TM2020** (default: `2`)
+- `MSM_CFG_CONFIG_PACKETASSEMBLY_MULTITHREAD` - **only TM2020** (default: `True`)
+- `MSM_CFG_CONFIG_PACKETASSEMBLY_PACKETS_PER_FRAME` - **only TM2020** (default: `60`)
+- `MSM_CFG_CONFIG_PACKETASSEMBLY_FULL_PACKETS_PER_FRAME` - **only TM2020** (default: `30`)
+- `MSM_CFG_CONFIG_DELAYED_VISUALS_S2C_SENDING_RATE` - **only TM2020** (default: `32`)
+- `MSM_CFG_CONFIG_TRUST_CLIENT_SIMU_C2S_SENDING_RATE` - **only TM2020** (default: `64`)
+- `MSM_CFG_CONFIG_ALLOW_SPECTATOR_RELAYS` (default: `False`)
+- `MSM_CFG_CONFIG_P2P_CACHE_SIZE` (default: `600`)
+- `MSM_CFG_CONFIG_SERVER_PORT` (default: `2350`)
+- `MSM_CFG_CONFIG_SERVER_P2P_PORT` (default: `3450`)
+- `MSM_CFG_CONFIG_CLIENT_PORT` (default: `0`)
+- `MSM_CFG_CONFIG_USE_NAT_UPNP` (default: none)
+- `MSM_CFG_CONFIG_GSP_NAME` (default: none)
+- `MSM_CFG_CONFIG_GSP_URL` (default: none)
+- `MSM_CFG_CONFIG_XMLRPC_PORT`  (default: `5000`)
+- `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE`  (default: `False`)
+- `MSM_CFG_CONFIG_BLACKLIST_URL` (default: none)
+- `MSM_CFG_CONFIG_GUESTLIST_FILE_NAME` (default: none)
+- `MSM_CFG_CONFIG_BLACKLIST_FILE_NAME` (default: none)
+- `MSM_CFG_CONFIG_MINIMUM_CLIENT_BUILD` - **only TM2020/ManiaPlanet** (default: none)
+- `MSM_CFG_CONFIG_DISABLE_COHERENCE_CHECKS` (default: `False`)
+- `MSM_CFG_CONFIG_DISABLE_REPLAY_RECORDING` (default: `False`)
+- `MSM_CFG_CONFIG_SAVE_ALL_INDIVIDUAL_RUNS` (default: `False`)
+- `MSM_CFG_CONFIG_USE_PROXY` (default: `False`)
+- `MSM_CFG_CONFIG_PROXY_URL` - **only TM2020/ManiaPlanet** (default: none)
+- `MSM_CFG_CONFIG_PACKETASSEMBLY_THREAD_COUNT` - **only TM2020/ManiaPlanet** (default: `1`)
+- `MSM_CFG_CONFIG_SCRIPTCLOUD_SOURCE` - **only ManiaPlanet**, values:
+  - `NadeoCloud` (default)
+  - `LocalDebug`
+  - `XmlRpc`
+- `MSM_CFG_CONFIG_PACK_MASK` - **only TMF** (default: `stadium`)
+- `MSM_CFG_CONFIG_PROXY_LOGIN` - **only TMF/TM** (default: none)
+- `MSM_CFG_CONFIG_PROXY_PASSWORD` - **only TMF/TM** (default: none)
+- `MSM_CFG_CONFIG_CONNECTION_TYPE` - **only TM** (default: `DSL_16384_4096`)
+
+#### Authorization settings
+
+These don't need to be changed if port 5000 is kept closed.
+
+- `MSM_CFG_AUTHORIZATION_SUPERADMIN_NAME` (default: `SuperAdmin`)
+- `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` (default: `SuperAdmin`)
+- `MSM_CFG_AUTHORIZATION_ADMIN_NAME` (default: `Admin`)
+- `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD` (default: `Admin`)
+- `MSM_CFG_AUTHORIZATION_USER_NAME` (default: `User`)
+- `MSM_CFG_AUTHORIZATION_USER_PASSWORD` (default: `User`)
+
+#### Account settings
+
+- `MSM_CFG_ACCOUNT_VALIDATION_KEY` - **only ManiaPlanet/TMF** (default: none)
+- `MSM_CFG_ACCOUNT_NATION` - **only TM** (default: none)
+
+## Example Docker Run
+
+For TM2020:
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=TM2020 \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_MATCH_SETTINGS=example.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -p 2350:2350/tcp \
+  -p 2350:2350/udp \
+  -p 3450:3450/tcp \
+  -p 3450:3450/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./GameData:/app/data/versions/TM2020_Latest/GameData \
+  bigbang1112/mania-server-manager:alpine
+```
+
+For ManiaPlanet:
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=ManiaPlanet \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_TITLE=TMStadium@nadeo \
+  -e MSM_MATCH_SETTINGS=NadeoTimeAttack.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -p 2350:2350/tcp \
+  -p 2350:2350/udp \
+  -p 3450:3450/tcp \
+  -p 3450:3450/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./GameData:/app/data/versions/ManiaPlanet_Latest/GameData \
+  bigbang1112/mania-server-manager:alpine
+```
+
+For TMF:
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=TMF \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_MATCH_SETTINGS=Nations/NationsWhite.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -p 2350:2350/tcp \
+  -p 2350:2350/udp \
+  -p 3450:3450/tcp \
+  -p 3450:3450/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./GameData:/app/data/versions/TMF_Latest/GameData \
+  bigbang1112/mania-server-manager:alpine
+```
+
+For TMNESWC:
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=TM \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_MATCH_SETTINGS=Internet/ProRace.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -p 2350:2350/tcp \
+  -p 2350:2350/udp \
+  -p 3450:3450/tcp \
+  -p 3450:3450/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./GameData:/app/data/versions/TM_Latest/GameData \
+  bigbang1112/mania-server-manager:alpine
+```
+
+## Example Docker Compose
+
+For TM2020:
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: TM2020
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_MATCH_SETTINGS: example.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+    ports:
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./GameData:/app/data/versions/TM2020_Latest/GameData
+
+volumes:
+  msm_archives:
+```
+
+For ManiaPlanet:
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: ManiaPlanet
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_TITLE: TMStadium@nadeo
+      MSM_MATCH_SETTINGS: NadeoTimeAttack.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+    ports:
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./GameData:/app/data/versions/ManiaPlanet_Latest/GameData
+
+volumes:
+  msm_archives:
+```
+
+For TMF:
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: TMF
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_MATCH_SETTINGS: Nations/NationsWhite.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+    ports:
+      - "2352:2350/tcp"
+      - "2352:2350/udp"
+      - "3452:3450/tcp"
+      - "3452:3450/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./GameData:/app/data/versions/TMF_Latest/GameData
+
+volumes:
+  msm_archives:
+```
+
+For TMNESWC:
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: TM
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_MATCH_SETTINGS: Internet/ProRace.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+    ports:
+      - "2353:2350/tcp"
+      - "2353:2350/udp"
+      - "3453:3450/tcp"
+      - "3453:3450/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./GameData:/app/data/versions/TM_Latest/GameData
+
+volumes:
+  msm_archives:
+```
