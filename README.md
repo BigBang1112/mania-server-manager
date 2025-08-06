@@ -4,7 +4,7 @@ ManiaServerManager (MSM) is NOT a server controller! It is a stock server manage
 
 You can easily open a communication between your server controller using this manager. In fact, it forces you to separate your server controller from your stock server.
 
-This tool is meant to be run with Docker, but it can be also integrated in other ways.
+This tool is meant to be run with Docker, but can be also integrated in other ways.
 
 ## How it works
 
@@ -14,10 +14,10 @@ The management application is written in C# and was built with NativeAOT and tri
 
 ## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
-- All Nadeo servers within a single image
+- All Nadeo game servers within a single image
 - Checks for updates per restart, not per deployment - benefitial for ManiaPlanet title packs
-- Alternatively use the Windows executable with Wine (there's a use for it, soon^)
-- Specific versions can be picked, or the download sources can be modified
+- Specific versions can be picked, or the download sources can be modified (there's a use for it, soon^^)
+- Alternatively use the Windows executable with Wine (there's a use for it, soon^^)
 - Many more possible options are configurable with environment variables
 - Supports niche command line arguments like `/validatepath`
 - Up-to-date base images
@@ -34,7 +34,7 @@ Multiple variants are available for `x86` (`amd64`) architectures only.
 
 ### Ubuntu Noble
 
-This is the default for `latest`, for specific images it's `noble`. It is a stable image that doesn't install anything additionally to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
+This is the default for `latest`, specifically tagged as `noble`. It is a stable image that doesn't install anything additionally to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
 
 ### Debian Bookworm (slim)
 
@@ -42,17 +42,19 @@ This is the Debian variant, tagged as `bookworm-slim`, whose image is actually 1
 
 ### Alpine
 
-Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers as just 22MB image size.
-
-There's a chance this variant is less stable, but no issues have been found yet.
+Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers as just 22MB image size. There's a chance this variant is less stable, but no issues have been found yet.
 
 It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) as a base so that breaking changes in future Alpine versions can still handle the server executable without much hassle.
 
 ## Experimental ARM64 emulation support
 
-There's an ongoing experiment with ARM64 support to make it possible to run any Nadeo game server on a Raspberry PI or other low-cost devices.
+There's an ongoing experiment with ARM64 support to make it possible to run any Nadeo game server on a Raspberry PI or other low-cost devices. ARM64 is a future-proof variant of ARM, so it is supported over ARM32.
 
-ARM64 is a future-proof variant of ARM, so it is supported over ARM32.
+Alpine is not supported here for obvious complexity reasons.
+
+## Wine for running Windows
+
+Because there seem to be minor build differences between Windows and Linux dedicated server builds, there are additional images, suffixed with `-wine` to emulate the Windows build on Linux.
 
 ## Environment variables reference
 
@@ -182,7 +184,7 @@ Provided via command line arguments when starting the server:
 
 #### Authorization settings
 
-These don't need to be changed if port 5000 is kept closed.
+These don't need to be changed if port 5000 is not publically accessible.
 
 - `MSM_CFG_AUTHORIZATION_SUPERADMIN_NAME` (default: `SuperAdmin`)
 - `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` - if you use `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`, make sure to change it to something more secure! (default: `SuperAdmin`)
@@ -438,7 +440,7 @@ volumes:
 
 ## Quirks to be aware of on host network
 
-If you decide to use host for simplicity, make sure that:
+If you decide to use host for simplicity/performance, make sure that:
 
 - You don't forget to change the XML-RPC port for each new server (if you want separate communication)
 - That your XML-RPC ports are behind a firewall if you set `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`
