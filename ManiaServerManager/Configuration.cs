@@ -239,8 +239,7 @@ internal sealed class Configuration : IConfiguration
         if (ushort.TryParse(Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_XMLRPC_PORT"), out var xmlRpcPort))
             Cfg.ConfigXmlRpcPort = xmlRpcPort;
 
-        if (bool.TryParse(Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE"), out var xmlRpcAllowRemote))
-            Cfg.ConfigXmlRpcAllowRemote = xmlRpcAllowRemote;
+        Cfg.ConfigXmlRpcAllowRemote = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE") ?? Cfg.ConfigXmlRpcAllowRemote;
 
         Cfg.ConfigBlacklistUrl = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_BLACKLIST_URL") ?? Cfg.ConfigBlacklistUrl;
         Cfg.ConfigGuestlistFileName = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_GUESTLIST_FILE_NAME") ?? Cfg.ConfigGuestlistFileName;

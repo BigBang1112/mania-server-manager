@@ -53,7 +53,7 @@ internal sealed class DedicatedCfg
     public string ConfigGspName { get; set; } = string.Empty;
     public string ConfigGspUrl { get; set; } = string.Empty;
     public ushort ConfigXmlRpcPort { get; set; } = 5000;
-    public bool ConfigXmlRpcAllowRemote { get; set; }
+    public string ConfigXmlRpcAllowRemote { get; set; } = "False";
     public string ConfigBlacklistUrl { get; set; } = string.Empty;
     public string ConfigGuestlistFileName { get; set; } = string.Empty;
     public string ConfigBlacklistFileName { get; set; } = string.Empty;
