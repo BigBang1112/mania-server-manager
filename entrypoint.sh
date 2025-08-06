@@ -130,6 +130,8 @@ done
 
 # Forward all constructed parameters to ManiaPlanetServer
 if [ "$MSM_SERVER_TYPE" = "TM" ]; then
+    mkdir -p ./Logs && touch ./Logs/ConsoleLog.1.txt
+    ln -sf /proc/self/fd/1 ./Logs/ConsoleLog.1.txt
     exec ./TrackManiaServer /nodaemon "$@"
 elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
     mkdir -p ./Logs && touch ./Logs/ConsoleLog.1.txt
