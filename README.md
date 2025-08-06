@@ -1,23 +1,27 @@
 # ManiaServerManager
 
+[![Docker pulls](https://img.shields.io/docker/pulls/bigbang1112/mania-server-manager?style=for-the-badge&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/bigbang1112/mania-server-manager?include_prereleases&style=for-the-badge&logo=github)](https://github.com/bigbang1112/mania-server-manager/releases)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/bigbang1112/mania-server-manager/master?style=for-the-badge&logo=github)](https://github.com/BigBang1112/mania-server-manager)
+
 ManiaServerManager (MSM) is NOT a server controller! It is a stock server manager for all Trackmania and Shootmania versions.
 
 You can easily open a communication between your server controller using this manager. In fact, it forces you to separate your server controller from your stock server.
 
-This tool is meant to be run with Docker, but can be also integrated in other ways.
+This tool is meant to be run with Docker, but can also be integrated in other ways.
 
 ## How it works
 
-The server is not executed immeidately. Instead, a short-lived manager application is launched which downloads all of the necessities and configures everything. The server is then launched afterwards, the shell handles command line argument propagation.
+The server is not executed immediately. Instead, a short-lived manager application is launched, which downloads all of the necessities and configures everything. The server is then launched afterwards, and the shell handles command-line argument propagation.
 
-The management application is written in C# and was built with NativeAOT and trimmed, allowing fast startup time and a very small image. It came out to be a convenient replacement for the Shell language.
+The management application is written in C# and was built with NativeAOT and trimmed, allowing fast startup time and a very small image. It turned out to be a convenient replacement for the Shell language.
 
 ## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
 - All Nadeo game servers within a single image
-- Checks for updates per restart, not per deployment - benefitial for ManiaPlanet title packs
+- Checks for updates per restart, not per deployment - beneficial for ManiaPlanet title packs
 - Specific versions can be picked, or the download sources can be modified (there's a use for it, soon^^)
-- Alternatively use the Windows executable with Wine (there's a use for it, soon^^)
+- Alternatively, use the Windows executable with Wine (there's a use for it, soon^^)
 - Many more possible options are configurable with environment variables
 - Supports niche command line arguments like `/validatepath`
 - Up-to-date base images
@@ -34,7 +38,7 @@ Multiple variants are available for `x86` (`amd64`) architectures only.
 
 ### Ubuntu Noble
 
-This is the default for `latest`, specifically tagged as `noble`. It is a stable image that doesn't install anything additionally to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
+This is the default for `latest`, specifically tagged as `noble`. It is a stable image that doesn't install anything additional to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
 
 ### Debian Bookworm (slim)
 
@@ -42,9 +46,9 @@ This is the Debian variant, tagged as `bookworm-slim`, whose image is actually 1
 
 ### Alpine
 
-Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers as just 22MB image size. There's a chance this variant is less stable, but no issues have been found yet.
+Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers with just 24MB image size. There's a chance this variant is less stable, but no issues have been found yet.
 
-It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) as a base so that breaking changes in future Alpine versions can still handle the server executable without much hassle.
+It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) as a base so that breaking changes in future Alpine versions can still be handled by the server executable without much hassle.
 
 ## Experimental ARM64 emulation support
 
