@@ -25,8 +25,8 @@ COPY --from=build /app .
 COPY --chown=$APP_UID --chmod=755 entrypoint.sh .
 
 RUN mkdir ./data
-RUN chown -R $APP_UID ./data
-#RUN chmod -R 777 ./data
+RUN chown -R $APP_UID:$APP_UID ./data
+RUN chmod -R u+w ./data
 
 USER $APP_UID
 ENTRYPOINT ["./entrypoint.sh"]
