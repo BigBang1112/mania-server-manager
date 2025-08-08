@@ -93,8 +93,8 @@ Provided MatchSettings examples:
 - `MSM_SERVER_NAME` - Server name (default: `ManiaServerManager Server`)
 - `MSM_SERVER_PASSWORD` - Server password (default: none)
 - `MSM_DEDICATED_CFG` - Dedicated config filename (default: `dedicated_cfg.txt`)
-- `MSM_REINSTALL` - Special variable to trigger server and title pack overwrite on the same version that's otherwise regularly triggered on server updates per restart (default: `False`)
 - `MSM_LAN` - LAN mode (default: `False`)
+- `MSM_REINSTALL` - Special variable to trigger server and title pack overwrite on the same version that's otherwise regularly triggered on server updates per restart (default: `False`)
 
 #### Download hosts
 
@@ -185,6 +185,9 @@ Provided via command line arguments when starting the server:
 
 - `MSM_FORCE_IP` (default: none)
 - `MSM_BIND_IP` (default: none)
+- `MSM_JOIN` (default: none)
+- `MSM_JOIN_PASSWORD` (default: none)
+- `MSM_LOAD_CACHE` (default: `False`) - loads the "checksum.txt" instead of recomputing it, to speed up first launch time if P2P is enabled. DO NOT USE if you run several servers in the same directory!
 
 #### Authorization settings
 
@@ -206,6 +209,14 @@ These don't need to be changed if port 5000 is not publically accessible.
 
 - `MSM_VERBOSE_RPC` (default: `False`)
 - `MSM_VERBOSE_RPC_FULL` (default: `False`)
+
+#### Specialized settings
+
+- `MSM_SERVER_VERSION` (default: `Latest`)
+- `MSM_VALIDATE_PATH` - specify validation path (this invalidates previous server variable requirements)
+- `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements)
+- `MSM_ONLY_SETUP` - only run the setup without running the server
+- `MSM_ONLY_SERVER_LOG` - avoid logging anything than server's stdout, useful for `MSM_VALIDATE_PATH` or `MSM_PARSE_GBX`
 
 ## Example Docker Run
 
