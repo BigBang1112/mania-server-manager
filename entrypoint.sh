@@ -23,6 +23,10 @@ log "> Server Type: $MSM_SERVER_TYPE"
 
 cd data/versions
 
+if [ -z "$MSM_SERVER_VERSION" ]; then
+    MSM_SERVER_VERSION="Latest"
+fi
+
 if [ "$MSM_SERVER_TYPE" = "TM" ]; then
     cd TM_$MSM_SERVER_VERSION
 elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
