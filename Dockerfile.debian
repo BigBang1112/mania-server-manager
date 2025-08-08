@@ -26,9 +26,11 @@ EXPOSE 3450/udp
 
 WORKDIR /app
 COPY --from=build /app .
-COPY --chown=$APP_UID --chmod=755 entrypoint.sh .
+COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
 
-RUN mkdir /app/data && chown $APP_UID:app /app/data && chmod 775 /app/data
+RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data
+
+EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
 
 USER $APP_UID
 ENTRYPOINT ["./entrypoint.sh"]
