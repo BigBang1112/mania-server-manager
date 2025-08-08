@@ -2,17 +2,21 @@
 set -e
 
 log() {
-    if [ "$MSM_STDOUT" = "True" ] || [ "$MSM_STDOUT" = "1" ]; then
+    if [ "$MSM_ONLY_SERVER_LOG" = "True" ] || [ "$MSM_ONLY_SERVER_LOG" = "1" ]; then
         echo "$1"
     fi
     # TODO: else write to a log file
 }
 
 # Runs the necessary setup of the server
-if [ "$MSM_STDOUT" = "True" ] || [ "$MSM_STDOUT" = "1" ]; then
+if [ "$MSM_ONLY_SERVER_LOG" = "True" ] || [ "$MSM_ONLY_SERVER_LOG" = "1" ]; then
     ./ManiaServerManager > /dev/null 2>&1
 else
     ./ManiaServerManager
+fi
+
+if [ "$MSM_ONLY_SETUP" = "True" ] || [ "$MSM_ONLY_SETUP" = "1" ]; then
+    exit 0
 fi
 
 log "> Server Type: $MSM_SERVER_TYPE"
@@ -20,13 +24,13 @@ log "> Server Type: $MSM_SERVER_TYPE"
 cd data/versions
 
 if [ "$MSM_SERVER_TYPE" = "TM" ]; then
-    cd TM_Latest
+    cd TM_$MSM_SERVER_VERSION
 elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
-    cd TMF_Latest
+    cd TMF_$MSM_SERVER_VERSION
 elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-    cd TM2020_Latest
+    cd TM2020_$MSM_SERVER_VERSION
 elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-    cd ManiaPlanet_Latest
+    cd ManiaPlanet_$MSM_SERVER_VERSION
 else
     log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
     exit 1
@@ -132,11 +136,6 @@ fi
 
 if [ -n "$MSM_TITLE" ]; then
     set -- "$@" "/title=${MSM_TITLE}"
-fi
-
-if [ -n "$MSM_PARSE_GBX" ]; then
-    log "> Parse Gbx: $MSM_PARSE_GBX"
-    set -- "$@" "/parsegbx=${MSM_PARSE_GBX}"
 fi
 
 # Append args given to the entrypoint script
