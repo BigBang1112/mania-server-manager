@@ -3,17 +3,16 @@
     "ManiaServerManager": {
       "commandName": "Project",
       "environmentVariables": {
-        "MSM_SERVER_TYPE": "ManiaPlanet",
-        "ACCOUNT_LOGIN": "bigbang1112test",
-        "ACCOUNT_PASSWORD": ""
+        "MSM_SERVER_TYPE": "TM2020",
+        "MSM_VALIDATE_PATH": "."
       }
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "environmentVariables": {
         "MSM_SERVER_TYPE": "ManiaPlanet",
-        "ACCOUNT_LOGIN": "bigbang1112test",
-        "ACCOUNT_PASSWORD": ""
+        "MSM_ACCOUNT_LOGIN": "bigbang1112test",
+        "MSM_ACCOUNT_PASSWORD": ""
       }
     }
   }

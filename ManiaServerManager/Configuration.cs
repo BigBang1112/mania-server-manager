@@ -15,6 +15,7 @@ internal interface IConfiguration
     string TitleDownloadHost { get; }
     UnusedContent UnusedContent { get; }
     string DedicatedCfgFileName { get; }
+    string? ValidatePath { get; } // Nullable because empty /validatepath still counts as validate request
 
     string AccountLogin { get; }
     string AccountPassword { get; }
@@ -36,6 +37,7 @@ internal sealed class Configuration : IConfiguration
     public string TitleDownloadHost { get; }
     public UnusedContent UnusedContent { get; }
     public string DedicatedCfgFileName { get; }
+    public string? ValidatePath { get; }
 
     public string AccountLogin { get; }
     public string AccountPassword { get; }
@@ -83,14 +85,16 @@ internal sealed class Configuration : IConfiguration
         UnusedContent = new();
         DedicatedCfgFileName = Environment.GetEnvironmentVariable("MSM_DEDICATED_CFG") ?? "dedicated_cfg.txt";
 
+        ValidatePath = Environment.GetEnvironmentVariable("MSM_VALIDATE_PATH");
+
         AccountLogin = Environment.GetEnvironmentVariable("MSM_ACCOUNT_LOGIN") ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(AccountLogin))
+        if (ValidatePath is null && string.IsNullOrWhiteSpace(AccountLogin))
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_LOGIN is not set."));
         }
 
         AccountPassword = Environment.GetEnvironmentVariable("MSM_ACCOUNT_PASSWORD") ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(AccountPassword))
+        if (ValidatePath is null && string.IsNullOrWhiteSpace(AccountPassword))
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_PASSWORD is not set."));
         }
@@ -109,7 +113,8 @@ internal sealed class Configuration : IConfiguration
             ExampleMatchSettingsDirPath = Path.Combine(ExampleMatchSettingsDirPath, titleFolder);
         }
 
-        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS")) &&
+        if (ValidatePath is null &&
+            string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS")) &&
             string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_MATCH_SETTINGS")))
         {
             exceptions.Add(ConstructMatchSettingsException(serverType));

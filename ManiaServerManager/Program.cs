@@ -9,8 +9,8 @@ using var cts = new CancellationTokenSource();
 
 using var registration = PosixSignalRegistration.Create(PosixSignal.SIGTERM, context =>
 {
-    cts.Cancel();
     Console.WriteLine("Received SIGTERM, shutting down early...");
+    cts.Cancel();
 });
 
 using var provider = new ServiceProvider();

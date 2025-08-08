@@ -274,6 +274,7 @@ docker run -d \
   -e MSM_SERVER_TYPE=TM \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_CFG_ACCOUNT_NATION=CZE \
   -e MSM_MATCH_SETTINGS=Internet/ProRace.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
@@ -399,6 +400,7 @@ services:
       MSM_SERVER_TYPE: TM
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
+      MSM_CFG_ACCOUNT_NATION: CZE
       MSM_MATCH_SETTINGS: Internet/ProRace.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
