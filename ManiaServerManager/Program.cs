@@ -25,10 +25,12 @@ try
 catch (OperationCanceledException)
 {
     Console.WriteLine("Operation was cancelled.");
+    Environment.Exit(1);
 }
 catch (Exception ex)
 {
     Console.WriteLine($"An error occurred: {ex.Message}");
+    Environment.Exit(2);
 }
 
 [ServiceProvider]
