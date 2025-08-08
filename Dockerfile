@@ -15,11 +15,6 @@ RUN rm /app/*.dbg
 # Final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
 
-EXPOSE 2350/tcp
-EXPOSE 2350/udp
-EXPOSE 3450/tcp
-EXPOSE 3450/udp
-
 WORKDIR /app
 COPY --from=build /app .
 COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
