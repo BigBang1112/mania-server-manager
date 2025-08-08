@@ -15,10 +15,21 @@ using var registration = PosixSignalRegistration.Create(PosixSignal.SIGTERM, con
 
 using var provider = new ServiceProvider();
 
-var config = provider.GetService<IConfiguration>();
-var setup = provider.GetService<IServerSetupService>();
+try
+{
+    var config = provider.GetService<IConfiguration>();
+    var setup = provider.GetService<IServerSetupService>();
 
-await setup.SetupAsync(cts.Token);
+    await setup.SetupAsync(cts.Token);
+}
+catch (OperationCanceledException)
+{
+    Console.WriteLine("Operation was cancelled.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
 
 [ServiceProvider]
 [Singleton<IConfiguration, Configuration>]
