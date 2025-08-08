@@ -42,6 +42,11 @@ if [ -n "$MSM_VALIDATE_PATH" ]; then
     set -- "$@" "/validatepath=${MSM_VALIDATE_PATH}"
 fi
 
+if [ -n "$MSM_PARSE_GBX" ]; then
+    log "> Parse Gbx: $MSM_PARSE_GBX"
+    set -- "$@" "/parsegbx=${MSM_PARSE_GBX}"
+fi
+
 if [ -z "$MSM_DEDICATED_CFG" ]; then
     MSM_DEDICATED_CFG="dedicated_cfg.txt"
 fi

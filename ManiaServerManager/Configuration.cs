@@ -16,6 +16,7 @@ internal interface IConfiguration
     UnusedContent UnusedContent { get; }
     string DedicatedCfgFileName { get; }
     string? ValidatePath { get; } // Nullable because empty /validatepath still counts as validate request
+    string? ParseGbx { get; } // Nullable because empty /parsegbx still counts as parse request
 
     string AccountLogin { get; }
     string AccountPassword { get; }
@@ -38,6 +39,7 @@ internal sealed class Configuration : IConfiguration
     public UnusedContent UnusedContent { get; }
     public string DedicatedCfgFileName { get; }
     public string? ValidatePath { get; }
+    public string? ParseGbx { get; } // Nullable because empty /parsegbx still counts as parse request
 
     public string AccountLogin { get; }
     public string AccountPassword { get; }
@@ -71,10 +73,15 @@ internal sealed class Configuration : IConfiguration
 
         Reinstall = bool.TryParse(Environment.GetEnvironmentVariable("MSM_REINSTALL"), out var reinstall) && reinstall;
 
+        ValidatePath = Environment.GetEnvironmentVariable("MSM_VALIDATE_PATH");
+        ParseGbx = Environment.GetEnvironmentVariable("MSM_PARSE_GBX");
+
+        var isDediServer = ValidatePath is null && ParseGbx is null;
+
         if (serverType == ServerType.ManiaPlanet)
         {
             Title = Environment.GetEnvironmentVariable("MSM_TITLE");
-            if (string.IsNullOrWhiteSpace(Title))
+            if (isDediServer && string.IsNullOrWhiteSpace(Title))
             {
                 exceptions.Add(new InvalidOperationException("MSM_TITLE is not set."));
             }
@@ -85,16 +92,14 @@ internal sealed class Configuration : IConfiguration
         UnusedContent = new();
         DedicatedCfgFileName = Environment.GetEnvironmentVariable("MSM_DEDICATED_CFG") ?? "dedicated_cfg.txt";
 
-        ValidatePath = Environment.GetEnvironmentVariable("MSM_VALIDATE_PATH");
-
         AccountLogin = Environment.GetEnvironmentVariable("MSM_ACCOUNT_LOGIN") ?? string.Empty;
-        if (ValidatePath is null && string.IsNullOrWhiteSpace(AccountLogin))
+        if (isDediServer && string.IsNullOrWhiteSpace(AccountLogin))
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_LOGIN is not set."));
         }
 
         AccountPassword = Environment.GetEnvironmentVariable("MSM_ACCOUNT_PASSWORD") ?? string.Empty;
-        if (ValidatePath is null && string.IsNullOrWhiteSpace(AccountPassword))
+        if (isDediServer && string.IsNullOrWhiteSpace(AccountPassword))
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_PASSWORD is not set."));
         }
@@ -113,7 +118,7 @@ internal sealed class Configuration : IConfiguration
             ExampleMatchSettingsDirPath = Path.Combine(ExampleMatchSettingsDirPath, titleFolder);
         }
 
-        if (ValidatePath is null &&
+        if (isDediServer &&
             string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS")) &&
             string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_MATCH_SETTINGS")))
         {
