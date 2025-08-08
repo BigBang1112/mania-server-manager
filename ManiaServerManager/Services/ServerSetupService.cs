@@ -140,6 +140,13 @@ internal sealed class ServerSetupService : IServerSetupService
     private async Task LoadTitleAsync(string identifier, CancellationToken cancellationToken)
     {
         var title = config.Title;
+
+        if (string.IsNullOrEmpty(title))
+        {
+            logger.LogInformation("No title specified, skipping title download.");
+            return;
+        }
+
         logger.LogInformation("> Title: {Title}", title);
 
         var ignoreTitleDownload = config.IgnoreTitleDownload;
