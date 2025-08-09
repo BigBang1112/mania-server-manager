@@ -38,8 +38,16 @@ internal sealed class ZipExtractService : IZipExtractService
 
         foreach (var entry in archive.Entries)
         {
+            const UnixFileMode OwnershipPermissions =
+                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
+
+            var fileMode = (UnixFileMode)(entry.ExternalAttributes >> 16) & OwnershipPermissions;
+
             if (entry.Name == "") // folder
             {
+                fileSystem.Directory.CreateDirectory(entry.FullName, fileMode);
                 continue;
             }
 
@@ -56,16 +64,6 @@ internal sealed class ZipExtractService : IZipExtractService
             var entryPath = entry.FullName.StartsWith(Constants.TmDedicatedServer)
                 ? Path.Combine(baseWorkingPath, outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
                 : Path.Combine(baseWorkingPath, outputDirectory, entry.FullName);
-
-            var directoryPath = fileSystem.Path.GetDirectoryName(entryPath)!;
-            fileSystem.Directory.CreateDirectory(directoryPath);
-
-            const UnixFileMode OwnershipPermissions =
-                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
-                UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
-                UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
-
-            var fileMode = (UnixFileMode)(entry.ExternalAttributes >> 16) & OwnershipPermissions;
 
             var fileStreamOptions = new FileStreamOptions()
             {

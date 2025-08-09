@@ -18,9 +18,10 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
 WORKDIR /app
 COPY --from=build /app .
 
-RUN mkdir -p /app/data/archives /app/data/versions && \
-    chown -R $APP_UID:app /app/data/archives /app/data/versions && \
-    chmod -R 775 /app/data/archives /app/data/versions
+# Allow APP_UID to write to the data directories
+RUN mkdir -p /app/data && \
+    chown -R $APP_UID:$APP_UID /app/data && \
+    chmod -R 775 /app/data
 
 EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
 
