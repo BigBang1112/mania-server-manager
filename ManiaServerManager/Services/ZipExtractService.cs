@@ -57,15 +57,15 @@ internal sealed class ZipExtractService : IZipExtractService
                 ? Path.Combine(baseWorkingPath, outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
                 : Path.Combine(baseWorkingPath, outputDirectory, entry.FullName);
 
+            var directoryPath = fileSystem.Path.GetDirectoryName(entryPath)!;
+            fileSystem.Directory.CreateDirectory(directoryPath);
+
             const UnixFileMode OwnershipPermissions =
                 UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
                 UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
                 UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
 
             var fileMode = (UnixFileMode)(entry.ExternalAttributes >> 16) & OwnershipPermissions;
-
-            var directoryPath = fileSystem.Path.GetDirectoryName(entryPath)!;
-            fileSystem.Directory.CreateDirectory(directoryPath, fileMode);
 
             var fileStreamOptions = new FileStreamOptions()
             {
