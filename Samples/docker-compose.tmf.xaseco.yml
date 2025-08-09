@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: TMF
+      MSM_SERVER_IDENTIFIER: my-tmf-xaseco-server
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_MATCH_SETTINGS: Nations/NationsWhite.txt
@@ -16,8 +17,8 @@ services:
       - "3450:3450/tcp"
       - "3450:3450/udp"
     volumes:
-      - ./my-tmf-xaseco-server:/app/data/servers/TMF_Latest
-      - msm-archives:/app/data/archives
+      - ./servers:/app/data/servers
+      - msm_archives:/app/data/archives
 
   xaseco:
     image: evoesports/xaseco
@@ -37,7 +38,7 @@ services:
       XASECO_MASTERADMINS: login1,login2,login3
     volumes:
       #- "xaseco:/xaseco"
-      - ./my-tmf-xaseco-server/GameData:/server/GameData
+      - ./servers/my-tmf-xaseco-server/GameData:/server/GameData
     networks:
       - default
       - db_mariadb
@@ -45,3 +46,6 @@ services:
 networks:
   db_mariadb:
     external: true
+
+volumes:
+  msm_archives:

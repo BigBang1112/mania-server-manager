@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: ManiaPlanet
+      MSM_SERVER_IDENTIFIER: my-tm2-minicontrol-server
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_TITLE: TMStadium@nadeo
@@ -17,8 +18,8 @@ services:
       - "3450:3450/tcp"
       - "3450:3450/udp"
     volumes:
-      - ./my-tm2-minicontrol-server:/app/data/servers/ManiaPlanet_Latest
-      - msm-archives:/app/data/archives
+      - ./servers:/app/data/servers
+      - msm_archives:/app/data/archives
     
   minicontrol:
     image: evoesports/minicontrol
@@ -47,4 +48,4 @@ networks:
     external: true
 
 volumes:
-  msm-archives:
+  msm_archives:

@@ -18,7 +18,7 @@ The management application is written in C# and was built with NativeAOT and tri
 
 ## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
-- All Nadeo game server types within a single image
+- All Nadeo game server types handled within a single image
 - Manage all of your servers within a single volume
 - Checks for updates per restart, not per deployment - beneficial for ManiaPlanet title packs, also avoids waiting on image updates
 - Specific versions can be picked, or the download sources can be modified (there's a use for it, soon^^)
@@ -214,10 +214,11 @@ These don't need to be changed if port 5000 is not publically accessible.
 #### Specialized settings
 
 - `MSM_SERVER_VERSION` (default: `Latest`)
-- `MSM_VALIDATE_PATH` - specify validation path (this invalidates previous server variable requirements)
-- `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements)
-- `MSM_ONLY_SETUP` - only run the setup without running the server
-- `MSM_ONLY_SERVER_LOG` - avoid logging anything than server's stdout, useful for `MSM_VALIDATE_PATH` or `MSM_PARSE_GBX`
+- `MSM_VALIDATE_PATH` - specify validation path (this invalidates previous server variable requirements) (default: none)
+- `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements) (default: none)
+- `MSM_ONLY_SETUP` - only run the setup without running the server (default: `False`)
+- `MSM_ONLY_SERVER_LOG` - avoid logging anything than server's stdout, useful for `MSM_VALIDATE_PATH` or `MSM_PARSE_GBX` (default: `False`)
+- `MSM_SKIP_DEDICATED_CFG` - skips dedicated_cfg creation/overwrite (default: `False`)
 
 ## Example Docker Run
 
@@ -226,6 +227,7 @@ For TM2020:
 ```bash
 docker run -d \
   -e MSM_SERVER_TYPE=TM2020 \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_MATCH_SETTINGS=example.txt \
@@ -236,7 +238,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/servers/TM2020_Latest \
+  -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -245,6 +247,7 @@ For ManiaPlanet:
 ```bash
 docker run -d \
   -e MSM_SERVER_TYPE=ManiaPlanet \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_TITLE=TMStadium@nadeo \
@@ -256,7 +259,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/servers/ManiaPlanet_Latest \
+  -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -265,6 +268,7 @@ For TMF:
 ```bash
 docker run -d \
   -e MSM_SERVER_TYPE=TMF \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_MATCH_SETTINGS=Nations/NationsWhite.txt \
@@ -275,7 +279,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/servers/TMF_Latest \
+  -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -284,6 +288,7 @@ For TMNESWC:
 ```bash
 docker run -d \
   -e MSM_SERVER_TYPE=TM \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
@@ -295,7 +300,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/servers/TM_Latest \
+  -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -304,6 +309,7 @@ Different ports need to be also configured with variables (due to the way master
 ```bash
 docker run -d \
   -e MSM_SERVER_TYPE=TM2020 \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_MATCH_SETTINGS=example.txt \
@@ -316,7 +322,7 @@ docker run -d \
   -p 3455:3455/tcp \
   -p 3455:3455/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/servers/TM2020_Latest \
+  -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -331,6 +337,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: TM2020
+      MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_MATCH_SETTINGS: example.txt
@@ -343,7 +350,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/servers/TM2020_Latest
+      - ./servers:/app/data/servers
 volumes:
   msm_archives:
 ```
@@ -357,6 +364,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: ManiaPlanet
+      MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_TITLE: TMStadium@nadeo
@@ -370,7 +378,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/servers/ManiaPlanet_Latest
+      - ./servers:/app/data/servers
 volumes:
   msm_archives:
 ```
@@ -384,6 +392,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: TMF
+      MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_MATCH_SETTINGS: Nations/NationsWhite.txt
@@ -396,7 +405,7 @@ services:
       - "3452:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/servers/TMF_Latest
+      - ./servers:/app/data/servers
 volumes:
   msm_archives:
 ```
@@ -410,6 +419,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: TM
+      MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_CFG_ACCOUNT_NATION: CZE
@@ -423,7 +433,7 @@ services:
       - "3453:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/servers/TM_Latest
+      - ./servers:/app/data/servers
 volumes:
   msm_archives:
 ```
@@ -437,6 +447,7 @@ services:
     restart: unless-stopped
     environment:
       MSM_SERVER_TYPE: TM2020
+      MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_MATCH_SETTINGS: example.txt
@@ -451,7 +462,7 @@ services:
       - "3455:3455/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/servers/TM2020_Latest
+      - ./servers:/app/data/servers
 volumes:
   msm_archives:
 ```
