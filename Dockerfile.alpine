@@ -32,6 +32,8 @@ RUN mkdir -p /app/data && \
 
 EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
 
+HEALTHCHECK --interval=5s --timeout=5s --start-period=20s CMD nc -z -v 127.0.0.1 5000 || exit 1
+
 USER $APP_UID
 
 COPY --chmod=0755 entrypoint.sh .
