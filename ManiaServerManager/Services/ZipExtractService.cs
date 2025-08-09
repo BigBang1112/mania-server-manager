@@ -20,8 +20,6 @@ internal sealed class ZipExtractService : IZipExtractService
     private readonly IFileSystem fileSystem;
     private readonly ILogger logger;
 
-    private readonly string baseWorkingPath = Constants.DataPath;
-
     public ZipExtractService(
         IConfiguration config,
         IFileSystem fileSystem,
@@ -54,8 +52,8 @@ internal sealed class ZipExtractService : IZipExtractService
             }
 
             var entryPath = entry.FullName.StartsWith(Constants.TmDedicatedServer)
-                ? Path.Combine(baseWorkingPath, outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
-                : Path.Combine(baseWorkingPath, outputDirectory, entry.FullName);
+                ? Path.Combine(outputDirectory, entry.FullName[(Constants.TmDedicatedServer.Length + 1)..])
+                : Path.Combine(outputDirectory, entry.FullName);
 
             var directoryPath = fileSystem.Path.GetDirectoryName(entryPath)!;
             fileSystem.Directory.CreateDirectory(directoryPath);
@@ -87,7 +85,7 @@ internal sealed class ZipExtractService : IZipExtractService
             if (TryRenameEntry(entry.FullName, out string? newFullName))
             {
                 using var entryStreamInside = entry.Open();
-                await using var fileStreamDefault = fileSystem.FileStream.New(Path.Combine(baseWorkingPath, outputDirectory, newFullName), fileStreamOptions);
+                await using var fileStreamDefault = fileSystem.FileStream.New(Path.Combine(outputDirectory, newFullName), fileStreamOptions);
                 await entryStreamInside.CopyToAsync(fileStreamDefault, cancellationToken);
 
                 // Skips the code that would overwrite the file

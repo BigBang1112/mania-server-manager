@@ -69,24 +69,30 @@ internal sealed class ServerSetupService : IServerSetupService
             _ => throw new Exception("Unknown server type"),
         };
 
-        // should rather be a constant file located in /server/archives folder, which could be wiped out by cleaner commands or env variables
-        // env var example: CLEANUP_ARCHIVES=true # deletes all archives
-        // CLEANUP_DESTRUCTIVE=true # deletes all archives and servers other than the one being run
-        // REINSTALL=true
-
         await using var serverArchiveResult = await DownloadArchiveAsync(uri, cancellationToken);
 
         var identifier = config.Identifier ?? GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType);
 
-        if (serverArchiveResult.NewlyDownloaded || config.Reinstall)
+        var serverDirectoryPath = Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier);
+        fileSystem.Directory.CreateDirectory(serverDirectoryPath);
+
+        var msmIdentifierFilePath = Path.Combine(serverDirectoryPath, "msm");
+
+        var isFirstSetup = !fileSystem.Directory.Exists(msmIdentifierFilePath);
+        if (isFirstSetup)
+        {
+            fileSystem.File.WriteAllText("msm", null);
+        }
+
+        if (isFirstSetup || serverArchiveResult.NewlyDownloaded || config.Reinstall)
         {
             logger.LogInformation("Extracting archive...");
-            await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, Path.Combine(Constants.ServerServersPath, identifier), cancellationToken);
+            await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, serverDirectoryPath, cancellationToken);
         }
 
         if (serverType is ServerType.ManiaPlanet)
         {
-            await LoadTitleAsync(identifier, cancellationToken);
+            await LoadTitleAsync(identifier, isFirstSetup, cancellationToken);
         }
 
         // setup dedicated_cfg.txt
@@ -134,7 +140,7 @@ internal sealed class ServerSetupService : IServerSetupService
         return $"{serverType}_{executableEntry.LastWriteTime:yyyy-MM-dd}";
     }
 
-    private async Task LoadTitleAsync(string identifier, CancellationToken cancellationToken)
+    private async Task LoadTitleAsync(string identifier, bool isFirstSetup, CancellationToken cancellationToken)
     {
         var title = config.Title;
 
@@ -149,20 +155,18 @@ internal sealed class ServerSetupService : IServerSetupService
         var ignoreTitleDownload = config.IgnoreTitleDownload;
         logger.LogInformation("> Ignore title download: {IgnoreTitleDownload}", ignoreTitleDownload);
 
-        var titleDownloadHost = config.TitleDownloadHost;
-
         if (ignoreTitleDownload)
         {
             return;
         }
 
         var titleFileName = title + ".Title.Pack.gbx";
-        var titleDownloadUri = new Uri($"{titleDownloadHost}/{titleFileName}");
+        var titleDownloadUri = new Uri($"{config.TitleDownloadHost}/{titleFileName}");
 
         await using var titleArchiveResult = await DownloadArchiveAsync(titleDownloadUri, cancellationToken);
 
         // maybe could always run the copy?
-        if (!titleArchiveResult.NewlyDownloaded && !config.Reinstall)
+        if (!isFirstSetup && !titleArchiveResult.NewlyDownloaded && !config.Reinstall)
         {
             return;
         }
