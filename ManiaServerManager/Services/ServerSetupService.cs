@@ -81,7 +81,7 @@ internal sealed class ServerSetupService : IServerSetupService
         var isFirstSetup = !fileSystem.Directory.Exists(msmIdentifierFilePath);
         if (isFirstSetup)
         {
-            fileSystem.File.WriteAllText("msm", null);
+            fileSystem.File.WriteAllText(msmIdentifierFilePath, null);
         }
 
         if (isFirstSetup || serverArchiveResult.NewlyDownloaded || config.Reinstall)
