@@ -21,14 +21,14 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim
 
 WORKDIR /app
 COPY --from=build /app .
-COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
-RUN chmod +x entrypoint.sh
 
 RUN mkdir -p /app/data/archives /app/data/versions && \
-    chown -R $APP_UID:$APP_UID /app/data && \
-    chmod -R u+w /app/data
+    chown -R $APP_UID:$APP_UID /app/data/archives /app/data/versions && \
+    chmod -R 775 /app/data/archives /app/data/versions
 
 EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
 
 USER $APP_UID
+
+COPY --chmod=0755 entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
