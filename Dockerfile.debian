@@ -24,7 +24,9 @@ COPY --from=build /app .
 COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
-RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data && chmod u+w /app/data
+RUN mkdir -p /app/data/archives /app/data/versions && \
+    chown -R $APP_UID:$APP_UID /app/data && \
+    chmod -R u+w /app/data
 
 EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
 
