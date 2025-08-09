@@ -64,6 +64,7 @@ internal sealed class ZipExtractService : IZipExtractService
                 UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
 
             var fileMode = (UnixFileMode)(entry.ExternalAttributes >> 16) & OwnershipPermissions;
+            fileMode |= UnixFileMode.UserWrite | UnixFileMode.GroupWrite;
 
             var fileStreamOptions = new FileStreamOptions()
             {

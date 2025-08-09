@@ -81,6 +81,7 @@ internal sealed class ServerSetupService : IServerSetupService
         var isFirstSetup = !fileSystem.Directory.Exists(msmIdentifierFilePath);
         if (isFirstSetup)
         {
+            logger.LogInformation("First setup detected...");
             fileSystem.File.WriteAllText(msmIdentifierFilePath, null);
         }
 
