@@ -81,7 +81,7 @@ internal sealed class ServerSetupService : IServerSetupService
         if (serverArchiveResult.NewlyDownloaded || config.Reinstall)
         {
             logger.LogInformation("Extracting archive...");
-            await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, Path.Combine(Constants.ServerVersionsPath, identifier), cancellationToken);
+            await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, Path.Combine(Constants.ServerServersPath, identifier), cancellationToken);
         }
 
         if (serverType is ServerType.ManiaPlanet)
@@ -94,16 +94,16 @@ internal sealed class ServerSetupService : IServerSetupService
         switch (serverType)
         {
             case ServerType.TM2020:
-                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
                 break;
             case ServerType.ManiaPlanet:
-                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
                 break;
             case ServerType.TMF:
-                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Config"), cancellationToken);
+                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Config"), cancellationToken);
                 break;
             case ServerType.TM:
-                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier), cancellationToken);
+                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier), cancellationToken);
                 break;
         }
 
@@ -165,7 +165,7 @@ internal sealed class ServerSetupService : IServerSetupService
             return;
         }
 
-        var copiedTitlePath = Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "Packs", titleFileName);
+        var copiedTitlePath = Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "Packs", titleFileName);
         await using var titleStream = fileSystem.FileStream.NewWriteAsync(copiedTitlePath);
         await titleArchiveResult.Stream.CopyToAsync(titleStream, cancellationToken);
     }
@@ -310,8 +310,8 @@ internal sealed class ServerSetupService : IServerSetupService
 
         var destinationDirPath = serverType switch
         {
-            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "UserData", "Maps", "MatchSettings"),
-            ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerVersionsPath, identifier, "GameData", "Tracks", "MatchSettings"),
+            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps", "MatchSettings"),
+            ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Tracks", "MatchSettings"),
             _ => throw new Exception("Unknown server type for match settings")
         };
 

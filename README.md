@@ -18,8 +18,9 @@ The management application is written in C# and was built with NativeAOT and tri
 
 ## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
-- All Nadeo game servers within a single image
-- Checks for updates per restart, not per deployment - beneficial for ManiaPlanet title packs
+- All Nadeo game server types within a single image
+- Manage all of your servers within a single volume
+- Checks for updates per restart, not per deployment - beneficial for ManiaPlanet title packs, also avoids waiting on image updates
 - Specific versions can be picked, or the download sources can be modified (there's a use for it, soon^^)
 - Alternatively, use the Windows executable with Wine (there's a use for it, soon^^)
 - Many more possible options are configurable with environment variables
@@ -235,7 +236,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/versions/TM2020_Latest \
+  -v ./MyServer:/app/data/servers/TM2020_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -255,7 +256,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/versions/ManiaPlanet_Latest \
+  -v ./MyServer:/app/data/servers/ManiaPlanet_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -274,7 +275,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/versions/TMF_Latest \
+  -v ./MyServer:/app/data/servers/TMF_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -294,7 +295,7 @@ docker run -d \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/versions/TM_Latest \
+  -v ./MyServer:/app/data/servers/TM_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -315,7 +316,7 @@ docker run -d \
   -p 3455:3455/tcp \
   -p 3455:3455/udp \
   -v msm_archives:/app/data/archives \
-  -v ./MyServer:/app/data/versions/TM2020_Latest \
+  -v ./MyServer:/app/data/servers/TM2020_Latest \
   bigbang1112/mania-server-manager:alpine
 ```
 
@@ -342,7 +343,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/versions/TM2020_Latest
+      - ./MyServer:/app/data/servers/TM2020_Latest
 volumes:
   msm_archives:
 ```
@@ -369,7 +370,7 @@ services:
       - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/versions/ManiaPlanet_Latest
+      - ./MyServer:/app/data/servers/ManiaPlanet_Latest
 volumes:
   msm_archives:
 ```
@@ -395,7 +396,7 @@ services:
       - "3452:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/versions/TMF_Latest
+      - ./MyServer:/app/data/servers/TMF_Latest
 volumes:
   msm_archives:
 ```
@@ -422,7 +423,7 @@ services:
       - "3453:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/versions/TM_Latest
+      - ./MyServer:/app/data/servers/TM_Latest
 volumes:
   msm_archives:
 ```
@@ -450,7 +451,7 @@ services:
       - "3455:3455/udp"
     volumes:
       - msm_archives:/app/data/archives
-      - ./MyServer:/app/data/versions/TM2020_Latest
+      - ./MyServer:/app/data/servers/TM2020_Latest
 volumes:
   msm_archives:
 ```

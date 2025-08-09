@@ -17,7 +17,7 @@ services:
       - "3450:3450/tcp"
       - "3450:3450/udp"
     volumes:
-      - ./my-tm2-minicontrol-server:/app/data/versions/ManiaPlanet_Latest
+      - ./my-tm2-minicontrol-server:/app/data/servers/ManiaPlanet_Latest
       - msm-archives:/app/data/archives
     
   minicontrol:

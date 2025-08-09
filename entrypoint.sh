@@ -21,7 +21,7 @@ fi
 
 log "> Server Type: $MSM_SERVER_TYPE"
 
-cd data/versions
+cd data/servers
 
 if [ -z "$MSM_SERVER_VERSION" ]; then
     MSM_SERVER_VERSION="Latest"

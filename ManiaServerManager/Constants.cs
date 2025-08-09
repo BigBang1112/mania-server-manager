@@ -9,6 +9,6 @@ internal static class Constants
     public const string ManiaPlanetServer = "ManiaPlanetServer";
     public const string LastTrackmaniaForeverServerVersion = "2011-02-21";
     public const string ServerArchivesPath = "archives";
-    public const string ServerVersionsPath = "versions";
+    public const string ServerServersPath = "servers";
     public const string DataPath = "./data";
 }

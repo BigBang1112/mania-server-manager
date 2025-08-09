@@ -16,7 +16,7 @@ services:
       - "3450:3450/tcp"
       - "3450:3450/udp"
     volumes:
-      - ./my-tmf-xaseco-server:/app/data/versions/TMF_Latest
+      - ./my-tmf-xaseco-server:/app/data/servers/TMF_Latest
       - msm-archives:/app/data/archives
 
   xaseco:

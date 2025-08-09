@@ -33,9 +33,9 @@ EXPOSE 3450/udp
 WORKDIR /app
 COPY --from=build /app .
 
-RUN mkdir -p /app/versions /app/archives
-RUN chown -R $APP_UID /app/versions /app/archives
-RUN chmod -R 777 /app/versions
+RUN mkdir -p /app/servers /app/archives
+RUN chown -R $APP_UID /app/servers /app/archives
+RUN chmod -R 777 /app/servers
 
 #USER $APP_UID
 ENTRYPOINT ["./ManiaServerManager"]
