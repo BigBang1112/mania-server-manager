@@ -23,22 +23,14 @@ log "> Server Type: $MSM_SERVER_TYPE"
 
 cd data/servers
 
-if [ -z "$MSM_SERVER_VERSION" ]; then
-    MSM_SERVER_VERSION="Latest"
+if [ -z "$MSM_SERVER_IDENTIFIER" ]; then
+    if [ -z "$MSM_SERVER_VERSION" ]; then
+        MSM_SERVER_VERSION="Latest"
+    fi
+    MSM_SERVER_IDENTIFIER="${MSM_SERVER_TYPE}_${MSM_SERVER_VERSION}"
 fi
 
-if [ "$MSM_SERVER_TYPE" = "TM" ]; then
-    cd TM_$MSM_SERVER_VERSION
-elif [ "$MSM_SERVER_TYPE" = "TMF" ]; then
-    cd TMF_$MSM_SERVER_VERSION
-elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-    cd TM2020_$MSM_SERVER_VERSION
-elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-    cd ManiaPlanet_$MSM_SERVER_VERSION
-else
-    log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
-    exit 1
-fi
+cd $MSM_SERVER_IDENTIFIER
 
 original_args="$@"
 
