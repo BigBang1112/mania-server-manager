@@ -90,21 +90,23 @@ internal sealed class ServerSetupService : IServerSetupService
         }
 
         // setup dedicated_cfg.txt
-        // TODO: add env variable to skip this step
-        switch (serverType)
+        if (!config.SkipDedicatedCfg)
         {
-            case ServerType.TM2020:
-                await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
-                break;
-            case ServerType.ManiaPlanet:
-                await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
-                break;
-            case ServerType.TMF:
-                await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Config"), cancellationToken);
-                break;
-            case ServerType.TM:
-                await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier), cancellationToken);
-                break;
+            switch (serverType)
+            {
+                case ServerType.TM2020:
+                    await dedicatedCfgService.CreateTM2020ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
+                    break;
+                case ServerType.ManiaPlanet:
+                    await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
+                    break;
+                case ServerType.TMF:
+                    await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Config"), cancellationToken);
+                    break;
+                case ServerType.TM:
+                    await dedicatedCfgService.CreateTMConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier), cancellationToken);
+                    break;
+            }
         }
 
         // copy matchsettings

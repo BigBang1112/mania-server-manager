@@ -26,6 +26,7 @@ internal interface IConfiguration
     string ExampleMatchSettingsDirPath { get; }
 
     DedicatedCfg Cfg { get; }
+    bool SkipDedicatedCfg { get; }
 }
 
 internal sealed class Configuration : IConfiguration
@@ -50,6 +51,7 @@ internal sealed class Configuration : IConfiguration
     public string ExampleMatchSettingsDirPath { get; }
 
     public DedicatedCfg Cfg { get; }
+    public bool SkipDedicatedCfg { get; }
 
     public Configuration()
     {
@@ -130,6 +132,8 @@ internal sealed class Configuration : IConfiguration
         }
 
         ServerName = Environment.GetEnvironmentVariable("MSM_SERVER_NAME") ?? "ManiaServerManager Server";
+
+        SkipDedicatedCfg = bool.TryParse(Environment.GetEnvironmentVariable("MSM_SKIP_DEDICATED_CFG"), out var skipDedicatedCfg) && skipDedicatedCfg;
 
         Cfg = new();
 
