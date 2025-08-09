@@ -76,12 +76,11 @@ internal sealed class ServerSetupService : IServerSetupService
 
         await using var serverArchiveResult = await DownloadArchiveAsync(uri, cancellationToken);
 
-        var identifier = GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType, isLatest);
+        var identifier = config.Identifier ?? GetServerIdentifierFromZip(serverArchiveResult.Stream, serverType);
 
         if (serverArchiveResult.NewlyDownloaded || config.Reinstall)
         {
             logger.LogInformation("Extracting archive...");
-
             await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, Path.Combine(Constants.ServerVersionsPath, identifier), cancellationToken);
         }
 
@@ -91,6 +90,7 @@ internal sealed class ServerSetupService : IServerSetupService
         }
 
         // setup dedicated_cfg.txt
+        // TODO: add env variable to skip this step
         switch (serverType)
         {
             case ServerType.TM2020:
@@ -115,13 +115,8 @@ internal sealed class ServerSetupService : IServerSetupService
         return new ServerSetupResult(serverType, serverVersion);
     }
 
-    private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType, bool isLatest)
+    private static string GetServerIdentifierFromZip(Stream serverZipStream, ServerType serverType)
     {
-        if (isLatest)
-        {
-            return $"{serverType}_{Constants.LatestUpper}";
-        }
-
         using var archive = new ZipArchive(serverZipStream, ZipArchiveMode.Read, leaveOpen: true);
 
         var executableName = serverType switch

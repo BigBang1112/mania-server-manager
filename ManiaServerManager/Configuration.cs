@@ -8,6 +8,7 @@ internal interface IConfiguration
 {
     ServerType Type { get; }
     string Version { get; }
+    string? Identifier { get; } // null will use Type_Version as identifier
     ServerDownloadHost DownloadHost { get; }
     bool Reinstall { get; }
     string? Title { get; }
@@ -31,6 +32,7 @@ internal sealed class Configuration : IConfiguration
 {
     public ServerType Type { get; }
     public string Version { get; }
+    public string? Identifier { get; }
     public ServerDownloadHost DownloadHost { get; }
     public bool Reinstall { get; }
     public string? Title { get; }
@@ -63,6 +65,8 @@ internal sealed class Configuration : IConfiguration
         }
 
         Version = Environment.GetEnvironmentVariable("MSM_SERVER_VERSION") ?? "Latest";
+
+        Identifier = Environment.GetEnvironmentVariable("MSM_SERVER_IDENTIFIER") ?? $"{Type}_{Version}";
 
         DownloadHost = new();
         DownloadHost.All = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_ALL") ?? DownloadHost.All;
