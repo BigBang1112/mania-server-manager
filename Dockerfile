@@ -18,6 +18,7 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
 WORKDIR /app
 COPY --from=build /app .
 COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data
 

@@ -25,6 +25,7 @@ RUN addgroup --gid=$APP_UID app && adduser --uid=$APP_UID --ingroup=app --disabl
 WORKDIR /app
 COPY --from=build /app .
 COPY --chown=$APP_UID:$APP_UID entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
 RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data
 
