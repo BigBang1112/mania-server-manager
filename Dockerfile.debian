@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=build /app .
 
 RUN mkdir -p /app/data/archives /app/data/versions && \
-    chown -R $APP_UID:$APP_UID /app/data/archives /app/data/versions && \
+    chown -R $APP_UID:app /app/data/archives /app/data/versions && \
     chmod -R 775 /app/data/archives /app/data/versions
 
 EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
