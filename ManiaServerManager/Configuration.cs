@@ -321,7 +321,7 @@ internal sealed class Configuration : IConfiguration
         if (int.TryParse(Environment.GetEnvironmentVariable("MSM_CFG_SERVER_LADDER_SERVER_LIMIT_MAX"), out var ladderServerLimitMax))
             Cfg.ServerLadderServerLimitMax = ladderServerLimitMax;
 
-        Cfg.ConfigPackMask = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_PACK_MASK") ?? Cfg.ConfigPackMask;
+        Cfg.ConfigPackMask = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_PACKMASK") ?? Cfg.ConfigPackMask;
         Cfg.ConfigProxyLogin = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_PROXY_LOGIN") ?? Cfg.ConfigProxyLogin;
         Cfg.ConfigProxyPassword = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_PROXY_PASSWORD") ?? Cfg.ConfigProxyPassword;
         Cfg.AccountNation = Environment.GetEnvironmentVariable("MSM_CFG_ACCOUNT_NATION") ?? Cfg.AccountNation;

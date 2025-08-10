@@ -211,7 +211,7 @@ Provided MatchSettings examples:
   - `NadeoCloud` (default)
   - `LocalDebug`
   - `XmlRpc`
-- `MSM_CFG_CONFIG_PACK_MASK` - **only TMF** (default: `stadium`)
+- `MSM_CFG_CONFIG_PACKMASK` - **only TMF** (default: `stadium`)
 - `MSM_CFG_CONFIG_PROXY_LOGIN` - **only TMF/TM** (default: none)
 - `MSM_CFG_CONFIG_PROXY_PASSWORD` - **only TMF/TM** (default: none)
 - `MSM_CFG_CONFIG_CONNECTION_TYPE` - **only TM** (default: `DSL_16384_4096`)
