@@ -83,18 +83,18 @@ Provided MatchSettings examples:
   - `MinimalLaps.txt` - base for a Laps server with custom maps, only has A08-Endurance
   - `MinimalTeams.txt` - base for a Teams server with custom maps, only has A01-Race
   - `MinimalStunts.txt` - base for a Stunts server with custom maps, only has StuntA1
-  - `OfficialTimeAttack.txt` - TimeAttack server with all Nadeo and StarTrack maps from the server installation
-  - `OfficialCup.txt` - Cup server with all Nadeo and StarTrack maps from the server installation
-  - `OfficialRounds.txt` - Rounds server with all Nadeo and StarTrack maps from the server installation
-  - `OfficialLaps.txt` - Laps server with multilap Nadeo and StarTrack maps from the server installation
-  - `OfficialTeams.txt` - Teams server with all Nadeo and StarTrack maps from the server installation
-  - `OfficialStunts.txt` - Stunts server with all Nadeo stunt maps from the server installation
-  - `OfficialStadiumTimeAttack.txt` - TimeAttack server like `OfficialTimeAttack.txt` but with Stadium tracks only
-  - `OfficialStadiumCup.txt` - Cup server like `OfficialCup.txt` but with Stadium tracks only
-  - `OfficialStadiumRounds.txt` - Rounds server like `OfficialRounds.txt` but with Stadium tracks only
-  - `OfficialStadiumLaps.txt` - Laps server wlike `OfficialLaps.txt` but with Stadium tracks only
-  - `OfficialStadiumTeams.txt` - Teams server like `OfficialTeams.txt` but with Stadium tracks only
-  - `OfficialStadiumStunts.txt` - Stunts server like `OfficialStunts.txt` but with Stadium tracks only
+  - `NadeoTimeAttack.txt` - TimeAttack server with all Nadeo maps from the server installation (no StarTrack)
+  - `NadeoCup.txt` - Cup server with all Nadeo maps from the server installation (no StarTrack)
+  - `NadeoRounds.txt` - Rounds server with all Nadeo maps from the server installation (no StarTrack)
+  - `NadeoLaps.txt` - Laps server with multilap Nadeo maps from the server installation (no StarTrack)
+  - `NadeoTeams.txt` - Teams server with all Nadeo maps from the server installation (no StarTrack)
+  - `NadeoStunts.txt` - Stunts server with all Nadeo stunt maps from the server installation
+  - `NadeoStadiumTimeAttack.txt` - TimeAttack server like `NadeoTimeAttack.txt` but with Stadium tracks only
+  - `NadeoStadiumCup.txt` - Cup server like `NadeoCup.txt` but with Stadium tracks only
+  - `NadeoStadiumRounds.txt` - Rounds server like `NadeoRounds.txt` but with Stadium tracks only
+  - `NadeoStadiumLaps.txt` - Laps server wlike `NadeoLaps.txt` but with Stadium tracks only
+  - `NadeoStadiumTeams.txt` - Teams server like `NadeoTeams.txt` but with Stadium tracks only
+  - `NadeoStadiumStunts.txt` - Stunts server like `NadeoStunts.txt` but with Stadium tracks only
 - For Trackmania 2 official title packs:
   - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01
   - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01
@@ -330,7 +330,7 @@ docker run -d \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
   -e MSM_MATCH_SETTINGS=MapList.txt \
-  -e MSM_MATCH_SETTINGS_BASE=Internet/ProRace.txt \
+  -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -466,7 +466,7 @@ services:
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_CFG_ACCOUNT_NATION: CZE
       MSM_MATCH_SETTINGS: MapList.txt
-      MSM_MATCH_SETTINGS_BASE: Internet/ProRace.txt
+      MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:

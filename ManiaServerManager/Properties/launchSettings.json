@@ -3,8 +3,11 @@
     "ManiaServerManager": {
       "commandName": "Project",
       "environmentVariables": {
-        "MSM_SERVER_TYPE": "TM2020",
-        "MSM_VALIDATE_PATH": "."
+        "MSM_SERVER_TYPE": "TM",
+        "MSM_ACCOUNT_LOGIN": "bigbang1112test",
+        "MSM_ACCOUNT_PASSWORD": "test",
+        "MSM_MATCH_SETTINGS_BASE": "NadeoTimeAttack.txt",
+        "MSM_MATCH_SETTINGS": "MapList.txt"
       }
     },
     "Container (Dockerfile)": {
