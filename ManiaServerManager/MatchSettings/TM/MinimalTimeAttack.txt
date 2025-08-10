@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<playlist>
+	<gameinfos>
+		<game_mode>1</game_mode>
+		<chat_time>10000</chat_time>
+		<rounds_pointslimit>2</rounds_pointslimit>
+		<rounds_usenewrules>1</rounds_usenewrules>
+		<timeattack_limit>300000</timeattack_limit>
+		<timeattack_synchstartperiod>0</timeattack_synchstartperiod>
+		<team_pointslimit>5</team_pointslimit>
+		<team_maxpoints>6</team_maxpoints>
+		<team_usenewrules>0</team_usenewrules>
+		<laps_nblaps>5</laps_nblaps>
+		<laps_timelimit>0</laps_timelimit>
+		<comment></comment>
+	</gameinfos>
+
+	<hotseat>
+		<game_mode>0</game_mode>
+		<timeattack_limit>3</timeattack_limit>
+		<rounds_count>5</rounds_count>
+	</hotseat>
+
+	<filter>
+		<is_solo>0</is_solo>
+		<is_hotseat>0</is_hotseat>
+		<is_lan>0</is_lan>
+		<is_internet>1</is_internet>
+		<sort_index>100</sort_index>
+		<random_map_order>1</random_map_order>
+	</filter>
+
+	<challenge>
+		<file>Challenges\Nadeo\Nations\Beginner\B-0.Challenge.Gbx</file>
+		<ident>4oalZWYdyx0SEFyM2Xy0Jgc9xJ8</ident>
+	</challenge>
+</playlist>

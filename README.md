@@ -72,12 +72,46 @@ Because there seem to be minor build differences between Windows and Linux dedic
 - **`MSM_ACCOUNT_PASSWORD`** - Server account password
 - **`MSM_MATCH_SETTINGS`** - MatchSettings file path relative to `UserData/Maps/MatchSettings` OR `GameData/Tracks/MatchSettings`
   - OR `MSM_GAME_SETTINGS` - MatchSettings file path relative to `UserData/Maps` OR `GameData/Tracks`
+  - To **copy from base MatchSettings into your own one** (to avoid overwrites when adding more using controllers), **use `MSM_MATCH_SETTINGS_BASE`** with one of the examples below. By setting this, `MSM_MATCH_SETTINGS` file doesn't have to exist, it will be created.
 
 Provided MatchSettings examples:
 
-- [Official](OFFICIAL_MATCHSETTINGS.md)
+- For Trackmania Forever:
+  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01-Race
+  - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01-Race
+  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has A01-Race
+  - `MinimalLaps.txt` - base for a Laps server with custom maps, only has A08-Endurance
+  - `MinimalTeams.txt` - base for a Teams server with custom maps, only has A01-Race
+  - `MinimalStunts.txt` - base for a Stunts server with custom maps, only has StuntA1
+  - `OfficialTimeAttack.txt` - TimeAttack server with all Nadeo and StarTrack maps from the server installation
+  - `OfficialCup.txt` - Cup server with all Nadeo and StarTrack maps from the server installation
+  - `OfficialRounds.txt` - Rounds server with all Nadeo and StarTrack maps from the server installation
+  - `OfficialLaps.txt` - Laps server with multilap Nadeo and StarTrack maps from the server installation
+  - `OfficialTeams.txt` - Teams server with all Nadeo and StarTrack maps from the server installation
+  - `OfficialStunts.txt` - Stunts server with all Nadeo stunt maps from the server installation
+  - `OfficialStadiumTimeAttack.txt` - TimeAttack server like `OfficialTimeAttack.txt` but with Stadium tracks only
+  - `OfficialStadiumCup.txt` - Cup server like `OfficialCup.txt` but with Stadium tracks only
+  - `OfficialStadiumRounds.txt` - Rounds server like `OfficialRounds.txt` but with Stadium tracks only
+  - `OfficialStadiumLaps.txt` - Laps server wlike `OfficialLaps.txt` but with Stadium tracks only
+  - `OfficialStadiumTeams.txt` - Teams server like `OfficialTeams.txt` but with Stadium tracks only
+  - `OfficialStadiumStunts.txt` - Stunts server like `OfficialStunts.txt` but with Stadium tracks only
 - For Trackmania 2 official title packs:
-  - `NadeoTimeAttack.txt`
+  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01
+  - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01
+  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has A01
+  - `MinimalLaps.txt` - base for a Laps server with custom maps, only has A05
+  - `NadeoTimeAttack.txt` - TimeAttack server with official maps in traditional format
+  - `NadeoCup.txt` - Cup server with official maps in traditional format
+  - `NadeoRounds.txt` - Rounds server with official maps in traditional format
+  - `NadeoLaps.txt` - Laps server with official maps in traditional format
+- For Trackmania Nations ESWC:
+  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has B-0
+  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has B-0
+  - `MinimalTeams.txt` - base for a Teams server with custom maps, only has B-0
+  - `NadeoTimeAttack.txt` - TimeAttack server with all Nadeo maps from the server installation
+  - `NadeoRounds.txt` - Teams server with all Nadeo maps from the server installation
+  - `NadeoTeams.txt` - Teams server with all Nadeo maps from the server installation
+- [Official](OFFICIAL_MATCHSETTINGS.md) - **only TMF/TM ones can be used as a base**
 
 #### ManiaPlanet-specific
 
@@ -230,7 +264,8 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=example.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=example.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -251,7 +286,8 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_TITLE=TMStadium@nadeo \
-  -e MSM_MATCH_SETTINGS=NadeoTimeAttack.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -271,7 +307,8 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=Nations/NationsWhite.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=OfficialStadiumTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -292,7 +329,8 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
-  -e MSM_MATCH_SETTINGS=Internet/ProRace.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=Internet/ProRace.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -312,7 +350,8 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=example.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=example.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -e MSM_CFG_CONFIG_SERVER_PORT=2355 \
@@ -340,7 +379,8 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: example.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: example.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
@@ -368,7 +408,8 @@ services:
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_TITLE: TMStadium@nadeo
-      MSM_MATCH_SETTINGS: NadeoTimeAttack.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
@@ -395,7 +436,8 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: Nations/NationsWhite.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: OfficialStadiumTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
@@ -423,7 +465,8 @@ services:
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_CFG_ACCOUNT_NATION: CZE
-      MSM_MATCH_SETTINGS: Internet/ProRace.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: Internet/ProRace.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
@@ -450,7 +493,8 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: example.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: example.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
       MSM_CFG_CONFIG_SERVER_PORT: 2355
