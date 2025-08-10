@@ -299,7 +299,7 @@ docker run -d \
   bigbang1112/mania-server-manager:alpine
 ```
 
-For TMF:
+For TMF (for United maps, don't forget to set `MSM_CFG_CONFIG_PACKMASK` to `united`):
 
 ```bash
 docker run -d \
@@ -424,7 +424,7 @@ volumes:
   msm_archives:
 ```
 
-For TMF:
+For TMF (for United maps, don't forget to set `MSM_CFG_CONFIG_PACKMASK` to `united`):
 
 ```yml
 services:
