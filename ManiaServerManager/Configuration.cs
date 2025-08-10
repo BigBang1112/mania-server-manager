@@ -24,6 +24,8 @@ internal interface IConfiguration
     string ServerName { get; }
 
     string ExampleMatchSettingsDirPath { get; }
+    string? GameSettingsBase { get; }
+    string? GameSettings { get; }
 
     DedicatedCfg Cfg { get; }
     bool SkipDedicatedCfg { get; }
@@ -49,6 +51,8 @@ internal sealed class Configuration : IConfiguration
     public string ServerName { get; }
 
     public string ExampleMatchSettingsDirPath { get; }
+    public string? GameSettingsBase { get; set; }
+    public string? GameSettings { get; set; }
 
     public DedicatedCfg Cfg { get; }
     public bool SkipDedicatedCfg { get; }
@@ -124,11 +128,35 @@ internal sealed class Configuration : IConfiguration
             ExampleMatchSettingsDirPath = Path.Combine(ExampleMatchSettingsDirPath, titleFolder);
         }
 
-        if (isDediServer &&
-            string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS")) &&
-            string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("MSM_MATCH_SETTINGS")))
+        if (isDediServer)
         {
-            exceptions.Add(ConstructMatchSettingsException(serverType));
+            var gameSettingsBase = Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS_BASE");
+            var matchSettingsBase = Environment.GetEnvironmentVariable("MSM_MATCH_SETTINGS_BASE");
+
+            if (!string.IsNullOrWhiteSpace(gameSettingsBase))
+            {
+                GameSettingsBase = gameSettingsBase;
+            }
+            else if (!string.IsNullOrWhiteSpace(matchSettingsBase))
+            {
+                GameSettingsBase = Path.Combine("MatchSettings", matchSettingsBase);
+            }
+
+            var gameSettings = Environment.GetEnvironmentVariable("MSM_GAME_SETTINGS");
+            var matchSettings = Environment.GetEnvironmentVariable("MSM_MATCH_SETTINGS");
+
+            if (!string.IsNullOrWhiteSpace(gameSettings))
+            {
+                GameSettings = gameSettings;
+            }
+            else if (!string.IsNullOrWhiteSpace(matchSettings))
+            {
+                GameSettings = Path.Combine("MatchSettings", matchSettings);
+            }
+            else
+            {
+                exceptions.Add(ConstructMatchSettingsException(serverType));
+            }
         }
 
         ServerName = Environment.GetEnvironmentVariable("MSM_SERVER_NAME") ?? "ManiaServerManager Server";
@@ -315,12 +343,12 @@ internal sealed class Configuration : IConfiguration
 
         if (availableMatchSettingsFileNames.Any())
         {
-            sb.Append(" You can set MSM_MATCH_SETTINGS to one of these examples: ");
+            sb.Append(" You can set MSM_MATCH_SETTINGS to one of these examples, or set MSM_MATCH_SETTINGS_BASE with them and then name your MatchSettings however you want: ");
             sb.Append(string.Join(", ", availableMatchSettingsFileNames));
         }
         else
         {
-            sb.Append(" No examples could be provied, so just try to se one of these variables to a MatchSettings file provided by the server");
+            sb.Append(" No examples could be provied, so just try to set one of these variables to a MatchSettings file provided by the server");
 
             if (serverType == ServerType.ManiaPlanet)
             {

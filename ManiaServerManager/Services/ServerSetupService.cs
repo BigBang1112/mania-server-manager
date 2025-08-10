@@ -118,6 +118,8 @@ internal sealed class ServerSetupService : IServerSetupService
         // copy matchsettings
         SetupExampleMatchSettings(serverType, identifier);
 
+        CopyBaseMatchSettings(serverType, identifier);
+
         logger.LogInformation("Server setup complete!");
 
         return new ServerSetupResult(serverType, serverVersion);
@@ -304,6 +306,12 @@ internal sealed class ServerSetupService : IServerSetupService
 
     private void SetupExampleMatchSettings(ServerType serverType, string identifier)
     {
+        if (string.IsNullOrWhiteSpace(config.GameSettings))
+        {
+            logger.LogInformation("Game settings not configured, skipping example MatchSettings copy.");
+            return;
+        }
+
         logger.LogInformation("Example MatchSettings source directory: {ExampleMatchSettingsDirPath}", config.ExampleMatchSettingsDirPath);
 
         if (!Directory.Exists(config.ExampleMatchSettingsDirPath))
@@ -335,5 +343,46 @@ internal sealed class ServerSetupService : IServerSetupService
             logger.LogInformation("Copying MatchSettings: {FileName} to {DestinationPath}", fileName, destinationPath);
             fileSystem.File.Copy(filePath, destinationPath, overwrite: true);
         }
+    }
+
+    private void CopyBaseMatchSettings(ServerType serverType, string identifier)
+    {
+        if (string.IsNullOrWhiteSpace(config.GameSettings))
+        {
+            logger.LogInformation("Game settings not configured, skipping base MatchSettings copy.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(config.GameSettingsBase))
+        {
+            logger.LogWarning("Base MatchSettings not configured, skipping base MatchSettings copy.");
+            return;
+        }
+
+        var gameSettingsDirPath = serverType switch
+        {
+            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps"),
+            ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Tracks"),
+            _ => throw new Exception("Unknown server type for match settings")
+        };
+
+        var gameSettingsFilePath = Path.Combine(gameSettingsDirPath, config.GameSettings);
+
+        if (fileSystem.File.Exists(gameSettingsFilePath))
+        {
+            return;
+        }
+
+        logger.LogInformation("Copying base MatchSettings ({BaseMatchSettings}) to {CustomMatchSettings}...", config.GameSettingsBase, config.GameSettings);
+
+        var baseMatchSettingsPath = Path.Combine(gameSettingsDirPath, config.GameSettingsBase);
+
+        if (!fileSystem.File.Exists(baseMatchSettingsPath))
+        {
+            logger.LogWarning("Base MatchSettings file does not exist: {BaseMatchSettingsPath}", baseMatchSettingsPath);
+            return;
+        }
+
+        fileSystem.File.Copy(baseMatchSettingsPath, gameSettingsFilePath, overwrite: true);
     }
 }
