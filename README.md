@@ -6,9 +6,9 @@
 
 ManiaServerManager (MSM) is NOT a server controller! It is a stock server manager for all Trackmania and Shootmania versions.
 
-You can easily open a communication between your server controller using this manager. In fact, it forces you to separate your server controller from your stock server.
+You can easily open a communication between the server and a controller using this manager - examples are provided in the Samples folder. In fact, it forces you to separate your server controller from your stock server.
 
-This tool is meant to be run with Docker, but can also be integrated in other ways.
+This tool is meant to be run with Docker, but it can also be integrated in other ways.
 
 ## How it works
 
@@ -16,7 +16,7 @@ The server is not executed immediately. Instead, a short-lived manager applicati
 
 The management application is written in C# and was built with NativeAOT and trimmed, allowing fast startup time and a very small image. It turned out to be a convenient replacement for the Shell language.
 
-## Advantaged over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
+## Advantages over `docker-trackmania/forever` or `pyplanet/maniaplanet-docker` images
 
 - All Nadeo game server types handled within a single image
 - Manage all of your servers within a single volume
