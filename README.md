@@ -308,7 +308,7 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_MATCH_SETTINGS=MapList.txt \
-  -e MSM_MATCH_SETTINGS_BASE=OfficialStadiumTimeAttack.txt \
+  -e MSM_MATCH_SETTINGS_BASE=NadeoStadiumTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -437,7 +437,7 @@ services:
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_MATCH_SETTINGS: MapList.txt
-      MSM_MATCH_SETTINGS_BASE: OfficialStadiumTimeAttack.txt
+      MSM_MATCH_SETTINGS_BASE: NAdeoStadiumTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:

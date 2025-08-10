@@ -7,10 +7,12 @@ services:
       MSM_SERVER_IDENTIFIER: my-tmf-xaseco-server
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: Nations/NationsWhite.txt
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
       MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE: xaseco
+      MSM_CFG_CONFIG_PACKMASK: united
     ports:
       - "2350:2350/tcp"
       - "2350:2350/udp"
@@ -23,6 +25,10 @@ services:
   xaseco:
     image: evoesports/xaseco
     restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+        restart: true
     environment:
       XASECO_TMSERVER_LOGIN: SuperAdmin
       XASECO_TMSERVER_PASSWORD: SuperAdmin
@@ -37,8 +43,8 @@ services:
       XASECO_DEDIMANIA_NATION: OTH # remember to set this to the actual country
       XASECO_MASTERADMINS: login1,login2,login3
     volumes:
-      #- "xaseco:/xaseco"
-      - ./servers/my-tmf-xaseco-server/GameData:/server/GameData
+      - ./controllers/my-tmf-xaseco-server:/xaseco
+      - ./servers/my-tmf-xaseco-server/GameData:/app/data/servers/my-tmf-xaseco-server/GameData
     networks:
       - default
       - db_mariadb
