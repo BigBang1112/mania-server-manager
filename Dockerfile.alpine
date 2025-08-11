@@ -15,8 +15,9 @@ RUN rm /app/*.dbg
 # Some issues might arise with future .NET versions
 FROM frolvlad/alpine-glibc
 
-# Required by ManiaPlanetServer
-RUN apk add --no-cache libuuid 
+# libuuid required by ManiaPlanetServer
+# coreutils for improved tail
+RUN apk add --no-cache libuuid coreutils
 
 # UID of the non-root user 'app', copied from .NET images
 ENV APP_UID=1654

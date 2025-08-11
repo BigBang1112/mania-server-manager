@@ -248,11 +248,15 @@ These don't need to be changed if port 5000 is not publically accessible.
 #### Specialized settings
 
 - `MSM_SERVER_VERSION` (default: `Latest`)
-- `MSM_VALIDATE_PATH` - specify validation path (this invalidates previous server variable requirements) (default: none)
+- `MSM_VALIDATE_PATH` - specify validation path, works only for ManiaPlanet and TM2020 (this invalidates previous server variable requirements) (default: none)
 - `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements) (default: none)
 - `MSM_ONLY_SETUP` - only run the setup without running the server (default: `False`)
 - `MSM_ONLY_SERVER_LOG` - avoid logging anything than server's stdout, useful for `MSM_VALIDATE_PATH` or `MSM_PARSE_GBX` (default: `False`)
 - `MSM_SKIP_DEDICATED_CFG` - skips dedicated_cfg creation/overwrite (default: `False`)
+
+## Docker setup
+
+For volumes, you might need to precreate the host folders and set the running user of the container, so that Docker doesn't create them with its own ownership rules, which then the container cannot access. The containers run root-less for security reasons. 
 
 ## Example Docker Run
 
