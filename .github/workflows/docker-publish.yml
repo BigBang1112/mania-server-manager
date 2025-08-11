@@ -26,6 +26,9 @@ jobs:
           - dockerfile: Dockerfile.alpine
             tags: |
               type=raw,value=alpine
+          - dockerfile: Dockerfile.wine
+            tags: |
+              type=raw,value=noble-wine
     steps:
       - name: Checkout
         uses: actions/checkout@v4
