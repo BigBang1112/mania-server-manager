@@ -199,9 +199,9 @@ if [ "$MSM_WINE" = "1" ]; then
 else
     # Regular Linux server start
     if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-        exec ./TrackmaniaServer /nodaemon "$@" 2>/dev/stderr
+        exec ./TrackmaniaServer /nodaemon "$@"
     elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-        exec ./ManiaPlanetServer /nodaemon "$@" 2>/dev/stderr
+        exec ./ManiaPlanetServer /nodaemon "$@" 2>/proc/1/fd/2
     else
         if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
             # Print only stdout to the console, useful for /validatepath or /parsegbx
