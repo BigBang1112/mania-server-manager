@@ -37,7 +37,7 @@ Various image variants are provided:
 
 Multiple variants are available for `x86` (`amd64`) architectures only.
 
-### Ubuntu Noble
+### Ubuntu Noble (24.04 LTS)
 
 This is the default for `latest`, specifically tagged as `noble`. It is a stable image that doesn't install anything additional to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
 
@@ -51,6 +51,10 @@ Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Track
 
 It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc) as a base so that breaking changes in future Alpine versions can still be handled by the server executable without much hassle.
 
+### Other images
+
+Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images with updated glibc (similarly to Alpine Linux) used for figuring out physics calculation differences.
+
 ## Experimental ARM64 emulation support
 
 There's an ongoing experiment with ARM64 support to make it possible to run any Nadeo game server on a Raspberry PI or other low-cost devices. ARM64 is a future-proof variant of ARM, so it is supported over ARM32.
@@ -59,7 +63,7 @@ Alpine is not supported here for obvious complexity reasons.
 
 ## Wine for running Windows
 
-Because there seem to be minor build differences between Windows and Linux dedicated server builds, there are additional images, suffixed with `-wine` to emulate the Windows build on Linux.
+Because there seem to be minor build differences between Windows and Linux dedicated server builds, there are additional images, suffixed with `-wine` to emulate the Windows build on Linux. Currently only `noble-wine`.
 
 ## Environment variables reference
 
