@@ -29,6 +29,9 @@ jobs:
           - dockerfile: Dockerfile.wine
             tags: |
               type=raw,value=noble-wine
+          - dockerfile: Dockerfile.fedora
+            tags: |
+              type=raw,value=fedora
     steps:
       - name: Checkout
         uses: actions/checkout@v4
