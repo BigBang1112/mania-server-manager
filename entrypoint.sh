@@ -10,7 +10,7 @@ log() {
 
 # Runs the necessary setup of the server
 if [ "$MSM_ONLY_SERVER_LOG" = "True" ] || [ "$MSM_ONLY_SERVER_LOG" = "1" ]; then
-    ./ManiaServerManager > /dev/null 2>&1
+    ( /ManiaServerManager > /dev/null 2>&1 )
 else
     ./ManiaServerManager
 fi
@@ -201,7 +201,7 @@ else
     if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
         exec ./TrackmaniaServer /nodaemon "$@"
     elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-        exec ./ManiaPlanetServer /nodaemon "$@" 2>/proc/1/fd/2
+        exec ./ManiaPlanetServer /nodaemon "$@"
     else
         if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
             # Print only stdout to the console, useful for /validatepath or /parsegbx
