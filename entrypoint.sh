@@ -143,68 +143,105 @@ done
 # log "> Parameters: $@"
 
 # Forward all constructed parameters to server executable
+
 if [ "$MSM_WINE" = "1" ]; then
+    log "Running under Wine"
+
     if [ "$MSM_SERVER_TYPE" = "TMF" ] || [ "$MSM_SERVER_TYPE" = "TM" ]; then
         log "TMF and TM are currently not supported on Wine"
         exit 1
-    elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-        exec wine TrackmaniaServer.exe "$@" 2>/dev/null &
-    elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-        exec wine ManiaPlanetServer.exe "$@" 2>/dev/null &
-    elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
-        exec wine TrackManiaServer.exe "$@" 2>/dev/null &
-    else
-        log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
-        exit 1
     fi
 
-    pid=$!
-    log "Server started with PID: $pid"
-
-    log_fd="/proc/$pid/fd/18"
-
-    # Wait until log exists
-    while [ ! -r "$log_fd" ]; do
-        sleep 0.1
-        #ls -l /proc/$pid/fd/
-        kill -0 "$pid" 2>/dev/null || {
-            log "Server exited before FD 18 was ready"
+    if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
+        # Print only stdout to the console, useful for /validatepath or /parsegbx
+        if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+            exec wine TrackmaniaServer.exe "$@" 2>/dev/null
+        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+            exec wine ManiaPlanetServer.exe "$@" 2>/dev/null
+        elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
+            exec wine TrackManiaServer.exe "$@" 2>/dev/null
+        else
+            log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
             exit 1
-        }
-    done
-
-    # Monitor the server process and stop tailing if it exits
-    tail -f "$log_fd" --pid "$pid" &
-    wait "$pid" # Allows graceful shutdown
-else
-    if [ "$MSM_SERVER_TYPE" = "TMF" ]; then
-        exec ./TrackmaniaServer /nodaemon "$@" &
-    elif [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-        exec ./TrackmaniaServer /nodaemon "$@"
-    elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-        exec ./ManiaPlanetServer /nodaemon "$@"
-    elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
-        exec ./TrackManiaServer /nodaemon "$@" &
+        fi
     else
-        log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
-        exit 1
-    fi
+        # Hook onto a log file for verbose logs
+        if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+            exec wine TrackmaniaServer.exe "$@" 2>/dev/null &
+        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+            exec wine ManiaPlanetServer.exe "$@" 2>/dev/null &
+        elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
+            exec wine TrackManiaServer.exe "$@" 2>/dev/null &
+        else
+            log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
+            exit 1
+        fi
 
-    # Listen to console on old TM dedicated servers
-    if [ "$MSM_SERVER_TYPE" = "TM" ] || [ "$MSM_SERVER_TYPE" = "TMF" ]; then
         pid=$!
-        fd_path="/proc/$pid/fd/3"
+        log "Server started with PID: $pid"
 
-        # Wait until fd_path exists
-        while [ ! -e "$fd_path" ]; do
+        log_fd="/proc/$pid/fd/18"
+
+        # Wait until log exists
+        while [ ! -r "$log_fd" ]; do
             sleep 0.1
+            #ls -l /proc/$pid/fd/
             kill -0 "$pid" 2>/dev/null || {
-                log "Server exited before FD 3 was ready"
+                log "Server exited before FD 18 was ready"
                 exit 1
             }
         done
 
-        tail -f "$fd_path" --pid "$pid" &
+        # Monitor the server process and stop tailing if it exits
+        tail -f "$log_fd" --pid "$pid" &
         wait "$pid" # Allows graceful shutdown
+    fi
+else
+    # Regular Linux server start
+    if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
+        exec ./TrackmaniaServer /nodaemon "$@"
+    elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+        exec ./ManiaPlanetServer /nodaemon "$@"
+    else
+        if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
+            # Print only stdout to the console, useful for /validatepath or /parsegbx
+            if [ "$MSM_SERVER_TYPE" = "TMF" ]; then
+                exec ./TrackmaniaServer /nodaemon "$@"
+            elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
+                exec ./TrackManiaServer /nodaemon "$@"
+            else
+                log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
+                exit 1
+            fi
+        else
+            # Hook onto a log file for verbose logs
+            if [ "$MSM_SERVER_TYPE" = "TMF" ]; then
+                exec ./TrackmaniaServer /nodaemon "$@" &
+            elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
+                exec ./TrackManiaServer /nodaemon "$@" &
+            else
+                log "Unknown MSM_SERVER_TYPE: $MSM_SERVER_TYPE"
+                exit 1
+            fi
+
+            # Listen to console on old TM dedicated servers
+            if [ "$MSM_SERVER_TYPE" = "TM" ] || [ "$MSM_SERVER_TYPE" = "TMF" ]; then
+                pid=$!
+                fd_path="/proc/$pid/fd/3"
+
+                # Wait until fd_path exists
+                while [ ! -e "$fd_path" ]; do
+                    sleep 0.1
+                    kill -0 "$pid" 2>/dev/null || {
+                        log "Server exited before FD 3 was ready"
+                        exit 1
+                    }
+                done
+
+                # Monitor the server process and stop tailing if it exits
+                tail -f "$fd_path" --pid "$pid" &
+                wait "$pid" # Allows graceful shutdown
+            fi
+        fi
     fi
 fi
