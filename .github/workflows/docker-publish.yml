@@ -32,6 +32,9 @@ jobs:
           - dockerfile: Dockerfile.fedora
             tags: |
               type=raw,value=fedora
+          - dockerfile: Dockerfile.plucky
+            tags: |
+              type=raw,value=plucky
     steps:
       - name: Checkout
         uses: actions/checkout@v4

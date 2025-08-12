@@ -1,0 +1,38 @@
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
+ARG TARGETARCH
+WORKDIR /src
+
+# Copy project file and restore as distinct layers
+COPY ManiaServerManager/*.csproj .
+RUN dotnet restore -r linux-$TARGETARCH
+
+# Copy source code and publish app
+COPY ManiaServerManager/. .
+RUN dotnet publish --no-restore -o /app
+RUN rm /app/*.dbg
+
+
+# Final stage/image
+FROM ubuntu:plucky
+
+WORKDIR /app
+COPY --from=build /app .
+
+# UID of the non-root user 'app', copied from .NET images
+ENV APP_UID=1654
+RUN groupadd --gid=$APP_UID app && \
+    useradd --no-log-init --uid=$APP_UID --gid=$APP_UID --create-home app
+
+# Allow APP_UID to write to the data directories
+RUN mkdir -p /app/data && \
+    chown -R $APP_UID:$APP_UID /app/data && \
+    chmod -R 775 /app/data
+
+EXPOSE 2350/tcp 2350/udp 3450/tcp 3450/udp
+
+#HEALTHCHECK --interval=5s --timeout=5s --start-period=20s CMD nc -z -v 127.0.0.1 5000 || exit 1
+
+USER $APP_UID
+
+COPY --chmod=0755 entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]
