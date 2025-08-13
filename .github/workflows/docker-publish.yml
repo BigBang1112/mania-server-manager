@@ -17,22 +17,28 @@ jobs:
       matrix:
         include:
           - dockerfile: Dockerfile
+            platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=latest
               type=raw,value=noble
           - dockerfile: Dockerfile.debian
+            platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=bookworm-slim
           - dockerfile: Dockerfile.alpine
+            platforms: linux/amd64
             tags: |
               type=raw,value=alpine
           - dockerfile: Dockerfile.wine
+            platforms: linux/amd64
             tags: |
               type=raw,value=noble-wine
           - dockerfile: Dockerfile.fedora
+            platforms: linux/amd64
             tags: |
               type=raw,value=fedora
           - dockerfile: Dockerfile.plucky
+            platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=plucky
     steps:
@@ -62,7 +68,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64
+          platforms: ${{ matrix.platforms }}
           file: ${{ matrix.dockerfile }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
