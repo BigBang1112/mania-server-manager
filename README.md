@@ -261,7 +261,11 @@ These don't need to be changed if port 5000 is not publically accessible.
 
 ## Docker setup
 
-For volumes, you might need to precreate the host folders and set the running user of the container, so that Docker doesn't create them with its own ownership rules, which then the container cannot access. The containers run root-less for security reasons. 
+Images use the `app` user like `app:app` (in UID form: `1654:1654`). Root-less approach was chosen for security reasons and recommended practices.
+
+For volumes, make sure the `app` user has access to the places where you declare the volumes. You might also need to precreate the host folders and set the running user of the container (`--user` in Docker Run, `user:` in Docker Compose), so that Docker doesn't create them with its own ownership rules, which then the `app` cannot access.
+
+You also cannot create a volume further than the `versions` folder. I'm investigating how to improve this so that servers don't have to see each other.
 
 ## Example Docker Run
 
