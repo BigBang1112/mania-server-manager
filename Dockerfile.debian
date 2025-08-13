@@ -1,12 +1,8 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
+# Debian Bookworm doesn't have AOT variant, and while it works alone, it doesn't work well when built in emulation on arm64
+# So this is a little weird solution to that which shouldn't cause issues
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
 ARG TARGETARCH
 WORKDIR /src
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    clang \
-    llvm \
-    zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy project file and restore as distinct layers
 COPY ManiaServerManager/*.csproj .

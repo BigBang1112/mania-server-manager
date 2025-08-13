@@ -23,7 +23,7 @@ jobs:
               type=raw,value=latest
               type=raw,value=noble
           - dockerfile: Dockerfile.debian
-            platforms: linux/amd64 #,linux/arm64 is not compiling for NativeAOT via emulation
+            platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=bookworm-slim
           - dockerfile: Dockerfile.alpine
