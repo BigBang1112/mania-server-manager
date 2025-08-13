@@ -404,6 +404,6 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
 </dedicated>
 """;
 
-        await File.WriteAllTextAsync(Path.Combine(configDirectory, "dedicated.cfg"), dedicatedCfg, cancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(configDirectory, dedicatedCfgFileName), dedicatedCfg, cancellationToken);
     }
 }
