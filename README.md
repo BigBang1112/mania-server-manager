@@ -41,13 +41,19 @@ Multiple variants are available for `x86` (`amd64`) architectures only.
 
 ### Ubuntu Noble (24.04 LTS)
 
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/noble?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
+
 This is the default for `latest`, specifically tagged as `noble`. It is a stable image that doesn't install anything additional to run Nadeo game servers. Ubuntu is known to be regularly updated with security patches.
 
 ### Debian Bookworm (slim)
 
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/bookworm-slim?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
+
 This is the Debian variant, tagged as `bookworm-slim`, whose image is actually 1MB bigger than Noble for some reason. Use this only if you prefer Debian image bases in your orchestration or any other layer caching reasons.
 
 ### Alpine
+
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/alpine?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
 
 Alpine is a recommended pick, tagged as `alpine`, crafted carefully to run Trackmania servers with just 24MB image size. There's a chance this variant is less stable, but no issues have been found yet.
 
@@ -58,6 +64,8 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images with updated glibc (similarly to Alpine Linux) used for testing physics calculation differences.
 
 ## Experimental arm64 emulation support
+
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/noble?arch=arm64&style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
@@ -72,6 +80,8 @@ Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 Raspberry Pi Zero 2 W might work as well, but it hasn't been tested.
 
 ## Wine for running Windows
+
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/noble-wine?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
 
 Because there seem to be minor build differences between Windows and Linux dedicated server builds, there are additional images, suffixed with `-wine` to emulate the Windows build on Linux. Currently only `noble-wine`.
 
