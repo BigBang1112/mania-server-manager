@@ -56,11 +56,19 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images with updated glibc (similarly to Alpine Linux) used for testing physics calculation differences.
 
-## Experimental ARM64 emulation support
+## Experimental arm64 emulation support
 
-There's an ongoing experiment with ARM64 support to make it possible to run any Nadeo game server on a Raspberry PI or other low-cost devices. ARM64 is a future-proof variant of ARM, so it is supported over ARM32.
+There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Alpine is not supported here for obvious complexity reasons.
+Supported tags with arm64 are `latest`/`noble`, `bookworm-slim`, and `plucky`.
+
+Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
+
+- TM2020 and ManiaPlanet work fine first try
+- TMF needs to be (re)started at least 3 times to resolve directory issues (Cache is always broken though)
+- TM (ESWC for example) might need way more (re)starts, if even possible to overcome it
+
+Raspberry Pi Zero 2 W might work as well, but it hasn't been tested.
 
 ## Wine for running Windows
 

@@ -199,9 +199,17 @@ if [ "$MSM_WINE" = "1" ]; then
 else
     # Regular Linux server start
     if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
-        exec ./TrackmaniaServer /nodaemon "$@"
+        if [ "$MSM_ARCH" = "arm64" ]; then
+            exec box64 TrackmaniaServer /nodaemon "$@"
+        else
+            exec ./TrackmaniaServer /nodaemon "$@"
+        fi
     elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
-        exec ./ManiaPlanetServer /nodaemon "$@"
+        if [ "$MSM_ARCH" = "arm64" ]; then
+            exec box64 ManiaPlanetServer /nodaemon "$@"
+        else
+            exec ./ManiaPlanetServer /nodaemon "$@"
+        fi
     else
         if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
             # Print only stdout to the console, useful for /validatepath or /parsegbx

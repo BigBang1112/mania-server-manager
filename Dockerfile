@@ -14,6 +14,16 @@ RUN rm /app/*.dbg
 
 # Final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
+ARG TARGETARCH
+
+ENV MSM_ARCH=$TARGETARCH
+RUN if [ "$MSM_ARCH" = "arm64" ]; then \
+    apt update && apt install wget gnupg -y && \
+    wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list && \
+    wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg && \
+    apt update && apt install box64 -y && \
+    rm -rf /var/lib/apt/lists/*; \
+fi
 
 WORKDIR /app
 COPY --from=build /app .
