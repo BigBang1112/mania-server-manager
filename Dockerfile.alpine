@@ -4,11 +4,11 @@ WORKDIR /src
 
 # copy csproj and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
-RUN dotnet restore -r linux-musl-$TARGETARCH
+RUN dotnet restore -a $TARGETARCH
 
-# copy and publish app and libraries
+# Copy source code and publish app
 COPY ManiaServerManager/. .
-RUN dotnet publish --no-restore -o /app
+RUN dotnet publish --no-restore -a $TARGETARCH -o /app
 RUN rm /app/*.dbg
 
 # There are glibc issues since 3.18, this image solves them automatically, though it's not directly runtime-deps build
