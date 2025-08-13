@@ -4,9 +4,9 @@ WORKDIR /src
 
 # copy csproj and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
-RUN dotnet restore -a $TARGETARCH
+RUN dotnet restore -r linux-musl-$TARGETARCH
 
-# Copy source code and publish app
+# copy and publish app and libraries
 COPY ManiaServerManager/. .
 RUN dotnet publish --no-restore -a $TARGETARCH -o /app
 RUN rm /app/*.dbg
