@@ -31,9 +31,10 @@ The management application is written in C# and was built with NativeAOT and tri
 
 Various image variants are provided:
 
-- Ubuntu Noble (default)
+- Ubuntu Noble (default) + Plucky (experimental)
 - Debian Bookworm (slim)
 - Alpine (recommended for image size)
+- Fedora
 
 Multiple variants are available for `x86` (`amd64`) architectures only.
 
@@ -53,7 +54,7 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 ### Other images
 
-Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images with updated glibc (similarly to Alpine Linux) used for figuring out physics calculation differences.
+Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images with updated glibc (similarly to Alpine Linux) used for testing physics calculation differences.
 
 ## Experimental ARM64 emulation support
 
