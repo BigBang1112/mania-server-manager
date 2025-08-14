@@ -190,6 +190,7 @@ Provided MatchSettings examples:
 - `MSM_CFG_SERVER_ENABLE_P2P_DOWNLOAD` (default: `False`)
 - `MSM_CFG_SERVER_CALLVOTE_TIMEOUT` - vote timeout in milliseconds (default: `60000`)
 - `MSM_CFG_SERVER_CALLVOTE_RATIO` - vote ratio to succeed (default: `0.5`)
+- `MSM_CFG_SERVER_CALLVOTE_RATIOS` - individual ratios, formatted as `Command1=0.8;Command2=0.6`... supports `;` and `,` (default: `Ban=-1`)
 - `MSM_CFG_SERVER_ALLOW_MAP_DOWNLOAD` (default: `True`)
 - `MSM_CFG_SERVER_AUTOSAVE_REPLAYS` (default: `False`)
 - `MSM_CFG_SERVER_AUTOSAVE_VALIDATION_REPLAYS` (default: `False`)

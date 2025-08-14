@@ -204,7 +204,33 @@ internal sealed class Configuration : IConfiguration
         if (double.TryParse(Environment.GetEnvironmentVariable("MSM_CFG_SERVER_CALLVOTE_RATIO"), out var callVoteRatio))
             Cfg.ServerCallVoteRatio = callVoteRatio;
 
-        // Note: ServerCallVoteRatios is more complex and would need custom parsing
+        var callVoteRatios = Environment.GetEnvironmentVariable("MSM_CFG_SERVER_CALLVOTE_RATIOS");
+
+        if (!string.IsNullOrWhiteSpace(callVoteRatios))
+        {
+            var ratios = callVoteRatios.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries);
+
+            var overridenRatios = new List<VoteRatio>();
+
+            foreach (var ratio in ratios)
+            {
+                var pair = ratio.Split('=', 2, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pair.Length == 2 && double.TryParse(pair[1].Trim(), out var ratioValue))
+                {
+                    overridenRatios.Add(new VoteRatio { Command = pair[0].Trim(), Ratio = ratioValue });
+                }
+                else
+                {
+                    exceptions.Add(new InvalidOperationException($"Invalid call vote ratio format: '{ratio}'. Expected format: 'Command=Ratio'."));
+                }
+            }
+
+            if (overridenRatios.Count > 0)
+            {
+                Cfg.ServerCallVoteRatios = overridenRatios.ToArray();
+            }
+        }
 
         if (bool.TryParse(Environment.GetEnvironmentVariable("MSM_CFG_SERVER_ALLOW_MAP_DOWNLOAD"), out var allowMapDownload))
             Cfg.ServerAllowMapDownload = allowMapDownload;
