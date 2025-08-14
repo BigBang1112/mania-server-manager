@@ -90,6 +90,8 @@ Because there seem to be minor build differences between Windows and Linux dedic
 
 Provided MatchSettings examples:
 
+- For TM2020:
+  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has Training - 01
 - For Trackmania Forever:
   - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01-Race
   - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01-Race
@@ -288,7 +290,7 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_MATCH_SETTINGS=MapList.txt \
-  -e MSM_MATCH_SETTINGS_BASE=example.txt \
+  -e MSM_MATCH_SETTINGS_BASE=MinimalTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
