@@ -343,7 +343,7 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=tracklist.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoStadiumTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
@@ -365,7 +365,7 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
-  -e MSM_MATCH_SETTINGS=tracklist.txt \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
@@ -472,7 +472,7 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: tracklist.txt
+      MSM_MATCH_SETTINGS: MapList.txt
       MSM_MATCH_SETTINGS_BASE: NAdeoStadiumTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
@@ -501,7 +501,7 @@ services:
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_CFG_ACCOUNT_NATION: CZE
-      MSM_MATCH_SETTINGS: tracklist.txt
+      MSM_MATCH_SETTINGS: MapList.txt
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
