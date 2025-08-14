@@ -19,7 +19,7 @@ internal sealed class DedicatedCfg
     public int ServerMaxSpectators { get; set; } = 32;
     public string ServerPasswordSpectator { get; set; } = string.Empty;
     public bool ServerKeepPlayerSlots { get; set; }
-    public LadderMode ServerLadderMode { get; set; }
+    public LadderMode ServerLadderMode { get; set; } = LadderMode.Forced;
     public bool ServerEnableP2pUpload { get; set; } = true;
     public bool ServerEnableP2pDownload { get; set; }
     public int ServerCallVoteTimeout { get; set; } = 60000;
