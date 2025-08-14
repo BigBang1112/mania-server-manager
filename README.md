@@ -149,6 +149,7 @@ Provided MatchSettings examples:
 
 #### Basic configuration
 
+- `MSM_SERVER_IDENTIFIER` - Name of the server's folder (default: `{MSM_SERVER_TYPE}_{MSM_SERVER_VERSION}`)
 - `MSM_SERVER_NAME` - Server name (default: `ManiaServerManager Server`)
 - `MSM_SERVER_PASSWORD` - Server password (default: none)
 - `MSM_DEDICATED_CFG` - Dedicated config filename (default: `dedicated_cfg.txt`)
