@@ -551,3 +551,11 @@ If you decide to use host for simplicity/performance, make sure that:
 - You don't forget to change the XML-RPC port for each new server (if you want separate communication)
 - That your XML-RPC ports are behind a firewall if you set `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`
 - If you need to communicate XML-RPC remotely from any address (there are minimal reasons), absolutely make sure to change `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` and `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD`
+
+## Special thanks
+
+You helped me throughout the struggles:
+
+- [Mystixor](https://github.com/Mystixor)
+- [Auris](https://github.com/AurisTFG)
+- [Vennstone](https://interfacinglinux.com/2024/10/04/trackberry-raspberry-pi-trackmania-server/)
