@@ -1,7 +1,6 @@
 # ManiaServerManager
 
 [![Docker pulls](https://img.shields.io/docker/pulls/bigbang1112/mania-server-manager?style=for-the-badge&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/bigbang1112/mania-server-manager?include_prereleases&style=for-the-badge&logo=github)](https://github.com/bigbang1112/mania-server-manager/releases)
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/bigbang1112/mania-server-manager/master?style=for-the-badge&logo=github)](https://github.com/BigBang1112/mania-server-manager)
 
 ManiaServerManager (MSM) is NOT a server controller! It is a stock server manager for all Trackmania and Shootmania versions.
@@ -69,7 +68,7 @@ Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images w
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`noble` and `plucky`.
+Supported tags with arm64 are `latest`/`noble`, `plucky`, and `bookworm-slim`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
@@ -344,7 +343,7 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS=tracklist.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoStadiumTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
@@ -366,7 +365,7 @@ docker run -d \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
-  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS=tracklist.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
@@ -473,8 +472,8 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: MapList.txt
-      MSM_MATCH_SETTINGS_BASE: NAdeoStadiumTimeAttack.txt
+      MSM_MATCH_SETTINGS: tracklist.txt
+      MSM_MATCH_SETTINGS_BASE: NadeoStadiumTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
@@ -502,7 +501,7 @@ services:
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
       MSM_CFG_ACCOUNT_NATION: CZE
-      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS: tracklist.txt
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
