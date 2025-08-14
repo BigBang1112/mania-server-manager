@@ -7,7 +7,7 @@ services:
       MSM_SERVER_IDENTIFIER: my-tmf-xaseco-server
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: tracklist.txt # XASECO by default expects this file name
+      MSM_MATCH_SETTINGS: MapList.txt # in XASECO's rasp.settings.php, in autosave_matchsettings - don't forget to change it to this file name!
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
