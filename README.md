@@ -182,8 +182,8 @@ Provided MatchSettings examples:
 - `MSM_CFG_SERVER_PASSWORD_SPECTATOR` (default: none)
 - `MSM_CFG_SERVER_KEEP_PLAYER_SLOTS` (default: `False`)
 - `MSM_CFG_SERVER_LADDER_MODE` - values:
-  - `Inactive` (default)
-  - `Forced`
+  - `Inactive`
+  - `Forced` (default)
   - `Normal` (old value)
 - `MSM_CFG_SERVER_ENABLE_P2P_UPLOAD` (default: `True`)
 - `MSM_CFG_SERVER_ENABLE_P2P_DOWNLOAD` (default: `False`)
