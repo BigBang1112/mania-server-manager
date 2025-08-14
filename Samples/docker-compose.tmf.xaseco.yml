@@ -7,7 +7,7 @@ services:
       MSM_SERVER_IDENTIFIER: my-tmf-xaseco-server
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS: tracklist.txt # XASECO by default expects this file name
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
@@ -25,10 +25,10 @@ services:
   xaseco:
     image: evoesports/xaseco
     restart: unless-stopped
-    depends_on:
-      server:
-        condition: service_healthy
-        restart: true
+    #depends_on:
+    #  server:
+    #    condition: service_healthy
+    #    restart: true
     environment:
       XASECO_TMSERVER_LOGIN: SuperAdmin
       XASECO_TMSERVER_PASSWORD: SuperAdmin
