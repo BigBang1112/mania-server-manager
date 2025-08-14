@@ -69,7 +69,7 @@ Fedora [`fedora`] and Ubuntu Plucky (25.04) [`plucky`] are experimental images w
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`noble` and `plucky`.
+Supported tags with arm64 are `latest`/`noble`, `plucky`, and `bookworm-slim`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
