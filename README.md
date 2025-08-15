@@ -1,7 +1,7 @@
 # ManiaServerManager
 
 [![Docker pulls](https://img.shields.io/docker/pulls/bigbang1112/mania-server-manager?style=for-the-badge&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager)
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/bigbang1112/mania-server-manager/master?style=for-the-badge&logo=github)](https://github.com/BigBang1112/mania-server-manager)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/bigbang1112/mania-server-manager/main?style=for-the-badge&logo=github)](https://github.com/BigBang1112/mania-server-manager)
 
 ManiaServerManager (MSM) is NOT a server controller! It is a stock server manager for all Trackmania and Shootmania versions.
 
