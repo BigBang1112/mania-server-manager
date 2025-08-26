@@ -25,7 +25,7 @@ The management application is written in C# and was built with NativeAOT and tri
 - Alternatively, use the Windows executable with Wine (there's a use for it, soon^^)
 - Many more possible options are configurable with environment variables
 - Supports niche command line arguments like `/validatepath`
-- Up-to-date base images, built every 2 days
+- Up-to-date base images, built every week
 
 ## Image variants
 
