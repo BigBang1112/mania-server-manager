@@ -288,7 +288,7 @@ Images use the `app` user like `app:app` (in UID form: `1654:1654`). Root-less a
 
 For volumes, make sure the `app` user has access to the places where you declare the volumes. You might also need to precreate the host folders and set the running user of the container (`--user` in Docker Run, `user:` in Docker Compose), so that Docker doesn't create them with its own ownership rules, which then the `app` cannot access.
 
-You also cannot create a volume further than the `versions` folder. I'm investigating how to improve this so that servers don't have to see each other.
+You also cannot create a volume further than the `servers` folder. I'm investigating how to improve this so that servers don't have to see each other.
 
 ## Example Docker Run
 
