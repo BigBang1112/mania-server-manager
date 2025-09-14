@@ -2,15 +2,16 @@
 set -e
 
 log() {
-    if [ "$MSM_ONLY_SERVER_LOG" != "True" ] && [ "$MSM_ONLY_SERVER_LOG" != "1" ]; then
+    if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
+        >&2 echo "$1"
+    else
         echo "$1"
     fi
-    # TODO: else write to a log file
 }
 
 # Runs the necessary setup of the server
-if [ "$MSM_ONLY_SERVER_LOG" = "True" ] || [ "$MSM_ONLY_SERVER_LOG" = "1" ]; then
-    ( /ManiaServerManager > /dev/null 2>&1 )
+if [ "$MSM_ONLY_STDOUT" = "True" ] || [ "$MSM_ONLY_STDOUT" = "1" ]; then
+    ./ManiaServerManager 1>&2
 else
     ./ManiaServerManager
 fi
