@@ -85,7 +85,7 @@ internal sealed class ZipExtractService : IZipExtractService
             // Avoid overwriting files that users usually edit (often dedicated_cfg.txt)
             if (TryRenameEntry(entry.FullName, out string? newFullName))
             {
-                using var entryStreamInside = entry.Open();
+                await using var entryStreamInside = entry.Open();
                 await using var fileStreamDefault = fileSystem.FileStream.New(Path.Combine(outputDirectory, newFullName), fileStreamOptions);
                 await entryStreamInside.CopyToAsync(fileStreamDefault, cancellationToken);
 

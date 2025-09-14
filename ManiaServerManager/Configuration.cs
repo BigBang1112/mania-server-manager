@@ -29,6 +29,8 @@ internal interface IConfiguration
 
     DedicatedCfg Cfg { get; }
     bool SkipDedicatedCfg { get; }
+
+    string[] PrepareTitles { get; }
 }
 
 internal sealed class Configuration : IConfiguration
@@ -56,6 +58,8 @@ internal sealed class Configuration : IConfiguration
 
     public DedicatedCfg Cfg { get; }
     public bool SkipDedicatedCfg { get; }
+
+    public string[] PrepareTitles { get; }
 
     public Configuration()
     {
@@ -352,6 +356,11 @@ internal sealed class Configuration : IConfiguration
         Cfg.ConfigProxyPassword = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_PROXY_PASSWORD") ?? Cfg.ConfigProxyPassword;
         Cfg.AccountNation = Environment.GetEnvironmentVariable("MSM_CFG_ACCOUNT_NATION") ?? Cfg.AccountNation;
         Cfg.ConfigConnectionType = Environment.GetEnvironmentVariable("MSM_CFG_CONFIG_CONNECTION_TYPE") ?? Cfg.ConfigConnectionType;
+
+        var prepareTitles = Environment.GetEnvironmentVariable("MSM_PREPARE_TITLES");
+        PrepareTitles = serverType == ServerType.ManiaPlanet && !string.IsNullOrWhiteSpace(prepareTitles)
+            ? prepareTitles.Split([' ', ',', ';'], StringSplitOptions.RemoveEmptyEntries)
+            : [];
 
         if (exceptions.Count > 0)
         {

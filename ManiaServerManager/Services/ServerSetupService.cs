@@ -92,7 +92,14 @@ internal sealed class ServerSetupService : IServerSetupService
 
         if (serverType is ServerType.ManiaPlanet)
         {
-            await LoadTitleAsync(identifier, isFirstSetup, cancellationToken);
+            await LoadTitleAsync(identifier, cancellationToken);
+
+            var parallelTitleDownloads = new List<Task>();
+            foreach (var title in config.PrepareTitles)
+            {
+                parallelTitleDownloads.Add(DownloadTitleAsync(identifier, title, cancellationToken));
+            }
+            await Task.WhenAll(parallelTitleDownloads);
         }
 
         // setup dedicated_cfg.txt
@@ -142,7 +149,7 @@ internal sealed class ServerSetupService : IServerSetupService
         return $"{serverType}_{executableEntry.LastWriteTime:yyyy-MM-dd}";
     }
 
-    private async Task LoadTitleAsync(string identifier, bool isFirstSetup, CancellationToken cancellationToken)
+    private async Task LoadTitleAsync(string identifier, CancellationToken cancellationToken)
     {
         var title = config.Title;
 
@@ -162,18 +169,24 @@ internal sealed class ServerSetupService : IServerSetupService
             return;
         }
 
+        await DownloadTitleAsync(identifier, title, cancellationToken);
+    }
+
+    private async Task DownloadTitleAsync(string identifier, string title, CancellationToken cancellationToken)
+    {
         var titleFileName = title + ".Title.Pack.gbx";
         var titleDownloadUri = new Uri($"{config.TitleDownloadHost}/{titleFileName}");
 
         await using var titleArchiveResult = await DownloadArchiveAsync(titleDownloadUri, cancellationToken);
 
-        // maybe could always run the copy?
-        if (!isFirstSetup && !titleArchiveResult.NewlyDownloaded && !config.Reinstall)
+        var copiedTitlePath = Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "Packs", titleFileName);
+
+        // skip if not newly downloaded and title already exists, unless reinstall is set
+        if (!titleArchiveResult.NewlyDownloaded && !config.Reinstall && fileSystem.File.Exists(copiedTitlePath))
         {
             return;
         }
 
-        var copiedTitlePath = Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "Packs", titleFileName);
         await using var titleStream = fileSystem.FileStream.NewWriteAsync(copiedTitlePath);
         await titleArchiveResult.Stream.CopyToAsync(titleStream, cancellationToken);
     }

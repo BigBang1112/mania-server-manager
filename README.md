@@ -275,6 +275,7 @@ These don't need to be changed if port 5000 is not publically accessible.
 #### Specialized settings
 
 - `MSM_SERVER_VERSION` (default: `Latest`)
+- `MSM_PREPARE_TITLES` - List of title pack IDs to check and download, formatted as `TMStadium@nadeo,TMValley@nadeo`... supports `,`, `;` and ` ` (works only when `MSM_SERVER_TYPE=ManiaPlanet`)
 - `MSM_VALIDATE_PATH` - specify validation path, works only for ManiaPlanet and TM2020 (this invalidates previous server variable requirements) (default: none)
 - `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements) (default: none)
 - `MSM_ONLY_SETUP` - only run the setup without running the server (default: `False`)
