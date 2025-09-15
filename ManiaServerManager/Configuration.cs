@@ -31,6 +31,8 @@ internal interface IConfiguration
     bool SkipDedicatedCfg { get; }
 
     string[] PrepareTitles { get; }
+
+    bool OnlySetup { get; }
 }
 
 internal sealed class Configuration : IConfiguration
@@ -61,6 +63,8 @@ internal sealed class Configuration : IConfiguration
 
     public string[] PrepareTitles { get; }
 
+    public bool OnlySetup { get; }
+
     public Configuration()
     {
         var exceptions = new List<Exception>();
@@ -89,13 +93,14 @@ internal sealed class Configuration : IConfiguration
 
         ValidatePath = Environment.GetEnvironmentVariable("MSM_VALIDATE_PATH");
         ParseGbx = Environment.GetEnvironmentVariable("MSM_PARSE_GBX");
+        OnlySetup = bool.TryParse(Environment.GetEnvironmentVariable("MSM_ONLY_SETUP"), out var onlySetup) && onlySetup;
 
         var isDediServer = ValidatePath is null && ParseGbx is null;
 
         if (serverType == ServerType.ManiaPlanet)
         {
             Title = Environment.GetEnvironmentVariable("MSM_TITLE");
-            if (isDediServer && string.IsNullOrWhiteSpace(Title))
+            if (isDediServer && string.IsNullOrWhiteSpace(Title) && !OnlySetup)
             {
                 exceptions.Add(new InvalidOperationException("MSM_TITLE is not set."));
             }
@@ -107,13 +112,13 @@ internal sealed class Configuration : IConfiguration
         DedicatedCfgFileName = Environment.GetEnvironmentVariable("MSM_DEDICATED_CFG") ?? "dedicated_cfg.txt";
 
         AccountLogin = Environment.GetEnvironmentVariable("MSM_ACCOUNT_LOGIN") ?? string.Empty;
-        if (isDediServer && string.IsNullOrWhiteSpace(AccountLogin))
+        if (isDediServer && string.IsNullOrWhiteSpace(AccountLogin) && !OnlySetup)
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_LOGIN is not set."));
         }
 
         AccountPassword = Environment.GetEnvironmentVariable("MSM_ACCOUNT_PASSWORD") ?? string.Empty;
-        if (isDediServer && string.IsNullOrWhiteSpace(AccountPassword))
+        if (isDediServer && string.IsNullOrWhiteSpace(AccountPassword) && !OnlySetup)
         {
             exceptions.Add(new InvalidOperationException("MSM_ACCOUNT_PASSWORD is not set."));
         }
@@ -157,7 +162,7 @@ internal sealed class Configuration : IConfiguration
             {
                 GameSettings = Path.Combine("MatchSettings", matchSettings);
             }
-            else
+            else if (!OnlySetup)
             {
                 exceptions.Add(ConstructMatchSettingsException(serverType));
             }
