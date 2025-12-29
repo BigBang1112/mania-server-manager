@@ -21,8 +21,8 @@ The management application is written in C# and was built with NativeAOT and tri
 - Manage all of your servers within a single volume
 - Checks for updates per restart, not per deployment - beneficial for ManiaPlanet title packs, also avoids waiting on image updates
 - **Support for arm64 to run servers on Raspberry Pi**
-- Specific versions can be picked, or the download sources can be modified (there's a use for it, soon^^)
-- Alternatively, use the Windows executable with Wine (there's a use for it, soon^^)
+- Specific versions can be picked, or the download sources can be modified (used in [Revalidate](https://github.com/bigBang1112/revalidate))
+- Alternatively, use the Windows executable with Wine (usually you don't want this)
 - Many more possible options are configurable with environment variables
 - Supports niche command line arguments like `/validatepath`
 - Up-to-date base images, built every week
