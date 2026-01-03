@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist>
+    <gameinfos>
+        <game_mode>0</game_mode>
+        <chat_time>10000</chat_time>
+        <finishtimeout>1</finishtimeout>
+        <allwarmupduration>0</allwarmupduration>
+        <disablerespawn>0</disablerespawn>
+        <forceshowallopponents>0</forceshowallopponents>
+        <script_name>
+            <![CDATA[Laps.Script.txt]]>
+        </script_name>
+    </gameinfos>
+    <filter>
+        <is_lan>1</is_lan>
+        <is_internet>1</is_internet>
+        <is_solo>0</is_solo>
+        <is_hotseat>0</is_hotseat>
+        <sort_index>1000</sort_index>
+        <random_map_order>0</random_map_order>
+    </filter>
+    <script_settings>
+        <setting name="S_ChatTime" type="integer" value="10"/>
+        <setting name="S_UseClublinks" type="boolean" value="0"/>
+        <setting name="S_UseClublinksSponsors" type="boolean" value="0"/>
+        <setting name="S_NeutralEmblemUrl" type="text" value=""/>
+        <setting name="S_ScriptEnvironment" type="text" value="production"/>
+        <setting name="S_AllowRespawn" type="boolean" value="1"/>
+        <setting name="S_UseLegacyXmlRpcCallbacks" type="boolean" value="1"/>
+        <setting name="S_ForceLapsNb" type="integer" value="10"/>
+        <setting name="S_FinishTimeout" type="integer" value="-1"/>
+        <setting name="S_WarmUpNb" type="integer" value="0"/>
+        <setting name="S_WarmUpDuration" type="integer" value="0"/>
+        <setting name="S_TimeLimit" type="integer" value="0"/>
+    </script_settings>
+
+    <startindex>0</startindex>
+    <map>
+        <file>Campaigns\Official\0\005.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\010.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\015.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\020.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\025.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\030.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\035.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\0\040.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\045.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\050.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\055.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\060.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\065.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\070.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\075.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\1\080.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\085.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\090.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\095.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\100.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\105.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\110.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\115.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\2\120.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\125.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\130.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\135.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\140.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\145.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\150.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\155.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\3\160.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\4\165.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\4\175.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\4\185.Map.Gbx</file>
+    </map>
+    <map>
+        <file>Campaigns\Official\4\195.Map.Gbx</file>
+    </map>
+</playlist>
