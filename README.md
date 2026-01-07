@@ -477,10 +477,10 @@ services:
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
-      - "2352:2350/tcp"
-      - "2352:2350/udp"
-      - "3452:3450/tcp"
-      - "3452:3450/udp"
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
       - ./servers:/app/data/servers
@@ -506,10 +506,10 @@ services:
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
-      - "2353:2350/tcp"
-      - "2353:2350/udp"
-      - "3453:3450/tcp"
-      - "3453:3450/udp"
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
     volumes:
       - msm_archives:/app/data/archives
       - ./servers:/app/data/servers
