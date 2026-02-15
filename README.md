@@ -160,7 +160,8 @@ Provided MatchSettings examples:
 #### Download hosts
 
 - `MSM_SERVER_DOWNLOAD_HOST_ALL` - Override download host for all server types, if you host all types of servers on some URL (default: none)
-- `MSM_SERVER_DOWNLOAD_HOST_TM2020` - Override download host for TM2020 servers (default: https://nadeo-download.cdn.ubi.com/trackmania)
+- `MSM_SERVER_DOWNLOAD_HOST_TM2020` - Override download host for TM2020 servers (default: http://files.v04.maniaplanet.com/server)
+  - It used to be https://nadeo-download.cdn.ubi.com/trackmania but Nadeo is not consistent so it was changed.
 - `MSM_SERVER_DOWNLOAD_HOST_MANIAPLANET` - Override download host for ManiaPlanet servers (default: http://files.v04.maniaplanet.com/server)
 - `MSM_SERVER_DOWNLOAD_HOST_TMF` - Override download host for TMF servers (default: http://files2.trackmaniaforever.com)
 - `MSM_SERVER_DOWNLOAD_HOST_TM` - Override download host for TMNESWC/TMSX servers (default: http://slig.free.fr/TM/dedicated)

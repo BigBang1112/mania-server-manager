@@ -87,7 +87,7 @@ internal sealed class Configuration : IConfiguration
         DownloadHost.TM = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_TM") ?? DownloadHost.TM;
         DownloadHost.TMF = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_TMF") ?? DownloadHost.TMF;
         DownloadHost.ManiaPlanet = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_MANIAPLANET") ?? DownloadHost.ManiaPlanet;
-        DownloadHost.TM2020 = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_TM2020") ?? DownloadHost.TM2020;
+        DownloadHost.TM2020 = Environment.GetEnvironmentVariable("MSM_SERVER_DOWNLOAD_HOST_TM2020") ?? DownloadHost.ManiaPlanet;
 
         Reinstall = bool.TryParse(Environment.GetEnvironmentVariable("MSM_REINSTALL"), out var reinstall) && reinstall;
 
