@@ -365,6 +365,7 @@ docker run -d \
   -e MSM_SERVER_IDENTIFIER=MyServer \
   -e MSM_ACCOUNT_LOGIN=your_login \
   -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_GAME=nations \
   -e MSM_CFG_ACCOUNT_NATION=CZE \
   -e MSM_MATCH_SETTINGS=tracklist.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
@@ -501,6 +502,7 @@ services:
       MSM_SERVER_IDENTIFIER: MyServer
       MSM_ACCOUNT_LOGIN: your_login
       MSM_ACCOUNT_PASSWORD: your_password
+      MSM_GAME: nations
       MSM_CFG_ACCOUNT_NATION: CZE
       MSM_MATCH_SETTINGS: tracklist.txt
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
