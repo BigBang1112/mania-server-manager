@@ -6,6 +6,7 @@ internal interface IDedicatedCfgService
 {
     Task CreateTM2020ConfigAsync(string configDirectory, CancellationToken cancellationToken);
     Task CreateManiaPlanetConfigAsync(string configDirectory, CancellationToken cancellationToken);
+	Task CreateManiaPlanet3ConfigAsync(string configDirectory, CancellationToken cancellationToken);
     Task CreateTMFConfigAsync(string configDirectory, CancellationToken cancellationToken);
     Task CreateTMConfigAsync(string configDirectory, CancellationToken cancellationToken);
 }
@@ -239,6 +240,116 @@ internal sealed class DedicatedCfgService : IDedicatedCfgService
         <use_proxy>{{cfg.ConfigUseProxy}}</use_proxy>
         <proxy_url>{{cfg.ConfigProxyUrl}}</proxy_url>
     </system_config>
+</dedicated>
+""";
+
+        await File.WriteAllTextAsync(Path.Combine(configDirectory, dedicatedCfgFileName), dedicatedCfg, cancellationToken);
+    }
+
+    public async Task CreateManiaPlanet3ConfigAsync(string configDirectory, CancellationToken cancellationToken)
+    {
+		var dedicatedCfg = $$"""
+<?xml version="1.0" encoding="utf-8" ?>
+
+<dedicated>
+	<authorization_levels>
+		<level>
+			<name>{{cfg.AuthorizationSuperAdminName}}</name>
+			<password>{{cfg.AuthorizationSuperAdminPassword}}</password>
+		</level>
+		<level>
+			<name>{{cfg.AuthorizationAdminName}}</name>
+			<password>{{cfg.AuthorizationAdminPassword}}</password>
+		</level>
+		<level>
+			<name>{{cfg.AuthorizationUserName}}</name>
+			<password>{{cfg.AuthorizationUserPassword}}</password>
+		</level>
+	</authorization_levels>
+	
+ 	<masterserver_account>
+		<login></login>
+		<password></password>
+		<validation_key>{{cfg.AccountValidationKey}}</validation_key>
+	</masterserver_account>
+	
+	<server_options>
+		<name></name>
+		<comment>{{cfg.ServerComment}}</comment>
+		<hide_server>{{(int)cfg.ServerHideServer}}</hide_server>					<!-- value is 0 (always shown), 1 (always hidden), 2 (hidden from nations) -->
+
+		<max_players>{{cfg.ServerMaxPlayers}}</max_players>
+		<password></password>
+		
+		<max_spectators>{{cfg.ServerMaxSpectators}}</max_spectators>
+		<password_spectator>{{cfg.ServerPasswordSpectator}}</password_spectator>
+	
+		<keep_player_slots>{{cfg.ServerKeepPlayerSlots}}</keep_player_slots>			<!-- when a player changes to spectator, hould the server keep if player slots/scores etc.. or not. --> 	
+		<ladder_mode>{{(int)cfg.ServerLadderMode}}</ladder_mode>				<!-- value between 'inactive', 'forced' (or '0', '1') -->
+		
+		<enable_p2p_upload>{{cfg.ServerEnableP2pUpload}}</enable_p2p_upload>
+		<enable_p2p_download>{{cfg.ServerEnableP2pDownload}}</enable_p2p_download>
+		
+		<callvote_timeout>{{cfg.ServerCallVoteTimeout}}</callvote_timeout>
+		<callvote_ratio>{{cfg.ServerCallVoteRatio}}</callvote_ratio>				<!-- default ratio. value in [0..1], or -1 to forbid. -->
+		<callvote_ratios>
+			{{string.Join("\n            ", cfg.ServerCallVoteRatios.Select(r => $"<voteratio command=\"{r.Command}\" ratio=\"{r.Ratio}\"/>"))}}
+			<!-- commands can be "Ban", "Kick", "RestartMap", "NextMap", "SetModeScriptSettingsAndCommands"... -->
+		</callvote_ratios>
+
+		<allow_map_download>{{cfg.ServerAllowMapDownload}}</allow_map_download>
+		<autosave_replays>{{cfg.ServerAutosaveReplays}}</autosave_replays>
+		<autosave_validation_replays>{{cfg.ServerAutosaveValidationReplays}}</autosave_validation_replays>
+
+		<referee_password>{{cfg.ServerRefereePassword}}</referee_password>
+		<referee_validation_mode>{{(int)cfg.ServerRefereeValidationMode}}</referee_validation_mode>		<!-- value is 0 (only validate top3 players),  1 (validate all players) -->
+
+		<use_changing_validation_seed>{{cfg.ServerUseChangingValidationSeed}}</use_changing_validation_seed>
+
+		<disable_horns>{{cfg.ServerDisableHorns}}</disable_horns>
+		<clientinputs_maxlatency>{{cfg.ServerClientInputsMaxLatency}}</clientinputs_maxlatency>		<!-- 0 mean automatic adjustement -->
+	</server_options>
+	
+	<system_config>
+		<connection_uploadrate>{{cfg.ConfigConnectionUploadRate}}</connection_uploadrate>		<!-- Kbits per second -->
+		<connection_downloadrate>{{cfg.ConfigConnectionDownloadRate}}</connection_downloadrate>		<!-- Kbits per second -->
+
+		<allow_spectator_relays>{{cfg.ConfigAllowSpectatorRelays}}</allow_spectator_relays>
+
+		<p2p_cache_size>{{cfg.ConfigP2pCacheSize}}</p2p_cache_size>
+
+		<force_ip_address></force_ip_address>
+		<server_port>{{cfg.ConfigServerPort}}</server_port>
+		<server_p2p_port>{{cfg.ConfigServerP2pPort}}</server_p2p_port>
+		<client_port>{{cfg.ConfigClientPort}}</client_port>
+		<bind_ip_address></bind_ip_address>
+		<use_nat_upnp>{{cfg.ConfigUseNatUpnp}}</use_nat_upnp>
+
+		<gsp_name>{{cfg.ConfigGspName}}</gsp_name>						<!-- Game Server Provider name and info url -->
+		<gsp_url>{{cfg.ConfigGspUrl}}</gsp_url>						<!-- If you're a server hoster, you can use this to advertise your services -->
+
+		<xmlrpc_port>{{cfg.ConfigXmlRpcPort}}</xmlrpc_port>
+		<xmlrpc_allowremote>{{cfg.ConfigXmlRpcAllowRemote}}</xmlrpc_allowremote>			<!-- If you specify an ip adress here, it'll be the only accepted adress. this will improve security. -->
+
+		<scriptcloud_source>{{cfg.ConfigScriptCloudSource.ToString().ToLowerInvariant()}}</scriptcloud_source>		<!-- Specify the cloud storage mode for Titles that use it. Can be "localdebug" or "xmlrpc" or "nadeocloud" (default). "nadeocloud" will work only if the creator of the title subscribed to the cloud service. -->
+
+		
+		<blacklist_url>{{cfg.ConfigBlacklistUrl}}</blacklist_url>
+		<guestlist_filename>{{cfg.ConfigGuestlistFileName}}</guestlist_filename>
+		<blacklist_filename>{{cfg.ConfigBlacklistFileName}}</blacklist_filename>
+		
+		<title>SMStorm</title>		<!-- SMStorm, TMCanyon, ... -->
+
+		<minimum_client_build>{{cfg.ConfigMinimumClientBuild}}</minimum_client_build>			<!-- Only accept updated client to a specific version. ex: 2011-10-06 -->
+
+		<disable_coherence_checks>{{cfg.ConfigDisableCoherenceChecks}}</disable_coherence_checks>	<!-- disable internal checks to detect issues/cheats, and reject race times -->
+
+		<disable_replay_recording>{{cfg.ConfigDisableReplayRecording}}</disable_replay_recording>	<!-- disable replay recording in memory during the game to lower memory usage. -->
+
+		<use_proxy>{{cfg.ConfigUseProxy}}</use_proxy>
+		<proxy_login>{{cfg.ConfigProxyLogin}}</proxy_login>
+		<proxy_password>{{cfg.ConfigProxyPassword}}</proxy_password>
+	</system_config>
 </dedicated>
 """;
 

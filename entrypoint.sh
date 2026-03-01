@@ -157,7 +157,7 @@ if [ "$MSM_WINE" = "1" ]; then
         # Print only stdout to the console, useful for /validatepath or /parsegbx
         if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
             exec wine TrackmaniaServer.exe "$@" 2>/dev/null
-        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ] || [ "$MSM_SERVER_TYPE" = "ManiaPlanet3" ]; then
             exec wine ManiaPlanetServer.exe "$@" 2>/dev/null
         elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
             exec wine TrackManiaServer.exe "$@" 2>/dev/null
@@ -169,7 +169,7 @@ if [ "$MSM_WINE" = "1" ]; then
         # Hook onto a log file for verbose logs
         if [ "$MSM_SERVER_TYPE" = "TM2020" ]; then
             exec wine TrackmaniaServer.exe "$@" 2>/dev/null &
-        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+        elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ] || [ "$MSM_SERVER_TYPE" = "ManiaPlanet3" ]; then
             exec wine ManiaPlanetServer.exe "$@" 2>/dev/null &
         elif [ "$MSM_SERVER_TYPE" = "TM" ]; then
             exec wine TrackManiaServer.exe "$@" 2>/dev/null &
@@ -205,7 +205,7 @@ else
         else
             exec ./TrackmaniaServer /nodaemon "$@"
         fi
-    elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ]; then
+    elif [ "$MSM_SERVER_TYPE" = "ManiaPlanet" ] || [ "$MSM_SERVER_TYPE" = "ManiaPlanet3" ]; then
         if [ "$MSM_ARCH" = "arm64" ]; then
             exec box64 ManiaPlanetServer /nodaemon "$@"
         else

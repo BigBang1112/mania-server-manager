@@ -62,6 +62,7 @@ internal sealed class ServerSetupService : IServerSetupService
         {
             ServerType.TM => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TM}/TmDedicatedServer_{(isLatest ? "2006-05-30" : serverVersion)}.zip"),
             ServerType.TMF => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TMF}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LastTrackmaniaForeverServerVersion : serverVersion)}.zip"),
+            ServerType.ManiaPlanet3 => new Uri($"{allServerDownloadHost ?? config.DownloadHost.ManiaPlanet3}/ManiaPlanetBetaServer_{(isLatest ? "2015-06-16" : serverVersion)}.zip"),
             ServerType.ManiaPlanet => new Uri($"{allServerDownloadHost ?? config.DownloadHost.ManiaPlanet}/ManiaplanetServer_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
             ServerType.TM2020 => new Uri($"{allServerDownloadHost ?? config.DownloadHost.TM2020}/{Constants.TrackmaniaServer}_{(isLatest ? Constants.LatestUpper : serverVersion)}.zip"),
             ServerType.None => throw new Exception("Server type not set"),
@@ -113,6 +114,9 @@ internal sealed class ServerSetupService : IServerSetupService
                 case ServerType.ManiaPlanet:
                     await dedicatedCfgService.CreateManiaPlanetConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
                     break;
+                case ServerType.ManiaPlanet3:
+                    await dedicatedCfgService.CreateManiaPlanet3ConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Config"), cancellationToken);
+                    break;
                 case ServerType.TMF:
                     await dedicatedCfgService.CreateTMFConfigAsync(Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Config"), cancellationToken);
                     break;
@@ -140,7 +144,7 @@ internal sealed class ServerSetupService : IServerSetupService
         {
             ServerType.TM => $"{Constants.TmDedicatedServer}/TrackManiaServer",
             ServerType.TMF or ServerType.TM2020 => Constants.TrackmaniaServer,
-            ServerType.ManiaPlanet => Constants.ManiaPlanetServer,
+            ServerType.ManiaPlanet3 or ServerType.ManiaPlanet => Constants.ManiaPlanetServer,
             _ => throw new Exception("Unknown server type")
         };
 
@@ -337,7 +341,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         var destinationDirPath = serverType switch
         {
-            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps", "MatchSettings"),
+            ServerType.TM2020 or ServerType.ManiaPlanet or ServerType.ManiaPlanet3 => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps", "MatchSettings"),
             ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Tracks", "MatchSettings"),
             _ => throw new Exception("Unknown server type for match settings")
         };
@@ -374,7 +378,7 @@ internal sealed class ServerSetupService : IServerSetupService
 
         var gameSettingsDirPath = serverType switch
         {
-            ServerType.TM2020 or ServerType.ManiaPlanet => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps"),
+            ServerType.TM2020 or ServerType.ManiaPlanet or ServerType.ManiaPlanet3 => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "UserData", "Maps"),
             ServerType.TMF or ServerType.TM => Path.Combine(baseWorkingPath, Constants.ServerServersPath, identifier, "GameData", "Tracks"),
             _ => throw new Exception("Unknown server type for match settings")
         };

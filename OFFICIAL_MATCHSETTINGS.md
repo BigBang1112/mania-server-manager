@@ -29,6 +29,25 @@ Be aware that these **cannot be used as a base MatchSettings with `MSM_MATCH_SET
   - `TMCanyonB.txt`
   - `TMCanyonC.txt`
 
+## ManiaPlanet 3
+
+These can be used as a base MatchSettings as they are located outside Pak files.
+
+- `SMStormBattle1.txt`
+- `SMStormBattle2.txt`
+- `SMStormMelee.txt`
+- `SMStormRealm.txt`
+- `SMStormTimeAttack.txt`
+- `TMCanyonA.txt`
+- `TMCanyonB.txt`
+- `TMCanyonC.txt`
+- `TMStadiumA.txt`
+- `TMStadiumB.txt`
+- `TMStadiumC.txt`
+- `TMValleyA.txt`
+- `TMValleyB.txt`
+- `TMValleyC.txt`
+
 ## TMF
 
 - `Nations/NationsWhite.txt`

@@ -97,7 +97,7 @@ internal sealed class Configuration : IConfiguration
 
         var isDediServer = ValidatePath is null && ParseGbx is null;
 
-        if (serverType == ServerType.ManiaPlanet)
+        if (serverType is ServerType.ManiaPlanet3 or ServerType.ManiaPlanet)
         {
             Title = Environment.GetEnvironmentVariable("MSM_TITLE");
             if (isDediServer && string.IsNullOrWhiteSpace(Title) && !OnlySetup)
@@ -125,7 +125,7 @@ internal sealed class Configuration : IConfiguration
 
         ExampleMatchSettingsDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MatchSettings", serverType.ToString());
 
-        if (serverType == ServerType.ManiaPlanet && Title is not null)
+        if (serverType is ServerType.ManiaPlanet3 or ServerType.ManiaPlanet && Title is not null)
         {
             var titleFolder = Title;
 
@@ -390,7 +390,7 @@ internal sealed class Configuration : IConfiguration
         {
             sb.Append(" No examples could be provied, so just try to set one of these variables to a MatchSettings file provided by the server");
 
-            if (serverType == ServerType.ManiaPlanet)
+            if (serverType is ServerType.ManiaPlanet3 or ServerType.ManiaPlanet)
             {
                 sb.Append(" or the title pack.");
 

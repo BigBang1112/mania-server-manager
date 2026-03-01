@@ -90,7 +90,7 @@ Because there seem to be minor build differences between Windows and Linux dedic
 
 #### Server configuration
 
-- **`MSM_SERVER_TYPE`** - Server type, must be one of: `TM2020`, `ManiaPlanet`, `TMF`, or `TM` (TMNESWC/TMSX)
+- **`MSM_SERVER_TYPE`** - Server type, must be one of: `TM2020`, `ManiaPlanet`, `ManiaPlanet3`, `TMF`, or `TM` (TMNESWC/TMSX)
 - **`MSM_ACCOUNT_LOGIN`** - Server account login
 - **`MSM_ACCOUNT_PASSWORD`** - Server account password
 - **`MSM_MATCH_SETTINGS`** - MatchSettings file path relative to `UserData/Maps/MatchSettings` OR `GameData/Tracks/MatchSettings`
@@ -140,7 +140,7 @@ Provided MatchSettings examples:
 
 #### ManiaPlanet-specific
 
-- **`MSM_TITLE`** - Title pack ID (required when `MSM_SERVER_TYPE=ManiaPlanet`, example: `TMStadium@nadeo`)
+- **`MSM_TITLE`** - Title pack ID (required when `MSM_SERVER_TYPE=ManiaPlanet` or `ManiaPlanet3`, example: `TMStadium@nadeo`)
 
 #### TMNESWC/TMSX-specific
 
@@ -163,6 +163,7 @@ Provided MatchSettings examples:
 - `MSM_SERVER_DOWNLOAD_HOST_TM2020` - Override download host for TM2020 servers (default: http://files.v04.maniaplanet.com/server)
   - It used to be https://nadeo-download.cdn.ubi.com/trackmania but Nadeo is not consistent so it was changed.
 - `MSM_SERVER_DOWNLOAD_HOST_MANIAPLANET` - Override download host for ManiaPlanet servers (default: http://files.v04.maniaplanet.com/server)
+- `MSM_SERVER_DOWNLOAD_HOST_MANIAPLANET3` - Override download host for ManiaPlanet 3 servers (default: http://files.maniaplanet.com/ManiaPlanet3Beta)
 - `MSM_SERVER_DOWNLOAD_HOST_TMF` - Override download host for TMF servers (default: http://files2.trackmaniaforever.com)
 - `MSM_SERVER_DOWNLOAD_HOST_TM` - Override download host for TMNESWC/TMSX servers (default: http://slig.free.fr/TM/dedicated)
 
@@ -170,6 +171,8 @@ Provided MatchSettings examples:
 
 - `MSM_IGNORE_TITLE_DOWNLOAD` - Skip title pack download (default: `False`)
 - `MSM_TITLE_DOWNLOAD_HOST` - Title pack download host (default: https://maniaplanet.com/ingame/public/titles/download)
+
+**Currently not applied for ManiaPlanet 3!**
 
 #### Server settings
 
@@ -240,8 +243,8 @@ Provided MatchSettings examples:
   - `LocalDebug`
   - `XmlRpc`
 - `MSM_CFG_CONFIG_PACKMASK` - **only TMF** (default: `stadium`)
-- `MSM_CFG_CONFIG_PROXY_LOGIN` - **only TMF/TM** (default: none)
-- `MSM_CFG_CONFIG_PROXY_PASSWORD` - **only TMF/TM** (default: none)
+- `MSM_CFG_CONFIG_PROXY_LOGIN` - **only ManiaPlanet 3/TMF/TM** (default: none)
+- `MSM_CFG_CONFIG_PROXY_PASSWORD` - **only ManiaPlanet 3/TMF/TM** (default: none)
 - `MSM_CFG_CONFIG_CONNECTION_TYPE` - **only TM** (default: `DSL_16384_4096`)
 
 Provided via command line arguments when starting the server:
@@ -325,6 +328,28 @@ docker run -d \
   -e MSM_TITLE=TMStadium@nadeo \
   -e MSM_MATCH_SETTINGS=MapList.txt \
   -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
+  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
+  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
+  -p 2350:2350/tcp \
+  -p 2350:2350/udp \
+  -p 3450:3450/tcp \
+  -p 3450:3450/udp \
+  -v msm_archives:/app/data/archives \
+  -v ./servers:/app/data/servers \
+  bigbang1112/mania-server-manager:alpine
+```
+
+For ManiaPlanet 3:
+
+```bash
+docker run -d \
+  -e MSM_SERVER_TYPE=ManiaPlanet3 \
+  -e MSM_SERVER_IDENTIFIER=MyServer \
+  -e MSM_ACCOUNT_LOGIN=your_login \
+  -e MSM_ACCOUNT_PASSWORD=your_password \
+  -e MSM_TITLE=TMStadium \
+  -e MSM_MATCH_SETTINGS=MapList.txt \
+  -e MSM_MATCH_SETTINGS_BASE=TMStadiumA.txt \
   -e MSM_SERVER_NAME="My ManiaServerManager Server" \
   -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
   -p 2350:2350/tcp \
@@ -448,6 +473,35 @@ services:
       MSM_TITLE: TMStadium@nadeo
       MSM_MATCH_SETTINGS: MapList.txt
       MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
+      MSM_SERVER_NAME: My ManiaServerManager Server
+      MSM_CFG_SERVER_MAX_PLAYERS: 255
+    ports:
+      - "2350:2350/tcp"
+      - "2350:2350/udp"
+      - "3450:3450/tcp"
+      - "3450:3450/udp"
+    volumes:
+      - msm_archives:/app/data/archives
+      - ./servers:/app/data/servers
+volumes:
+  msm_archives:
+```
+
+For ManiaPlanet 3:
+
+```yml
+services:
+  server:
+    image: bigbang1112/mania-server-manager:alpine
+    restart: unless-stopped
+    environment:
+      MSM_SERVER_TYPE: ManiaPlanet3
+      MSM_SERVER_IDENTIFIER: MyServer
+      MSM_ACCOUNT_LOGIN: your_login
+      MSM_ACCOUNT_PASSWORD: your_password
+      MSM_TITLE: TMStadium
+      MSM_MATCH_SETTINGS: MapList.txt
+      MSM_MATCH_SETTINGS_BASE: TMStadiumA.txt
       MSM_SERVER_NAME: My ManiaServerManager Server
       MSM_CFG_SERVER_MAX_PLAYERS: 255
     ports:
