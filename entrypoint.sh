@@ -135,6 +135,16 @@ if [ -n "$MSM_TITLE" ]; then
     set -- "$@" "/title=${MSM_TITLE}"
 fi
 
+if [ -n "$MSM_MASTER_SERVER_INIT" ]; then
+    log "> Master Server Init: $MSM_MASTER_SERVER_INIT"
+    set -- "$@" "/masterserverinit=${MSM_MASTER_SERVER_INIT}"
+fi
+
+if [ -n "$MSM_MASTER_SERVER_REPLICATE_ENV" ]; then
+    log "> Master Server Replicate Environment: $MSM_MASTER_SERVER_REPLICATE_ENV"
+    set -- "$@" "/masterserverreplicateenv=${MSM_MASTER_SERVER_REPLICATE_ENV}"
+fi
+
 # Append args given to the entrypoint script
 for arg in $original_args; do
     set -- "$@" "$arg"

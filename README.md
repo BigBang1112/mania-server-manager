@@ -254,6 +254,8 @@ Provided via command line arguments when starting the server:
 - `MSM_JOIN` (default: none)
 - `MSM_JOIN_PASSWORD` (default: none)
 - `MSM_LOAD_CACHE` (default: `False`) - loads the "checksum.txt" instead of recomputing it, to speed up first launch time if P2P is enabled. DO NOT USE if you run several servers in the same directory!
+- `MSM_MASTER_SERVER_INIT` (default: none) - **only ManiaPlanet/TM2020**, init server address
+- `MSM_MASTER_SERVER_REPLICATE_ENV` (default: none) - **only ManiaPlanet/TM2020**, possible values: `dev`, `uat`, `cert` or `prod`
 
 #### Authorization settings
 
