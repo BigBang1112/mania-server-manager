@@ -1,8 +1,38 @@
-# Debian Bookworm doesn't have AOT variant, and while it works alone, it doesn't work well when built in emulation on arm64
-# So this is a little weird solution to that which shouldn't cause issues
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
+FROM --platform=$BUILDPLATFORM debian:trixie-slim AS build
+ARG BUILDARCH
 ARG TARGETARCH
+
+ENV DOTNET_ROOT=/usr/share/dotnet \
+    PATH=/usr/share/dotnet:$PATH
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        clang \
+        curl \
+        libicu76 \
+        libssl3t64 \
+        zlib1g-dev && \
+    dotnet_arch="$BUILDARCH" && \
+    if [ "$dotnet_arch" = "amd64" ]; then dotnet_arch="x64"; fi && \
+    curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
+    bash /tmp/dotnet-install.sh \
+        --channel 10.0 \
+        --quality GA \
+        --architecture "$dotnet_arch" \
+        --install-dir "$DOTNET_ROOT" \
+        --no-path && \
+    rm -f /tmp/dotnet-install.sh && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /src
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    apt-get update && apt-get install -y --no-install-recommends \
+        gcc-aarch64-linux-gnu \
+        libc6-dev-arm64-cross && \
+    ln -s /usr/bin/aarch64-linux-gnu-objcopy /usr/local/bin/objcopy && \
+    rm -rf /var/lib/apt/lists/*; \
+fi
 
 # Copy project file and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
@@ -15,17 +45,29 @@ RUN rm /app/*.dbg
 
 
 # Final stage/image
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-bookworm-slim
+FROM debian:trixie-slim
 ARG TARGETARCH
 
-ENV MSM_ARCH=$TARGETARCH
-RUN if [ "$MSM_ARCH" = "arm64" ]; then \
-    apt update && apt install wget gnupg -y && \
+ENV APP_UID=1654 \
+    MSM_ARCH=$TARGETARCH
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        libgcc-s1 \
+        libssl3t64 \
+        libstdc++6 \
+        passwd \
+        tzdata \
+        zlib1g && \
+    if [ "$MSM_ARCH" = "arm64" ]; then \
+        apt-get install -y --no-install-recommends gnupg wget && \
     wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list && \
     wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg && \
-    apt update && apt install box64 -y && \
-    rm -rf /var/lib/apt/lists/*; \
-fi
+        apt-get update && apt-get install -y --no-install-recommends box64; \
+    fi && \
+    groupadd --gid "$APP_UID" app && \
+    useradd --uid "$APP_UID" --gid "$APP_UID" --create-home --shell /usr/sbin/nologin app && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=build /app .
