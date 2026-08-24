@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-resolute-aot AS build
 ARG TARGETARCH
 WORKDIR /src
 
@@ -13,7 +13,7 @@ RUN rm /app/*.dbg
 
 
 # Final stage/image
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-noble
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-resolute
 ARG TARGETARCH
 
 ENV MSM_ARCH=$TARGETARCH

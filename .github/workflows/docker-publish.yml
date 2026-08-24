@@ -23,6 +23,10 @@ jobs:
             platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=latest
+              type=raw,value=resolute
+          - dockerfile: Dockerfile.noble
+            platforms: linux/amd64,linux/arm64
+            tags: |
               type=raw,value=noble
           - dockerfile: Dockerfile.debian
             platforms: linux/amd64,linux/arm64
@@ -36,14 +40,6 @@ jobs:
             platforms: linux/amd64
             tags: |
               type=raw,value=noble-wine
-          - dockerfile: Dockerfile.fedora
-            platforms: linux/amd64
-            tags: |
-              type=raw,value=fedora
-          - dockerfile: Dockerfile.plucky
-            platforms: linux/amd64,linux/arm64
-            tags: |
-              type=raw,value=plucky
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -6,13 +6,13 @@ ARG LAUNCHING_FROM_VS
 ARG FINAL_BASE_IMAGE=${LAUNCHING_FROM_VS:+aotdebug}
 
 # Tato fáze se používá při spuštění z VS v rychlém režimu (výchozí pro konfiguraci ladění).
-FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
 USER $APP_UID
 WORKDIR /app
 
 
 # Tato fáze slouží k sestavení projektu služby.
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 # Nainstalovat závislosti clang/zlib1g-dev pro publikování do nativního prostředí
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -40,7 +40,7 @@ RUN apt-get update \
 USER app
 
 # Tato fáze se používá v produkčním prostředí nebo při spuštění z VS v běžném režimu (výchozí, když se nepoužívá konfigurace ladění).
-FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:9.0} AS final
+FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:10.0} AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["./ManiaServerManager"]
