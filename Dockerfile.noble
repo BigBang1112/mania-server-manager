@@ -2,6 +2,13 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-noble-aot AS bu
 ARG TARGETARCH
 WORKDIR /src
 
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    apt-get update && apt-get install -y --no-install-recommends \
+        gcc-aarch64-linux-gnu \
+        libc6-dev-arm64-cross && \
+    rm -rf /var/lib/apt/lists/*; \
+fi
+
 # Copy project file and restore as distinct layers
 COPY ManiaServerManager/*.csproj .
 RUN dotnet restore -r linux-$TARGETARCH

@@ -32,7 +32,7 @@ The management application is written in C# and was built with NativeAOT and tri
 Various image variants are provided:
 
 - Ubuntu Resolute (default) + Noble
-- Debian Bookworm (slim)
+- Debian Trixie (slim)
 - Alpine (recommended for image size)
 - Fedora
 
@@ -50,11 +50,11 @@ This is the default for `latest`, specifically tagged as `resolute`. It is a sta
 
 This image is tagged as `noble`. This image uses older glibc version than Resolute Raccoon which has a bug in certain rare calculations. This can be used to test validation from the Nadeo perspective, as they run older glibc version on their servers. More details about this [here](https://www.youtube.com/watch?v=cb5r3r38O9c).
 
-### Debian Bookworm (slim)
+### Debian Trixie (slim)
 
-[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/bookworm-slim?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/trixie-slim?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
 
-This is the Debian variant, tagged as `bookworm-slim`, whose image is actually 1MB bigger than Noble for some reason. Use this only if you prefer Debian image bases in your orchestration or any other layer caching reasons.
+This is the Debian variant, tagged as `trixie-slim`. Use this if you prefer Debian image bases in your orchestration or for layer caching reasons.
 
 ### Alpine
 
@@ -70,7 +70,7 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`resolute`, `noble`, and `bookworm-slim`.
+Supported tags with arm64 are `latest`/`resolute`, `noble`, and `trixie-slim`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
