@@ -45,10 +45,14 @@ jobs:
             platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=noble
-          - dockerfile: Dockerfile.debian
+          - dockerfile: Dockerfile.trixie
             platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=trixie-slim
+          - dockerfile: Dockerfile.bookworm
+            platforms: linux/amd64,linux/arm64
+            tags: |
+              type=raw,value=bookworm-slim
           - dockerfile: Dockerfile.alpine
             platforms: linux/amd64
             tags: |

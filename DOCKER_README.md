@@ -32,7 +32,7 @@ The management application is written in C# and was built with NativeAOT and tri
 Various image variants are provided:
 
 - Ubuntu Resolute (default) + Noble
-- Debian Trixie (slim)
+- Debian Trixie + Bookworm (slim)
 - Alpine (recommended for image size)
 - Fedora
 
@@ -56,6 +56,12 @@ This image is tagged as `noble`. This image uses older glibc version than Resolu
 
 This is the Debian variant, tagged as `trixie-slim`. Use this if you prefer Debian image bases in your orchestration or for layer caching reasons.
 
+### Debian Bookworm (slim)
+
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/bookworm-slim?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
+
+This Debian variant is based on the previous stable release and tagged as `bookworm-slim`.
+
 ### Alpine
 
 [![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bigbang1112/mania-server-manager/alpine?style=flat-square&logo=docker)](https://hub.docker.com/r/bigbang1112/mania-server-manager/tags)
@@ -70,7 +76,7 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`resolute`, `noble`, and `trixie-slim`.
+Supported tags with arm64 are `latest`/`resolute`, `noble`, `trixie-slim`, and `bookworm-slim`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
