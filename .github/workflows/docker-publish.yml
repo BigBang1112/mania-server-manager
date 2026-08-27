@@ -111,10 +111,27 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update Docker Hub description
-        uses: peter-evans/dockerhub-description@v5
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
-          readme-filepath: ./DOCKER_README.md
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          login_payload=$(jq -n \
+            --arg username "$DOCKERHUB_USERNAME" \
+            --arg password "$DOCKERHUB_TOKEN" \
+            '{ username: $username, password: $password }')
+          jwt=$(curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data "$login_payload" \
+            https://hub.docker.com/v2/users/login/ | jq --exit-status --raw-output '.token')
+
+          jq -n --rawfile description DOCKER_README.md \
+            '{ full_description: $description }' > /tmp/dockerhub-description.json
+
+          curl --fail-with-body --silent --show-error \
+            --request PATCH \
+            --header "Authorization: JWT $jwt" \
+            --header "Content-Type: application/json" \
+            --data-binary @/tmp/dockerhub-description.json \
+            "https://hub.docker.com/v2/repositories/$DOCKERHUB_USERNAME/$IMAGE_NAME/"
 
