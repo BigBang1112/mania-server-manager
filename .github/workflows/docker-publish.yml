@@ -5,6 +5,7 @@ on:
     branches: [ "main", "dev" ]
     paths:
       - ".github/workflows/docker-publish.yml"
+      - "DOCKER_README.md"
       - "Dockerfile*"
       - "entrypoint.sh"
       - "ManiaServerManager/**"
@@ -12,6 +13,7 @@ on:
     branches: [ "main", "dev" ]
     paths:
       - ".github/workflows/docker-publish.yml"
+      - "DOCKER_README.md"
       - "Dockerfile*"
       - "entrypoint.sh"
       - "ManiaServerManager/**"
@@ -28,6 +30,7 @@ env:
 
 jobs:
   build-and-push:
+    name: Build & Push
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -42,10 +45,14 @@ jobs:
             platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=noble
-          - dockerfile: Dockerfile.debian
+          - dockerfile: Dockerfile.trixie
             platforms: linux/amd64,linux/arm64
             tags: |
               type=raw,value=trixie-slim
+          - dockerfile: Dockerfile.bookworm
+            platforms: linux/amd64,linux/arm64
+            tags: |
+              type=raw,value=bookworm-slim
           - dockerfile: Dockerfile.alpine
             platforms: linux/amd64,linux/arm64
             tags: |
@@ -93,4 +100,38 @@ jobs:
           push: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      
+
+  update-dockerhub-description:
+    name: Update Docker Hub Description
+    needs: build-and-push
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update Docker Hub description
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          login_payload=$(jq -n \
+            --arg username "$DOCKERHUB_USERNAME" \
+            --arg password "$DOCKERHUB_TOKEN" \
+            '{ username: $username, password: $password }')
+          jwt=$(curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data "$login_payload" \
+            https://hub.docker.com/v2/users/login/ | jq --exit-status --raw-output '.token')
+
+          jq -n --rawfile description DOCKER_README.md \
+            '{ full_description: $description }' > /tmp/dockerhub-description.json
+
+          curl --fail-with-body --silent --show-error \
+            --request PATCH \
+            --header "Authorization: JWT $jwt" \
+            --header "Content-Type: application/json" \
+            --data-binary @/tmp/dockerhub-description.json \
+            "https://hub.docker.com/v2/repositories/$DOCKERHUB_USERNAME/$IMAGE_NAME/"
+

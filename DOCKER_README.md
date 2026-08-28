@@ -76,7 +76,7 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`resolute`, `noble`, `trixie-slim`, `bookworm-slim`, and `alpine`.
+Supported tags with arm64 are `latest`/`resolute`, `noble`, `trixie-slim`, and `bookworm-slim`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
@@ -104,47 +104,6 @@ Because there seem to be minor build differences between Windows and Linux dedic
 - **`MSM_MATCH_SETTINGS`** - MatchSettings file path relative to `UserData/Maps/MatchSettings` OR `GameData/Tracks/MatchSettings`
   - OR `MSM_GAME_SETTINGS` - MatchSettings file path relative to `UserData/Maps` OR `GameData/Tracks`
   - To **copy from base MatchSettings into your own one** (to avoid overwrites when adding more using controllers), **use `MSM_MATCH_SETTINGS_BASE`** with one of the examples below. By setting this, `MSM_MATCH_SETTINGS` file doesn't have to exist, it will be created.
-
-Provided MatchSettings examples:
-
-- For TM2020:
-  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has Training - 01
-- For Trackmania Forever:
-  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01-Race
-  - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01-Race
-  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has A01-Race
-  - `MinimalLaps.txt` - base for a Laps server with custom maps, only has A08-Endurance
-  - `MinimalTeams.txt` - base for a Teams server with custom maps, only has A01-Race
-  - `MinimalStunts.txt` - base for a Stunts server with custom maps, only has StuntA1
-  - `NadeoTimeAttack.txt` - TimeAttack server with all Nadeo maps from the server installation (no StarTrack)
-  - `NadeoCup.txt` - Cup server with all Nadeo maps from the server installation (no StarTrack)
-  - `NadeoRounds.txt` - Rounds server with all Nadeo maps from the server installation (no StarTrack)
-  - `NadeoLaps.txt` - Laps server with multilap Nadeo maps from the server installation (no StarTrack)
-  - `NadeoTeams.txt` - Teams server with all Nadeo maps from the server installation (no StarTrack)
-  - `NadeoStunts.txt` - Stunts server with all Nadeo stunt maps from the server installation
-  - `NadeoStadiumTimeAttack.txt` - TimeAttack server like `NadeoTimeAttack.txt` but with Stadium tracks only
-  - `NadeoStadiumCup.txt` - Cup server like `NadeoCup.txt` but with Stadium tracks only
-  - `NadeoStadiumRounds.txt` - Rounds server like `NadeoRounds.txt` but with Stadium tracks only
-  - `NadeoStadiumLaps.txt` - Laps server wlike `NadeoLaps.txt` but with Stadium tracks only
-  - `NadeoStadiumTeams.txt` - Teams server like `NadeoTeams.txt` but with Stadium tracks only
-  - `NadeoStadiumStunts.txt` - Stunts server like `NadeoStunts.txt` but with Stadium tracks only
-- For Trackmania 2 official title packs:
-  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has A01
-  - `MinimalCup.txt` - base for a Cup server with custom maps, only has A01
-  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has A01
-  - `MinimalLaps.txt` - base for a Laps server with custom maps, only has A05
-  - `NadeoTimeAttack.txt` - TimeAttack server with official maps in traditional format
-  - `NadeoCup.txt` - Cup server with official maps in traditional format
-  - `NadeoRounds.txt` - Rounds server with official maps in traditional format
-  - `NadeoLaps.txt` - Laps server with official maps in traditional format
-- For Trackmania Nations ESWC:
-  - `MinimalTimeAttack.txt` - base for a TimeAttack server with custom maps, only has B-0
-  - `MinimalRounds.txt` - base for a Rounds server with custom maps, only has B-0
-  - `MinimalTeams.txt` - base for a Teams server with custom maps, only has B-0
-  - `NadeoTimeAttack.txt` - TimeAttack server with all Nadeo maps from the server installation
-  - `NadeoRounds.txt` - Teams server with all Nadeo maps from the server installation
-  - `NadeoTeams.txt` - Teams server with all Nadeo maps from the server installation
-- [Official](OFFICIAL_MATCHSETTINGS.md) - **only TMF/TM ones can be used as a base**
 
 #### ManiaPlanet-specific
 
@@ -349,28 +308,6 @@ docker run -d \
   bigbang1112/mania-server-manager:alpine
 ```
 
-For ManiaPlanet 3:
-
-```bash
-docker run -d \
-  -e MSM_SERVER_TYPE=ManiaPlanet3 \
-  -e MSM_SERVER_IDENTIFIER=MyServer \
-  -e MSM_ACCOUNT_LOGIN=your_login \
-  -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_TITLE=TMStadium \
-  -e MSM_MATCH_SETTINGS=MapList.txt \
-  -e MSM_MATCH_SETTINGS_BASE=TMStadiumA.txt \
-  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
-  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
-  -p 2350:2350/tcp \
-  -p 2350:2350/udp \
-  -p 3450:3450/tcp \
-  -p 3450:3450/udp \
-  -v msm_archives:/app/data/archives \
-  -v ./servers:/app/data/servers \
-  bigbang1112/mania-server-manager:alpine
-```
-
 For TMF (for United maps, don't forget to set `MSM_CFG_CONFIG_PACKMASK` to `united`):
 
 ```bash
@@ -387,52 +324,6 @@ docker run -d \
   -p 2350:2350/udp \
   -p 3450:3450/tcp \
   -p 3450:3450/udp \
-  -v msm_archives:/app/data/archives \
-  -v ./servers:/app/data/servers \
-  bigbang1112/mania-server-manager:alpine
-```
-
-For TMNESWC:
-
-```bash
-docker run -d \
-  -e MSM_SERVER_TYPE=TM \
-  -e MSM_SERVER_IDENTIFIER=MyServer \
-  -e MSM_ACCOUNT_LOGIN=your_login \
-  -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_GAME=nations \
-  -e MSM_CFG_ACCOUNT_NATION=CZE \
-  -e MSM_MATCH_SETTINGS=tracklist.txt \
-  -e MSM_MATCH_SETTINGS_BASE=NadeoTimeAttack.txt \
-  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
-  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
-  -p 2350:2350/tcp \
-  -p 2350:2350/udp \
-  -p 3450:3450/tcp \
-  -p 3450:3450/udp \
-  -v msm_archives:/app/data/archives \
-  -v ./servers:/app/data/servers \
-  bigbang1112/mania-server-manager:alpine
-```
-
-Different ports need to be also configured with variables (due to the way master server handles servers):
-
-```bash
-docker run -d \
-  -e MSM_SERVER_TYPE=TM2020 \
-  -e MSM_SERVER_IDENTIFIER=MyServer \
-  -e MSM_ACCOUNT_LOGIN=your_login \
-  -e MSM_ACCOUNT_PASSWORD=your_password \
-  -e MSM_MATCH_SETTINGS=MapList.txt \
-  -e MSM_MATCH_SETTINGS_BASE=example.txt \
-  -e MSM_SERVER_NAME="My ManiaServerManager Server" \
-  -e MSM_CFG_SERVER_MAX_PLAYERS=255 \
-  -e MSM_CFG_CONFIG_SERVER_PORT=2355 \
-  -e MSM_CFG_CONFIG_SERVER_P2P_PORT=3455 \
-  -p 2355:2355/tcp \
-  -p 2355:2355/udp \
-  -p 3455:3455/tcp \
-  -p 3455:3455/udp \
   -v msm_archives:/app/data/archives \
   -v ./servers:/app/data/servers \
   bigbang1112/mania-server-manager:alpine
@@ -497,35 +388,6 @@ volumes:
   msm_archives:
 ```
 
-For ManiaPlanet 3:
-
-```yml
-services:
-  server:
-    image: bigbang1112/mania-server-manager:alpine
-    restart: unless-stopped
-    environment:
-      MSM_SERVER_TYPE: ManiaPlanet3
-      MSM_SERVER_IDENTIFIER: MyServer
-      MSM_ACCOUNT_LOGIN: your_login
-      MSM_ACCOUNT_PASSWORD: your_password
-      MSM_TITLE: TMStadium
-      MSM_MATCH_SETTINGS: MapList.txt
-      MSM_MATCH_SETTINGS_BASE: TMStadiumA.txt
-      MSM_SERVER_NAME: My ManiaServerManager Server
-      MSM_CFG_SERVER_MAX_PLAYERS: 255
-    ports:
-      - "2350:2350/tcp"
-      - "2350:2350/udp"
-      - "3450:3450/tcp"
-      - "3450:3450/udp"
-    volumes:
-      - msm_archives:/app/data/archives
-      - ./servers:/app/data/servers
-volumes:
-  msm_archives:
-```
-
 For TMF (for United maps, don't forget to set `MSM_CFG_CONFIG_PACKMASK` to `united`):
 
 ```yml
@@ -554,66 +416,6 @@ volumes:
   msm_archives:
 ```
 
-For TMNESWC:
-
-```yml
-services:
-  server:
-    image: bigbang1112/mania-server-manager:alpine
-    restart: unless-stopped
-    environment:
-      MSM_SERVER_TYPE: TM
-      MSM_SERVER_IDENTIFIER: MyServer
-      MSM_ACCOUNT_LOGIN: your_login
-      MSM_ACCOUNT_PASSWORD: your_password
-      MSM_GAME: nations
-      MSM_CFG_ACCOUNT_NATION: CZE
-      MSM_MATCH_SETTINGS: tracklist.txt
-      MSM_MATCH_SETTINGS_BASE: NadeoTimeAttack.txt
-      MSM_SERVER_NAME: My ManiaServerManager Server
-      MSM_CFG_SERVER_MAX_PLAYERS: 255
-    ports:
-      - "2350:2350/tcp"
-      - "2350:2350/udp"
-      - "3450:3450/tcp"
-      - "3450:3450/udp"
-    volumes:
-      - msm_archives:/app/data/archives
-      - ./servers:/app/data/servers
-volumes:
-  msm_archives:
-```
-
-Different ports need to be also configured with variables (due to the way master server handles servers):
-
-```yml
-services:
-  server:
-    image: bigbang1112/mania-server-manager:alpine
-    restart: unless-stopped
-    environment:
-      MSM_SERVER_TYPE: TM2020
-      MSM_SERVER_IDENTIFIER: MyServer
-      MSM_ACCOUNT_LOGIN: your_login
-      MSM_ACCOUNT_PASSWORD: your_password
-      MSM_MATCH_SETTINGS: MapList.txt
-      MSM_MATCH_SETTINGS_BASE: example.txt
-      MSM_SERVER_NAME: My ManiaServerManager Server
-      MSM_CFG_SERVER_MAX_PLAYERS: 255
-      MSM_CFG_CONFIG_SERVER_PORT: 2355
-      MSM_CFG_CONFIG_SERVER_P2P_PORT: 3455
-    ports:
-      - "2355:2355/tcp"
-      - "2355:2355/udp"
-      - "3455:3455/tcp"
-      - "3455:3455/udp"
-    volumes:
-      - msm_archives:/app/data/archives
-      - ./servers:/app/data/servers
-volumes:
-  msm_archives:
-```
-
 ## Quirks to be aware of on host network
 
 If you decide to use host for simplicity/performance, make sure that:
@@ -621,11 +423,3 @@ If you decide to use host for simplicity/performance, make sure that:
 - You don't forget to change the XML-RPC port for each new server (if you want separate communication)
 - That your XML-RPC ports are behind a firewall if you set `MSM_CFG_CONFIG_XMLRPC_ALLOW_REMOTE=True`
 - If you need to communicate XML-RPC remotely from any address (there are minimal reasons), absolutely make sure to change `MSM_CFG_AUTHORIZATION_SUPERADMIN_PASSWORD` and `MSM_CFG_AUTHORIZATION_ADMIN_PASSWORD`
-
-## Special thanks
-
-You helped me throughout the struggles:
-
-- [Mystixor](https://github.com/Mystixor)
-- [Auris](https://github.com/AurisTFG)
-- [Vennstone](https://interfacinglinux.com/2024/10/04/trackberry-raspberry-pi-trackmania-server/)
