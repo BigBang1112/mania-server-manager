@@ -76,7 +76,7 @@ It uses [frolvlad/alpine-glibc](https://github.com/Docker-Hub-frolvlad/docker-al
 
 There's an ongoing experiment with arm64 support to make it possible to run any Nadeo game server on a Raspberry Pi or other low-cost devices. It uses [box64](https://github.com/ptitSeb/box64) and the [apt repository by Ryan Fortner](https://github.com/ryanfortner/box64-debs).
 
-Supported tags with arm64 are `latest`/`resolute`, `noble`, `trixie-slim`, and `bookworm-slim`.
+Supported tags with arm64 are `latest`/`resolute`, `noble`, `trixie-slim`, `bookworm-slim`, and `alpine`.
 
 Tested on Raspberry Pi 5 8GB, there are some notes to take in count:
 
