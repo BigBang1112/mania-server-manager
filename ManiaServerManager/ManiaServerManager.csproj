@@ -25,4 +25,9 @@
         <PackageReference Include="System.IO.Abstractions" Version="22.0.14" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="ManiaServerManager.Tests" />
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    </ItemGroup>
+
 </Project>
