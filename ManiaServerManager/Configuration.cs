@@ -18,6 +18,8 @@ internal interface IConfiguration
     string DedicatedCfgFileName { get; }
     string? ValidatePath { get; } // Nullable because empty /validatepath still counts as validate request
     string? ParseGbx { get; } // Nullable because empty /parsegbx still counts as parse request
+    string[] UserDataDownloadUrls { get; }
+    string[] GameDataDownloadUrls { get; }
 
     string AccountLogin { get; }
     string AccountPassword { get; }
@@ -49,6 +51,8 @@ internal sealed class Configuration : IConfiguration
     public string DedicatedCfgFileName { get; }
     public string? ValidatePath { get; }
     public string? ParseGbx { get; } // Nullable because empty /parsegbx still counts as parse request
+    public string[] UserDataDownloadUrls { get; }
+    public string[] GameDataDownloadUrls { get; }
 
     public string AccountLogin { get; }
     public string AccountPassword { get; }
@@ -93,6 +97,8 @@ internal sealed class Configuration : IConfiguration
 
         ValidatePath = Environment.GetEnvironmentVariable("MSM_VALIDATE_PATH");
         ParseGbx = Environment.GetEnvironmentVariable("MSM_PARSE_GBX");
+        UserDataDownloadUrls = ParseList(Environment.GetEnvironmentVariable("MSM_USERDATA_DOWNLOAD_URLS"));
+        GameDataDownloadUrls = ParseList(Environment.GetEnvironmentVariable("MSM_GAMEDATA_DOWNLOAD_URLS"));
         OnlySetup = bool.TryParse(Environment.GetEnvironmentVariable("MSM_ONLY_SETUP"), out var onlySetup) && onlySetup;
 
         var isDediServer = ValidatePath is null && ParseGbx is null;
@@ -371,6 +377,13 @@ internal sealed class Configuration : IConfiguration
         {
             throw new AggregateException("Configuration errors occurred.", exceptions);
         }
+    }
+
+    private static string[] ParseList(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? []
+            : value.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 
     private InvalidOperationException ConstructMatchSettingsException(ServerType serverType)

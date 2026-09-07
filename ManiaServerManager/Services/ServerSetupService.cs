@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.IO.Compression;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ManiaServerManager.Services;
 
@@ -90,6 +92,9 @@ internal sealed class ServerSetupService : IServerSetupService
             logger.LogInformation("Extracting archive...");
             await zipExtractService.ExtractServerAsync(serverType, serverArchiveResult.Stream, serverDirectoryPath, cancellationToken);
         }
+
+        await DownloadContentAsync(config.UserDataDownloadUrls, serverDirectoryPath, "UserData", isFirstSetup, cancellationToken);
+        await DownloadContentAsync(config.GameDataDownloadUrls, serverDirectoryPath, "GameData", isFirstSetup, cancellationToken);
 
         if (serverType is ServerType.ManiaPlanet)
         {
@@ -195,7 +200,27 @@ internal sealed class ServerSetupService : IServerSetupService
         await titleArchiveResult.Stream.CopyToAsync(titleStream, cancellationToken);
     }
 
-    private async Task<DownloadResult> DownloadArchiveAsync(Uri uri, CancellationToken cancellationToken)
+    private async Task DownloadContentAsync(IEnumerable<string> urls, string serverDirectoryPath, string rootFolderName, bool isFirstSetup, CancellationToken cancellationToken)
+    {
+        foreach (var url in urls)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                throw new InvalidOperationException($"Invalid {rootFolderName} download URL: '{url}'.");
+            }
+
+            var cachePrefix = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(uri.AbsoluteUri)))[..12];
+            await using var archiveResult = await DownloadArchiveAsync(uri, cancellationToken, cachePrefix);
+
+            if (isFirstSetup || archiveResult.NewlyDownloaded || config.Reinstall)
+            {
+                logger.LogInformation("Extracting {RootFolderName} content from {Url}...", rootFolderName, uri);
+                await zipExtractService.ExtractContentAsync(archiveResult.Stream, serverDirectoryPath, rootFolderName, cancellationToken);
+            }
+        }
+    }
+
+    private async Task<DownloadResult> DownloadArchiveAsync(Uri uri, CancellationToken cancellationToken, string? cachePrefix = null)
     {
         var serverArchivesPath = Path.Combine(baseWorkingPath, Constants.ServerArchivesPath);
 
@@ -233,7 +258,9 @@ internal sealed class ServerSetupService : IServerSetupService
 
         using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
-        var archiveFileName = response.Content.Headers.ContentDisposition?.FileName ?? Path.GetFileName(uri.LocalPath);
+        var archiveFileName = cachePrefix is null
+            ? response.Content.Headers.ContentDisposition?.FileName?.Trim('"') ?? Path.GetFileName(uri.LocalPath)
+            : $"{cachePrefix}_{Path.GetFileName(uri.LocalPath)}";
         var archiveFilePath = Path.Combine(serverArchivesPath, archiveFileName);
 
         if (response.StatusCode == HttpStatusCode.NotModified)
