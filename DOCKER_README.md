@@ -248,6 +248,9 @@ These don't need to be changed if port 5000 is not publically accessible.
 #### Specialized settings
 
 - `MSM_SERVER_VERSION` (default: `Latest`)
+- `MSM_USERDATA_DOWNLOAD_URLS` - URLs of ZIP, TAR, or TAR.GZ archives to extract into the server's `UserData` folder, separated by `,` or `;` (default: none)
+- `MSM_GAMEDATA_DOWNLOAD_URLS` - URLs of ZIP, TAR, or TAR.GZ archives to extract into the server's `GameData` folder, separated by `,` or `;` (default: none)
+  - If an archive contains the respective `UserData` or `GameData` folder at its root, only that folder is extracted into the server folder. Otherwise, all archive contents are extracted into the respective folder. Existing files are overwritten.
 - `MSM_PREPARE_TITLES` - List of title pack IDs to check and download, formatted as `TMStadium@nadeo,TMValley@nadeo`... supports `,`, `;` and ` ` (works only when `MSM_SERVER_TYPE=ManiaPlanet`)
 - `MSM_VALIDATE_PATH` - specify validation path, works only for ManiaPlanet and TM2020 (this invalidates previous server variable requirements) (default: none)
 - `MSM_PARSE_GBX` - specify Gbx file path relative from work directory (this invalidates previous server variable requirements) (default: none)
